@@ -58,9 +58,9 @@
 (set! geometry-lattice (make lattice (size sx sy no-size)))
 (set! default-material (make dielectric (index n1)))
 (set! geometry (list
-                (make block         ; located at lower right edge for 45 degree tilt
-				(center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0)) 
-				(size infinity (* (sqrt 2.0) sx) infinity)
+                (make block        ; located at lower right edge for 45 degree tilt
+                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0)) 
+                (size infinity (* (sqrt 2.0) sx) infinity)
                     (e1 (/ 1.0 (tan (alpha chi_deg))) 1 0)
                     (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
                     (e3 0 0 1)
