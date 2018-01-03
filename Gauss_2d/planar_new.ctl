@@ -31,13 +31,13 @@
 (define-param chi_deg  (* 1.0 (Brewster n1 n2))) ; set incidence angle in degrees
 ;(define-param chi_deg  40.0) 
 
-(define-param krw 50.0)            ; beam waist distance to interface (30-50 is good if
+(define-param krw   50)            ; beam waist distance to interface (30 to 50 is good if
                                    ; source position coincides with beam waist)
-(define-param kw_0 10)             ; beam width (10 is good)
-(define-param freq 12)             ; vacuum frequency of source (12 is good)
+(define-param kw_0  10)            ; beam width (10 is good)
+(define-param freq  12)            ; vacuum frequency of source (5 to 12 is good)
 
 (define-param pixel 20)            ; number of pixels per wavelength in the denser
-                                   ; medium (at least >10; 20 is a good choice)
+                                   ; medium (at least >10; 20 to 30 is a good choice)
 
 (define-param resol (* pixel (* n1 freq)))  ; calculation of resolution parameter assuming n1 > n2
 (define-param k_vac (* 2.0 pi freq))
