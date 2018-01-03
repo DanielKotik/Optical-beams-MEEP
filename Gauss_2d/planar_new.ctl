@@ -89,12 +89,22 @@
                         (exp (* 0+1i k_y y))) 
         ))
 
-; complex field amplitude at position (x,y) with spectrum aplitude f
+; complex field amplitude at position (x, y) with spectrum aplitude f
 ; (one may have to adjust the 'relerr' value of the integrand function)
 (define (psi f x k)
         (lambda (r) (car (integrate (integrand f (vector3-y r) x k) 
                                     (* -1.0 k) (* 1.0 k) 0.0001))  ;1.49e-8
         )) 
+
+; output values of all specified variables
+(print "chi_deg " chi_deg "\n")
+(print "kw_0 "    kw_0    "\n")
+(print "r_w "     rw      "\n")
+(print "k_vac "   k_vac   "\n")
+;(print "The value of our Gaussian spectrum amplitude is: " ((f_Gauss w_0) 20.0) "\n")
+;(print "integrand " ((integrand 0.8 2.0 k_vac w_0) 20.0) "\n")
+;(print "Field amplitude: " ((psi 1.0 k_vac w_0) 0.5) "\n")
+
 (set! sources (list
                 (make source
                     (src (make continuous-src (frequency freq) (width 0.5)))
