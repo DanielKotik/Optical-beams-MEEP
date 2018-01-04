@@ -1,4 +1,4 @@
-![planar](https://github.com/DanielKotik/Optical-beams-MEEP/blob/master/Gauss_2d/img/planar.png)
+![planar](Gauss_2d/img/planar_cropped_rotated_resized.png)
 # Optical-beams-MEEP
 Simulation of reflection and refraction of polarized optical beams at plane and curved dielectric interfaces.
 *   Collection of Scheme configuration files for Gaussian beams (2d), Laguerre-Gaussian (vortex) beams (3d) and Airy
