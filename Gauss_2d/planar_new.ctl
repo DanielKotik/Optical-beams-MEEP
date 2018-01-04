@@ -41,7 +41,7 @@
 
 (define-param resol (* pixel (* n1 freq)))  ; calculation of resolution parameter assuming n1 > n2
 (define-param k_vac (* 2.0 pi freq))
-(define-param rw  (/ krw (* 1.00  k_vac)))
+(define-param rw  (/ krw  (* 1.00 k_vac)))
 (define-param w_0 (/ kw_0 (* 1.00 k_vac)))
 
 (define-param source_shift (* -1.0 rw))     ; source position with respect to the center (point of impact) in Meep
@@ -126,8 +126,8 @@
 (set-param! resolution resol)
 
 (run-until runtime
-    ; (at-beginning output-epsilon)
+     (at-beginning output-epsilon)
     ; (at-end output-efield-x)
-    ; (at-end output-efield-y)
-    ; (at-end output-efield-z)
+    ; (at-end output-efield-y)      ; for p-polarisation
+     (at-end output-efield-z)       ; for s-polarisation
      (at-end output-efield2))       ; intensity of the electric field
