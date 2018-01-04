@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; command line argument: meep s-pol\?=false ....ctl 
+;; command line argument: meep s-pol\?=false ....ctl
 ;; coordinate system in meep:
 ;; --|-----> x
 ;;   |
@@ -29,14 +29,14 @@
         (* (/ (atan (/ _n2 _n1)) (* 2.0 pi)) 360.0))
 
 (define-param chi_deg  (* 1.0 (Brewster n1 n2))) ; set incidence angle in degrees
-;(define-param chi_deg  40.0) 
+;(define-param chi_deg  40.0)
 
 (define-param krw   50)            ; beam waist distance to interface (30 to 50 is good if
                                    ; source position coincides with beam waist)
 (define-param kw_0  10)            ; beam width (10 is good)
 (define-param freq  12)            ; vacuum frequency of source (5 to 12 is good)
 
-(define-param pixel 20)            ; number of pixels per wavelength in the denser
+(define-param pixel 10)            ; number of pixels per wavelength in the denser
                                    ; medium (at least >10; 20 to 30 is a good choice)
 
 (define-param resol (* pixel (* n1 freq)))  ; calculation of resolution parameter assuming n1 > n2
@@ -52,26 +52,26 @@
 
 (define (alpha _chi_deg)           ; angle of inclined plane with y-axis
         (- (/ pi 2.0) (* (/ _chi_deg 360) 2 pi)))
-(define (Delta_x _alpha)           ; inclined plane offset to the center of the cell 
+(define (Delta_x _alpha)           ; inclined plane offset to the center of the cell
         (* (/ sx 2.0) (/ (-(- (sqrt 2.0) (cos _alpha)) (sin _alpha)) (sin _alpha))))
 
 (set! geometry-lattice (make lattice (size sx sy no-size)))
 (set! default-material (make dielectric (index n1)))
 (set! geometry (list
                 (make block        ; located at lower right edge for 45 degree tilt
-                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0)) 
+                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
                 (size infinity (* (sqrt 2.0) sx) infinity)
                     (e1 (/ 1.0 (tan (alpha chi_deg))) 1 0)
                     (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
                     (e3 0 0 1)
-				(material (make dielectric (index n2))))))
+                (material (make dielectric (index n2))))))
 (define (Gauss sigma)
         (lambda (r) (exp (* -1.0 (expt (/ (vector3-y r) sigma) 2.0)))
         ))
 
 (define (Asymmetric sigma)
         (lambda (r) (if (< (vector3-y r) (* -1.5 sigma)) 0.0
-                    (* (/ 2.0 3.0) (exp 1.5) (+ (/ (vector3-y r) sigma) 1.5) 
+                    (* (/ 2.0 3.0) (exp 1.5) (+ (/ (vector3-y r) sigma) 1.5)
                        (exp (* -1.0 (+ (/ (vector3-y r) sigma) 1.5)))))
         ))
 (define (f_Gauss w_0)
@@ -85,16 +85,16 @@
         ))
 (define (integrand f y x k)
         (lambda (k_y) (* (f k_y)
-                        (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y))))) 
-                        (exp (* 0+1i k_y y))) 
+                        (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
+                        (exp (* 0+1i k_y y)))
         ))
 
 ; complex field amplitude at position (x, y) with spectrum aplitude f
 ; (one may have to adjust the 'relerr' value of the integrand function)
 (define (psi f x k)
-        (lambda (r) (car (integrate (integrand f (vector3-y r) x k) 
+        (lambda (r) (car (integrate (integrand f (vector3-y r) x k)
                                     (* -1.0 k) (* 1.0 k) 0.0001))  ;1.49e-8
-        )) 
+        ))
 
 ; output values of all specified variables
 (print "chi_deg " chi_deg "\n")
@@ -110,14 +110,14 @@
                     (src (make continuous-src (frequency freq) (width 0.5)))
                     (if s-pol? (component Ez) (component Hz))
                     (amplitude 3.0)
-                    (size 0 2.0 0) 
-                    (center source_shift 0 0) 
+                    (size 0 2.0 0)
+                    (center source_shift 0 0)
                     (amp-func (Gauss w_0)))
                     ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
                     ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                 ))
 (define (eSquared r ex ey ez)
-        (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey)) 
+        (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
            (* (magnitude ez) (magnitude ez))))
 
 (define (output-efield2) (output-field-function (if s-pol? "e2_s" "e2_p")
