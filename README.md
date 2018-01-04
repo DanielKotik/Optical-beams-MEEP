@@ -1,8 +1,8 @@
 ![planar](Gauss_2d/img/planar_cropped_rotated_resized.png) 
 # Optical-beams-MEEP
 Simulation of reflection and refraction of polarized optical beams at plane and curved dielectric interfaces.
-*   Collection of Scheme configuration files for Gaussian beams (2d), Laguerre-Gaussian (vortex) beams (3d) and Airy
-    beams (2d)
+*   Collection of Scheme configuration files for Gaussian beams (2d) impinging upon planar, concave and convex
+    dielectric interfaces
 *   Based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package
 
 ## Invocation
@@ -18,3 +18,10 @@ comes bundled with the [h5utils](https://github.com/stevengj/h5utils) programs .
 
 The [Meep Scheme tutorial](https://meep.readthedocs.io/en/latest/Scheme_Tutorials/Basics/) provides further useful information and assistance.
 For more detailed explanation of our configuration files and the physical background, please see my dissertation thesis. Available soon.
+
+## Currently provided optical beam/interface configuration files
+- [x] Gaussian beams (2d), planar
+- [ ] Gaussian beams (2d), concave
+- [ ] Gaussian beams (2d), convex
+- [ ] Laguerre-Gaussian (vortex) beams (3d)
+- [ ] Airy beams (2d)
