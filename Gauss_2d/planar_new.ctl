@@ -1,12 +1,17 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; command line argument: meep s-pol\?=false ....ctl
-;; coordinate system in meep:
-;; --|-----> x
-;;   |
-;;   |
-;;   v y
+;;-------------------------------------------------------------------------------------------------
+;; file:   planar_new.ctl
+;; brief:  Scheme configuration input file for the FDTD solver Meep simulating the scattering of a 
+;;         Gaussian beam at a plane dielectric interface
+;; author: Daniel Kotik
+;; date:   XX.XX.XXXX
 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; invocation: meep s-pol\?=false planar_new.ctl
+;; coordinate system in meep:  --|-----> x
+;;                               |
+;;                               |
+;;                               v y
+;;------------------------------------------------------------------------------------------------ 
+
 ;(set! eps-averaging? false)
 (use-output-directory)
 (set! force-complex-fields? true)
@@ -22,14 +27,14 @@
 (define-param n1 1.54)             ; index of refraction of the denser medium
 (define-param n2 1.00)             ; index of refraction of the thinner medium
 
-(define (Critical _n1 _n2)         ; calculates critical angle in degrees
+(define (Critical _n1 _n2)         ; calculates the critical angle in degrees
         (* (/ (asin (/ _n2 _n1)) (* 2.0 pi)) 360.0))
 
-(define (Brewster _n1 _n2)         ; calculates Brewster angle in degrees
+(define (Brewster _n1 _n2)         ; calculates the Brewster angle in degrees
         (* (/ (atan (/ _n2 _n1)) (* 2.0 pi)) 360.0))
 
-(define-param chi_deg  (* 1.0 (Brewster n1 n2))) ; set incidence angle in degrees
-;(define-param chi_deg  40.0)
+(define-param chi_deg  (* 1.0 (Brewster n1 n2))) ; define incidence angle relative to the Brewster or critical angle,
+;(define-param chi_deg  40.0)                    ; or set it explicitly in degrees
 
 (define-param krw   50)            ; beam waist distance to interface (30 to 50 is good if
                                    ; source position coincides with beam waist)
