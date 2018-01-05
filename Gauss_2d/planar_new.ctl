@@ -16,6 +16,7 @@
 (use-output-directory)
 (set! force-complex-fields? true)
 
+;; meep specific paramters ----------------------------------------------------------------------- 
 (define-param sx 5)                ; size of cell including PML in x-direction
 (define-param sy 5)                ; size of cell including PML in y-direction
 (define-param pml_thickness 0.25)  ; thickness of PML layer
@@ -27,12 +28,14 @@
 (define-param n1 1.54)             ; index of refraction of the denser medium
 (define-param n2 1.00)             ; index of refraction of the thinner medium
 
+;; helper functions ------------------------------------------------------------------------------ 
 (define (Critical _n1 _n2)         ; calculates the critical angle in degrees
         (* (/ (asin (/ _n2 _n1)) (* 2.0 pi)) 360.0))
 
 (define (Brewster _n1 _n2)         ; calculates the Brewster angle in degrees
         (* (/ (atan (/ _n2 _n1)) (* 2.0 pi)) 360.0))
 
+;; paramter characterizing the light source and its position ------------------------------------- 
 (define-param chi_deg  (* 1.0 (Brewster n1 n2))) ; define incidence angle relative to the Brewster or critical angle,
 ;(define-param chi_deg  40.0)                    ; or set it explicitly in degrees
 
