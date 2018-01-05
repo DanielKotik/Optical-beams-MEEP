@@ -102,10 +102,11 @@
         ))
 
 ; output values of all specified variables
-(print "chi_deg " chi_deg "\n")
-(print "kw_0 "    kw_0    "\n")
-(print "r_w "     rw      "\n")
-(print "k_vac "   k_vac   "\n")
+(print "\nValues of specified variables:\n")
+(print "chi:   " chi_deg " [degree]\n")
+(print "kw_0:  " kw_0    "\n")
+(print "r_w:   " rw      "\n")
+(print "k_vac: " k_vac   "\n\n")
 ;(print "The value of our Gaussian spectrum amplitude is: " ((f_Gauss w_0) 20.0) "\n")
 ;(print "integrand " ((integrand 0.8 2.0 k_vac w_0) 20.0) "\n")
 ;(print "Field amplitude: " ((psi 1.0 k_vac w_0) 0.5) "\n")
