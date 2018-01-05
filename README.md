@@ -26,8 +26,8 @@ For a more detailed explanation of our configuration files and the physical back
 thesis. Available soon.
 
 ## Currently supported _beam - interface - polarisation_ configurations
-- [x] Gaussian beams (2d), planar, s- and p-polarisation
-- [ ] Gaussian beams (2d), concave, s- and p-polarisation
-- [ ] Gaussian beams (2d), convex, s- and p-polarisation
-- [ ] Laguerre-Gaussian (vortex) beams (3d)
-- [ ] Airy beams (2d) (free space propagation)
+-   [x] Gaussian beams (2d), planar, s- and p-polarisation
+-   [ ] Gaussian beams (2d), concave, s- and p-polarisation
+-   [ ] Gaussian beams (2d), convex, s- and p-polarisation
+-   [ ] Laguerre-Gaussian (vortex) beams (3d)
+-   [ ] Airy beams (2d) (free space propagation)
