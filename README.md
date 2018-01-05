@@ -13,8 +13,8 @@ A Scheme configuration file (extension ``.ctl``) may be launched with the parall
 ``mpirun -np X meep-mpi planar_new.ctl``
 
  with ``X`` indicating the number of cores.
-The generated HDF5 files can be processed by various visualisation toolkits. [Meep](https://github.com/stevengj/meep) 
-comes bundled with the [h5utils](https://github.com/stevengj/h5utils) programs ...
+The generated HDF5 files can be processed by different visualisation toolkits. [Meep](https://github.com/stevengj/meep) 
+comes bundled with the [h5utils](https://github.com/stevengj/h5utils) programs. Utilizing these tools, visualisation is easily performed by issuing the commands
 
 ``h5topng -S2 -Zc dkbluered -a gray -A eps-000000000.h5 ez-000003696.h5`` (real part of the field pattern)
 
