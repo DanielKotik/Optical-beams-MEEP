@@ -30,4 +30,4 @@ thesis. Available soon.
 - [ ] Gaussian beams (2d), concave, s- and p-polarisation
 - [ ] Gaussian beams (2d), convex, s- and p-polarisation
 - [ ] Laguerre-Gaussian (vortex) beams (3d)
-- [ ] Airy beams (2d)
+- [ ] Airy beams (2d) (free space propagation)
