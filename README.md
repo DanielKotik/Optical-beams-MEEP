@@ -1,6 +1,6 @@
 ![planar](Gauss_2d/img/planar_cropped_rotated_resized.png) 
 # Optical-beams-MEEP
-FDTD simulation of reflection and refraction of polarized optical beams at plane and curved dielectric interfaces.
+FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces.
 *   Collection of Scheme configuration files for Gaussian beams (2d) impinging upon planar, concave and convex
     dielectric interfaces
 *   Based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package
@@ -14,7 +14,7 @@ A Scheme configuration file (extension ``.ctl``) may be launched with the parall
 
  with ``X`` indicating the number of cores.
 The generated HDF5 files can be processed by different visualisation toolkits. [Meep](https://github.com/stevengj/meep) 
-comes bundled with the [h5utils](https://github.com/stevengj/h5utils) programs. Utilizing these tools, visualisation is easily performed by issuing the commands
+comes bundled with the [h5utils](https://github.com/stevengj/h5utils) programs. Utilising these tools, visualisation is easily performed by issuing the commands
 
 ``h5topng -S2 -Zc dkbluered -a gray -A eps-000000000.h5 ez-000003696.h5`` (real part of the field pattern)
 
@@ -26,8 +26,8 @@ For a more detailed explanation of our configuration files and the physical back
 thesis. Available soon.
 
 ## Currently supported _beam - interface - polarisation_ configurations
-- [x] Gaussian beams (2d), planar, s- and p-polarisation
-- [ ] Gaussian beams (2d), concave, s- and p-polarisation
-- [ ] Gaussian beams (2d), convex, s- and p-polarisation
-- [ ] Laguerre-Gaussian (vortex) beams (3d)
-- [ ] Airy beams (2d) (free space propagation)
+-   [x] Gaussian beams (2d), planar, s- and p-polarisation
+-   [ ] Gaussian beams (2d), concave, s- and p-polarisation
+-   [ ] Gaussian beams (2d), convex, s- and p-polarisation
+-   [ ] Laguerre-Gaussian (vortex) beams (3d), arbitrarily complex polarisation
+-   [ ] Airy beams (2d) (free space propagation)
