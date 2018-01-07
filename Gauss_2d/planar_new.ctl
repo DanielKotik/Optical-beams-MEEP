@@ -41,19 +41,19 @@
 (define Critical                            ; calculates the critical angle in degrees
     (cond
       ((> n1 n2) (* (/ (asin (/ n2 n1)) (* 2.0 pi)) 360.0))
-      (else      (display "\nWarning: Critical angle is not definable!\n\n"))
+      (else      (display "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
     ))  
 
 (define Brewster                            ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
-;(define-param chi_deg  (* 1.0 Brewster))    ; define incidence angle relative to the Brewster or critical angle,
-(define-param chi_deg  40.0)               ; or set it explicitly in degrees
+;(define-param chi_deg  (* 1.0 Brewster))   ; define incidence angle relative to the Brewster or critical angle,
+(define-param chi_deg  45.0)                ; or set it explicitly in degrees
 
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters
 ;;------------------------------------------------------------------------------------------------
-(define-param resol (* pixel (* n1 freq)))  ; calculation of resolution parameter assuming n1 > n2
+(define-param resol (* pixel (* (if (> n1 n2) n1 n2) freq)))  ; calculation of resolution parameter
 (define-param k_vac (* 2.0 pi freq))
 (define-param rw  (/ krw  (* 1.00 k_vac)))
 (define-param w_0 (/ kw_0 (* 1.00 k_vac)))
