@@ -20,36 +20,35 @@
 ;;------------------------------------------------------------------------------------------------ 
 ;; meep specific paramters 
 ;;------------------------------------------------------------------------------------------------
-(define-param sx 5)                ; size of cell including PML in x-direction
-(define-param sy 5)                ; size of cell including PML in y-direction
-(define-param pml_thickness 0.25)  ; thickness of PML layer
-(define-param freq    12)          ; vacuum frequency of source (5 to 12 is good)
-(define-param runtime 10)          ; runs simulation for 10 times freq periods
-(define-param pixel   10)          ; number of pixels per wavelength in the denser
-                                   ; medium (at least >10; 20 to 30 is a good choice)
+(define-param sx 5)                         ; size of cell including PML in x-direction
+(define-param sy 5)                         ; size of cell including PML in y-direction
+(define-param pml_thickness 0.25)           ; thickness of PML layer
+(define-param freq    12)                   ; vacuum frequency of source (5 to 12 is good)
+(define-param runtime 10)                   ; runs simulation for 10 times freq periods
+(define-param pixel   10)                   ; number of pixels per wavelength in the denser
+                                            ; medium (at least >10; 20 to 30 is a good choice)
 
 ;;------------------------------------------------------------------------------------------------
 ;; physical paramters characterizing the light source and interface characteristics
 ;;------------------------------------------------------------------------------------------------
-(define-param s-pol? true)         ; true for s-spol, false for p-pol
-(define-param n1 1.54)             ; index of refraction of the incident medium
-(define-param n2 1.00)             ; index of refraction of the refracted medium
+(define-param s-pol? true)                  ; true for s-spol, false for p-pol
+(define-param n1  1.54)                     ; index of refraction of the incident medium
+(define-param n2  1.00)                     ; index of refraction of the refracted medium
+(define-param kw_0  10)                     ; beam width (10 is good)
+(define-param krw   50)                     ; beam waist distance to interface (30 to 50 is good if
+                                            ; source position coincides with beam waist)
 
-(define Critical                   ; calculates the critical angle in degrees
+(define Critical                            ; calculates the critical angle in degrees
     (cond
       ((> n1 n2) (* (/ (asin (/ n2 n1)) (* 2.0 pi)) 360.0))
       (else      (display "\nWarning: Critical angle is not definable!\n\n"))
     ))  
 
-(define Brewster                   ; calculates the Brewster angle in degrees
+(define Brewster                            ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
-(define-param chi_deg  (* 1.0 Brewster)) ; define incidence angle relative to the Brewster or critical angle,
-;(define-param chi_deg  40.0)            ; or set it explicitly in degrees
-
-(define-param kw_0  10)            ; beam width (10 is good)
-(define-param krw   50)            ; beam waist distance to interface (30 to 50 is good if
-                                   ; source position coincides with beam waist)
+;(define-param chi_deg  (* 1.0 Brewster))    ; define incidence angle relative to the Brewster or critical angle,
+(define-param chi_deg  40.0)               ; or set it explicitly in degrees
 
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters
@@ -65,6 +64,9 @@
 
 (define-param shift (+ source_shift rw))    ; distance from source position to beam waist (along y-axis)
 
+;;------------------------------------------------------------------------------------------------
+;; placement of the dielectric interface
+;;------------------------------------------------------------------------------------------------
 (define (alpha _chi_deg)                    ; angle of inclined plane with y-axis
         (- (/ pi 2.0) (* (/ _chi_deg 360) 2 pi)))
 (define (Delta_x _alpha)                    ; inclined plane offset to the center of the cell
@@ -73,7 +75,7 @@
 (set! geometry-lattice (make lattice (size sx sy no-size)))
 (set! default-material (make dielectric (index n1)))
 (set! geometry (list
-                (make block        ; located at lower right edge for 45 degree tilt
+                (make block                 ; located at lower right edge for 45 degree tilt
                 (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
                 (size infinity (* (sqrt 2.0) sx) infinity)
                     (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
@@ -93,18 +95,23 @@
                     (* (/ 2.0 3.0) (exp 1.5) (+ (/ (vector3-y r) sigma) 1.5)
                        (exp (* -1.0 (+ (/ (vector3-y r) sigma) 1.5)))))
         ))
+
+;;------------------------------------------------------------------------------------------------
+;; spectrum amplitude distributions
+;;------------------------------------------------------------------------------------------------
 (define (f_Gauss w_0)
+        (lambda (k_y) (* (/ w_0 (* 2.0 (sqrt pi)))
+                        (exp (* -1.0 (expt (* 0.5 k_y w_0) 2.0))))
+        ))
+        
+(define (f_asymmetric a b)
         (lambda (k_y) (* (/ w_0 (* 2.0 (sqrt pi)))
                         (exp (* -1.0 (expt (* 0.5 k_y w_0) 2.0))))
         ))
 
 ;;------------------------------------------------------------------------------------------------
-;; spectrum amplitude distributions
+;; ???????????????????
 ;;------------------------------------------------------------------------------------------------
-(define (f_asymmetric a b)
-        (lambda (k_y) (* (/ w_0 (* 2.0 (sqrt pi)))
-                        (exp (* -1.0 (expt (* 0.5 k_y w_0) 2.0))))
-        ))
 (define (integrand f y x k)
         (lambda (k_y) (* (f k_y)
                         (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
