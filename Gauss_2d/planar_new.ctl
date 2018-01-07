@@ -3,14 +3,14 @@
 ;; brief:  Scheme configuration input file for the FDTD solver Meep simulating the scattering of a 
 ;;         Gaussian beam at a plane dielectric interface
 ;; author: Daniel Kotik
-;; date:   XX.XX.XXXX
+;; date:   2013-2018
 ;;
 ;; example invocation: meep s-pol\?=false planar_new.ctl
 ;;
-;; coordinate system in meep:  --|-----> x
-;;                               |
-;;                               |
-;;                               v y
+;; coordinate system in meep (defines center of computational cell):  --|-----> x
+;;                                                                      |
+;;                                                                      |
+;;                                                                      v y
 ;;------------------------------------------------------------------------------------------------ 
 
 ;(set! eps-averaging? false)
@@ -55,8 +55,8 @@
 ;;------------------------------------------------------------------------------------------------
 (define-param resol (* pixel (* (if (> n1 n2) n1 n2) freq)))  ; calculation of resolution parameter
 (define-param k_vac (* 2.0 pi freq))
-(define-param rw  (/ krw  (* 1.00 k_vac)))
-(define-param w_0 (/ kw_0 (* 1.00 k_vac)))
+(define-param rw  (/ krw  (* 1.00 k_vac)))  ;TODO: generalise to handle k_1r_w asl well as k_2r_w
+(define-param w_0 (/ kw_0 (* 1.00 k_vac)))  ;TODO: generalise to handle k_1w_0 asl well as k_2w_0
 
 (define-param source_shift (* -1.0 rw))     ; source position with respect to the center (point of impact) in Meep
                                             ; units (-2.15 good); if equal -rw, then source position coincides with
@@ -65,7 +65,7 @@
 (define-param shift (+ source_shift rw))    ; distance from source position to beam waist (along y-axis)
 
 ;;------------------------------------------------------------------------------------------------
-;; placement of the dielectric interface
+;; placement of the planar dielectric interface within the computational cell
 ;;------------------------------------------------------------------------------------------------
 (define (alpha _chi_deg)                    ; angle of inclined plane with y-axis
         (- (/ pi 2.0) (* (/ _chi_deg 360) 2 pi)))
@@ -84,33 +84,33 @@
                 (material (make dielectric (index n2))))))
 
 ;;------------------------------------------------------------------------------------------------
-;; beam profile distributions
+;; beam profile distribution(s) given at the origin of the light source
 ;;------------------------------------------------------------------------------------------------
-(define (Gauss sigma)
-        (lambda (r) (exp (* -1.0 (expt (/ (vector3-y r) sigma) 2.0)))
+(define (Gauss W_y)
+        (lambda (r) (exp (* -1.0 (expt (/ (vector3-y r) W_y) 2.0)))
         ))
 
-(define (Asymmetric sigma)
-        (lambda (r) (if (< (vector3-y r) (* -1.5 sigma)) 0.0
-                    (* (/ 2.0 3.0) (exp 1.5) (+ (/ (vector3-y r) sigma) 1.5)
-                       (exp (* -1.0 (+ (/ (vector3-y r) sigma) 1.5)))))
-        ))
+;(define (Asymmetric sigma)
+;        (lambda (r) (if (< (vector3-y r) (* -1.5 sigma)) 0.0
+;                        (* (/ 2.0 3.0) (exp 1.5) (+ (/ (vector3-y r) sigma) 1.5)
+;                        (exp (* -1.0 (+ (/ (vector3-y r) sigma) 1.5)))))
+;        ))
 
 ;;------------------------------------------------------------------------------------------------
-;; spectrum amplitude distributions
+;; spectrum amplitude distribution(s)
 ;;------------------------------------------------------------------------------------------------
-(define (f_Gauss w_0)
-        (lambda (k_y) (* (/ w_0 (* 2.0 (sqrt pi)))
-                        (exp (* -1.0 (expt (* 0.5 k_y w_0) 2.0))))
+(define (f_Gauss W_y)
+        (lambda (k_y) (* (/ W_y (* 2.0 (sqrt pi)))
+                         (exp (* -1.0 (expt (* 0.5 k_y W_y) 2.0))))
         ))
         
-(define (f_asymmetric a b)
-        (lambda (k_y) (* (/ w_0 (* 2.0 (sqrt pi)))
-                        (exp (* -1.0 (expt (* 0.5 k_y w_0) 2.0))))
-        ))
+;(define (f_asymmetric a b)
+;        (lambda (k_y) (* (/ w_0 (* 2.0 (sqrt pi)))
+;                         (exp (* -1.0 (expt (* 0.5 k_y w_0) 2.0))))
+;        ))
 
 ;;------------------------------------------------------------------------------------------------
-;; ???????????????????
+;; plane wave decomposition
 ;;------------------------------------------------------------------------------------------------
 (define (integrand f y x k)
         (lambda (k_y) (* (f k_y)
@@ -118,19 +118,22 @@
                         (exp (* 0+1i k_y y)))
         ))
 
-; complex field amplitude at position (x, y) with spectrum aplitude f
-; (one may have to adjust the 'relerr' value of the integrand function)
+;; complex field amplitude at position (x, y) with spectrum aplitude f
+;; (one may have to adjust the 'relerr' value of the integrand function)
 (define (psi f x k)
         (lambda (r) (car (integrate (integrand f (vector3-y r) x k)
                                     (* -1.0 k) (* 1.0 k) 0.0001))  ;1.49e-8
         ))
 
-; output values of all specified variables
-(print "\nValues of specified variables:\n")
+;;------------------------------------------------------------------------------------------------
+;; display values of specified and variables
+;;------------------------------------------------------------------------------------------------
+(print "\n")
+(print "Values of specified variables:    \n")
 (print "chi:   " chi_deg        " [degree]\n") ; angle of incidence
 (print "incl.: " (- 90 chi_deg) " [degree]\n") ; interface inclination with respect to the x-axis
 (print "kw_0:  " kw_0  "\n"  )
-(print "r_w:   " rw    "\n"  )
+(print "kr_w:  " krw   "\n"  )
 (print "k_vac: " k_vac "\n\n")
 ;(print "The value of our Gaussian spectrum amplitude is: " ((f_Gauss w_0) 20.0) "\n")
 ;(print "integrand " ((integrand 0.8 2.0 k_vac w_0) 20.0) "\n")
@@ -147,6 +150,7 @@
                     ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
                     ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                 ))
+
 (define (eSquared r ex ey ez)
         (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
            (* (magnitude ez) (magnitude ez))))
