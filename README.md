@@ -16,7 +16,8 @@ A Scheme configuration file (extension ``.ctl``) may be launched with the parall
 The generated HDF5 files can be processed by different visualisation toolkits. [Meep](https://github.com/stevengj/meep) 
 comes bundled with the [h5utils](https://github.com/stevengj/h5utils) programs. Utilising these tools, visualisation is easily performed by issuing the commands
 
-``h5topng -S2 -Zc dkbluered -a gray -A eps-000000000.h5 ez-000003696.h5`` (real part of the field pattern)
+``h5topng -S2 -Zc dkbluered -a gray -A eps-000000000.h5 ez-000003696.h5`` (real part of the field pattern, optical 
+denser material is shaded in gray)
 
 ``h5topng -S2 -c hot -d e2_s.r e2_s-000003696.h5`` (intensity distribution)
 
@@ -29,5 +30,5 @@ thesis. Available soon.
 -   [x] Gaussian beams (2d), planar, s- and p-polarisation
 -   [ ] Gaussian beams (2d), concave, s- and p-polarisation
 -   [ ] Gaussian beams (2d), convex, s- and p-polarisation
--   [ ] Laguerre-Gaussian (vortex) beams (3d), arbitrarily complex polarisation
+-   [ ] Laguerre-Gaussian (vortex) beams (3d), arbitrary complex polarisation
 -   [ ] Airy beams (2d) (free space propagation)
