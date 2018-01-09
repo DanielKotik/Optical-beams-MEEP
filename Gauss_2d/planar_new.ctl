@@ -126,7 +126,7 @@
         ))
 
 ;;------------------------------------------------------------------------------------------------
-;; display values of specified and variables
+;; display values of specified variables
 ;;------------------------------------------------------------------------------------------------
 (print "\n")
 (print "Values of specified variables:    \n")
