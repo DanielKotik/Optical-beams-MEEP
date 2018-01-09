@@ -17,17 +17,6 @@
 (use-output-directory)
 (set! force-complex-fields? true)
 
-;;------------------------------------------------------------------------------------------------ 
-;; meep specific paramters 
-;;------------------------------------------------------------------------------------------------
-(define-param sx 5)                         ; size of cell including PML in x-direction
-(define-param sy 5)                         ; size of cell including PML in y-direction
-(define-param pml_thickness 0.25)           ; thickness of PML layer
-(define-param freq    12)                   ; vacuum frequency of source (5 to 12 is good)
-(define-param runtime 10)                   ; runs simulation for 10 times freq periods
-(define-param pixel   10)                   ; number of pixels per wavelength in the denser
-                                            ; medium (at least >10; 20 to 30 is a good choice)
-
 ;;------------------------------------------------------------------------------------------------
 ;; physical paramters characterizing the light source and interface characteristics
 ;;------------------------------------------------------------------------------------------------
@@ -49,6 +38,17 @@
 
 ;(define-param chi_deg  (* 1.0 Brewster))   ; define incidence angle relative to the Brewster or critical angle,
 (define-param chi_deg  45.0)                ; or set it explicitly in degrees
+
+;;------------------------------------------------------------------------------------------------ 
+;; meep specific paramters 
+;;------------------------------------------------------------------------------------------------
+(define-param sx 5)                         ; size of cell including PML in x-direction
+(define-param sy 5)                         ; size of cell including PML in y-direction
+(define-param pml_thickness 0.25)           ; thickness of PML layer
+(define-param freq    12)                   ; vacuum frequency of source (5 to 12 is good)
+(define-param runtime 10)                   ; runs simulation for 10 times freq periods
+(define-param pixel   10)                   ; number of pixels per wavelength in the denser
+                                            ; medium (at least >10; 20 to 30 is a good choice)
 
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters
