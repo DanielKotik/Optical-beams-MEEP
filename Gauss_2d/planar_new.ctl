@@ -157,9 +157,8 @@
                     (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                 ))
 
-(set! force-complex-fields? false)
-(set! eps-averaging? true)                  ; subpixel averaging at the beginning of the simulation
-                                            ; (disabling is not recommended)
+(set! force-complex-fields? false)          ; default: false
+(set! eps-averaging? true)                  ; default: true
 
 (define (eSquared r ex ey ez)
         (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
