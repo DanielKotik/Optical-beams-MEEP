@@ -56,7 +56,6 @@
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters (not be changed)
 ;;------------------------------------------------------------------------------------------------
-(define-param resol (* pixel (* (if (> n1 n2) n1 n2) freq)))  ; calculation of resolution parameter
 (define-param k_vac (* 2.0 pi freq))
 (define-param rw  (/ krw  (* 1.00 k_vac)))  ;TODO: generalise to handle k_1r_w asl well as k_2r_w
 (define-param w_0 (/ kw_0 (* 1.00 k_vac)))  ;TODO: generalise to handle k_1w_0 asl well as k_2w_0
@@ -84,8 +83,10 @@
 ;;------------------------------------------------------------------------------------------------
 ;; add absorbing boundary conditions and discretize structure
 ;;------------------------------------------------------------------------------------------------
-(set! pml-layers (list (make pml (thickness pml_thickness))))
-(set! resolution resol)
+(set! pml-layers 
+    (list (make pml (thickness pml_thickness))))
+(set! resolution                            ; calculation of resolution (pixels per Meep distance unit)
+      (* pixel (* (if (> n1 n2) n1 n2) freq))) 
 
 ;;------------------------------------------------------------------------------------------------
 ;; beam profile distribution(s) given at the origin of the light source 
