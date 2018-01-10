@@ -18,7 +18,7 @@
 (set! force-complex-fields? true)
 
 ;;------------------------------------------------------------------------------------------------
-;; physical paramters characterizing the light source and interface characteristics 
+;; physical parameters characterizing light source and interface characteristics 
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
 (define-param s-pol? true)                  ; true for s-spol, false for p-pol
