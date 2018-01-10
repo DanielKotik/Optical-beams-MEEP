@@ -89,7 +89,7 @@
       (* pixel (* (if (> n1 n2) n1 n2) freq))) 
 
 ;;------------------------------------------------------------------------------------------------
-;; beam profile distribution(s) at the waist of the beam
+;; beam profile distribution(s) (field amplitude) at the waist of the beam
 ;;------------------------------------------------------------------------------------------------
 (define (Gauss W_y)
         (lambda (r) (exp (* -1.0 (expt (/ (vector3-y r) W_y) 2.0)))
@@ -116,7 +116,7 @@
 
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
-;; (calculate field amplitude at light source position if not coinciding with beam waist 
+;; (aim: calculate field amplitude at light source position if not coinciding with beam waist)
 ;;------------------------------------------------------------------------------------------------
 (define (integrand f y x k)
         (lambda (k_y) (* (f k_y)
@@ -124,7 +124,7 @@
                         (exp (* 0+1i k_y y)))
         ))
 
-;; complex field amplitude at position (x, y) with spectrum aplitude f
+;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
 ;; (one may have to adjust the 'relerr' parameter value in the integrate function)
 (define (psi f x k)
         (lambda (r) (car (integrate (integrand f (vector3-y r) x k)
