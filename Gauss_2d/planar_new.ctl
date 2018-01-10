@@ -13,7 +13,7 @@
 ;;                                                                      v y
 ;;------------------------------------------------------------------------------------------------ 
 
-(use-output-directory)                      ; puts all generated fils in extra folder 'plana_new-out' 
+(use-output-directory)                      ; move generated files to separate folder 'planar_new-out' 
 
 ;;------------------------------------------------------------------------------------------------
 ;; physical parameters characterizing light source and interface characteristics 
@@ -54,7 +54,7 @@
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
 
 ;;------------------------------------------------------------------------------------------------
-;; derived Meep parameters (not be changed)
+;; derived Meep parameters (do not change)
 ;;------------------------------------------------------------------------------------------------
 (define k_vac (* 2.0 pi freq))
 (define rw  (/ krw  (* 1.00 k_vac)))        ;TODO: generalise to handle k_1r_w as well as k_2r_w
@@ -85,7 +85,7 @@
 ;;------------------------------------------------------------------------------------------------
 (set! pml-layers 
     (list (make pml (thickness pml_thickness))))
-(set! resolution                            ; specify resolution in pixels per Meep distance unit
+(set! resolution                            ; set resolution in pixels per Meep distance unit
       (* pixel (* (if (> n1 n2) n1 n2) freq))) 
 
 ;;------------------------------------------------------------------------------------------------
