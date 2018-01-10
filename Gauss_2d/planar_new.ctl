@@ -89,7 +89,7 @@
       (* pixel (* (if (> n1 n2) n1 n2) freq))) 
 
 ;;------------------------------------------------------------------------------------------------
-;; beam profile distribution(s) given at the origin of the light source 
+;; beam profile distribution(s) at the waist of the beam
 ;;------------------------------------------------------------------------------------------------
 (define (Gauss W_y)
         (lambda (r) (exp (* -1.0 (expt (/ (vector3-y r) W_y) 2.0)))
