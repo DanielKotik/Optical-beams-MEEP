@@ -13,9 +13,7 @@
 ;;                                                                      v y
 ;;------------------------------------------------------------------------------------------------ 
 
-;(set! eps-averaging? false)
-(use-output-directory)
-(set! force-complex-fields? true)
+(use-output-directory)                      ; puts all generated fils in extra folder 'plana_new-out' 
 
 ;;------------------------------------------------------------------------------------------------
 ;; physical parameters characterizing light source and interface characteristics 
@@ -38,7 +36,7 @@
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
 (define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
-;(define-param chi_deg  45.0)               ; or set it explicitly in degrees
+;(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
@@ -53,6 +51,7 @@
 (define-param source_shift -2.15)           ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 rw))    ; units (-2.15 good); if equal -rw, then source position coincides with
                                             ; waist position
+(define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
 
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters (not be changed)
@@ -86,7 +85,7 @@
 ;;------------------------------------------------------------------------------------------------
 (set! pml-layers 
     (list (make pml (thickness pml_thickness))))
-(set! resolution                            ; calculation of resolution (pixels per Meep distance unit)
+(set! resolution                            ; specify resolution in pixels per Meep distance unit
       (* pixel (* (if (> n1 n2) n1 n2) freq))) 
 
 ;;------------------------------------------------------------------------------------------------
@@ -116,7 +115,8 @@
 ;        ))
 
 ;;------------------------------------------------------------------------------------------------
-;; plane wave decomposition
+;; plane wave decomposition 
+;; (calculate field amplitude at light source position if not coinciding with beam waist 
 ;;------------------------------------------------------------------------------------------------
 (define (integrand f y x k)
         (lambda (k_y) (* (f k_y)
@@ -126,14 +126,13 @@
 
 ;; complex field amplitude at position (x, y) with spectrum aplitude f
 ;; (one may have to adjust the 'relerr' parameter value in the integrate function)
-(define relerr 0.0001)  ; relative error (0.0001 or smaller)
 (define (psi f x k)
         (lambda (r) (car (integrate (integrand f (vector3-y r) x k)
                           (* -1.0 k) (* 1.0 k) relerr))
         ))
 
 ;;------------------------------------------------------------------------------------------------
-;; display values of specified variables
+;; display values of physical variables
 ;;------------------------------------------------------------------------------------------------
 (print "\n")
 (print "Values of specified variables:    \n")
@@ -157,6 +156,10 @@
                     ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
                     (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                 ))
+
+(set! force-complex-fields? false)
+(set! eps-averaging? true)                  ; subpixel averaging at the beginning of the simulation
+                                            ; (disabling is not recommended)
 
 (define (eSquared r ex ey ez)
         (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
