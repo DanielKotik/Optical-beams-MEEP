@@ -24,7 +24,7 @@
 (define-param n1  1.54)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
 (define-param kw_0  10)                     ; beam width (10 is good)
-(define-param krw   50)                     ; beam waist distance to interface (30 to 50 is good if
+(define-param krw    0)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 
 (define Critical                            ; calculates the critical angle in degrees
@@ -36,11 +36,11 @@
 (define Brewster                            ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
-;(define-param chi_deg  (* 1.0 Brewster))   ; define incidence angle relative to the Brewster or critical angle,
-(define-param chi_deg  45.0)                ; or set it explicitly in degrees
+(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
+;(define-param chi_deg  45.0)               ; or set it explicitly in degrees
 
 ;;------------------------------------------------------------------------------------------------ 
-;; meep specific paramters (may need to be adjusted)
+;; specific Meep paramters (may need to be adjusted)
 ;;------------------------------------------------------------------------------------------------
 (define-param sx 5)                         ; size of cell including PML in x-direction
 (define-param sy 5)                         ; size of cell including PML in y-direction
@@ -54,7 +54,7 @@
                                             ; waist position
 
 ;;------------------------------------------------------------------------------------------------
-;; derived Meep parameters (should not be changed)
+;; derived Meep parameters (not be changed)
 ;;------------------------------------------------------------------------------------------------
 (define-param resol (* pixel (* (if (> n1 n2) n1 n2) freq)))  ; calculation of resolution parameter
 (define-param k_vac (* 2.0 pi freq))
@@ -82,7 +82,13 @@
                 (material (make dielectric (index n2))))))
 
 ;;------------------------------------------------------------------------------------------------
-;; beam profile distribution(s) given at the origin of the light source
+;; add absorbing boundary conditions and discretize structure
+;;------------------------------------------------------------------------------------------------
+(set! pml-layers (list (make pml (thickness pml_thickness))))
+(set! resolution resol)
+
+;;------------------------------------------------------------------------------------------------
+;; beam profile distribution(s) given at the origin of the light source 
 ;;------------------------------------------------------------------------------------------------
 (define (Gauss W_y)
         (lambda (r) (exp (* -1.0 (expt (/ (vector3-y r) W_y) 2.0)))
@@ -117,10 +123,11 @@
         ))
 
 ;; complex field amplitude at position (x, y) with spectrum aplitude f
-;; (one may have to adjust the 'relerr' value of the integrand function)
+;; (one may have to adjust the 'relerr' parameter value in the integrate function)
+(define relerr 0.0001)  ; relative error (0.0001 or smaller)
 (define (psi f x k)
         (lambda (r) (car (integrate (integrand f (vector3-y r) x k)
-                                    (* -1.0 k) (* 1.0 k) 0.0001))  ;1.49e-8
+                          (* -1.0 k) (* 1.0 k) relerr))
         ))
 
 ;;------------------------------------------------------------------------------------------------
@@ -144,9 +151,9 @@
                     (amplitude 3.0)
                     (size 0 2.0 0)
                     (center source_shift 0 0)
-                    (amp-func (Gauss w_0)))
+                    ;(amp-func (Gauss w_0)))
                     ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
-                    ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
+                    (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                 ))
 
 (define (eSquared r ex ey ez)
@@ -155,8 +162,6 @@
 
 (define (output-efield2) (output-field-function (if s-pol? "e2_s" "e2_p")
                                                 (list Ex Ey Ez) eSquared))
-(set! pml-layers (list (make pml (thickness pml_thickness))))
-(set-param! resolution resol)
 
 (run-until runtime
      (at-beginning output-epsilon)
