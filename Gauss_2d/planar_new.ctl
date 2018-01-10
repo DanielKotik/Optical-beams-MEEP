@@ -18,7 +18,8 @@
 (set! force-complex-fields? true)
 
 ;;------------------------------------------------------------------------------------------------
-;; physical paramters characterizing the light source and interface characteristics (must be adjusted)
+;; physical paramters characterizing the light source and interface characteristics 
+;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
 (define-param s-pol? true)                  ; true for s-spol, false for p-pol
 (define-param n1  1.54)                     ; index of refraction of the incident medium
@@ -40,7 +41,7 @@
 ;(define-param chi_deg  45.0)               ; or set it explicitly in degrees
 
 ;;------------------------------------------------------------------------------------------------ 
-;; specific Meep paramters (may need to be adjusted)
+;; specific Meep paramters (may need to be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
 (define-param sx 5)                         ; size of cell including PML in x-direction
 (define-param sy 5)                         ; size of cell including PML in y-direction
@@ -56,10 +57,10 @@
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters (not be changed)
 ;;------------------------------------------------------------------------------------------------
-(define-param k_vac (* 2.0 pi freq))
-(define-param rw  (/ krw  (* 1.00 k_vac)))  ;TODO: generalise to handle k_1r_w asl well as k_2r_w
-(define-param w_0 (/ kw_0 (* 1.00 k_vac)))  ;TODO: generalise to handle k_1w_0 asl well as k_2w_0
-(define-param shift (+ source_shift rw))    ; distance from source position to beam waist (along y-axis)
+(define k_vac (* 2.0 pi freq))
+(define rw  (/ krw  (* 1.00 k_vac)))        ;TODO: generalise to handle k_1r_w as well as k_2r_w
+(define w_0 (/ kw_0 (* 1.00 k_vac)))        ;TODO: generalise to handle k_1w_0 as well as k_2w_0
+(define shift (+ source_shift rw))          ; distance from source position to beam waist (along y-axis)
 
 ;;------------------------------------------------------------------------------------------------
 ;; placement of the planar dielectric interface within the computational cell
