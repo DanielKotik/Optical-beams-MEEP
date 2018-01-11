@@ -159,8 +159,6 @@
                     (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                 ))
 
-(set! force-complex-fields? false)          ; default: false
-(set! eps-averaging? true)                  ; default: true
 
 (define (eSquared r ex ey ez)
         (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
@@ -169,9 +167,12 @@
 (define (output-efield2) (output-field-function (if s-pol? "e2_s" "e2_p")
                                                 (list Ex Ey Ez) eSquared))
 
+(set! force-complex-fields? false)          ; default: false
+(set! eps-averaging? true)                  ; default: true
+
 (run-until runtime
-     (at-beginning output-epsilon)
-    ; (at-end output-efield-x)
-    ; (at-end output-efield-y)      ; for p-polarisation
-     (at-end output-efield-z)       ; for s-polarisation
-     (at-end output-efield2))       ; intensity of the electric field
+     (at-beginning output-epsilon)          ; output of dielectric function
+     (if s-pol?
+         (at-end output-efield-z)           ; output of E_z component (for s-polarisation)
+         (at-end output-hfield-z))          ; output of H_z component (for p-polarisation)
+     (at-end output-efield2))               ; output of electric field intensity
