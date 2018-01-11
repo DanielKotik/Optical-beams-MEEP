@@ -23,7 +23,7 @@
 (define-param n1  1.54)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
 (define-param kw_0  10)                     ; beam width (10 is good)
-(define-param krw    0)                     ; beam waist distance to interface (30 to 50 is good if
+(define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 
 (define Critical                            ; calculates the critical angle in degrees
@@ -57,7 +57,7 @@
 ;; derived Meep parameters (do not change)
 ;;------------------------------------------------------------------------------------------------
 (define k_vac (* 2.0 pi freq))
-(define rw  (/ krw  (* 1.00 k_vac)))        ;TODO: generalise to handle k_1r_w as well as k_2r_w
+(define rw  (/ kr_w (* 1.00 k_vac)))        ;TODO: generalise to handle k_1r_w as well as k_2r_w
 (define w_0 (/ kw_0 (* 1.00 k_vac)))        ;TODO: generalise to handle k_1w_0 as well as k_2w_0
 (define shift (+ source_shift rw))          ; distance from source position to beam waist (along y-axis)
 
@@ -135,8 +135,8 @@
 (print "Values of specified variables:    \n")
 (print "chi:   " chi_deg        " [degree]\n") ; angle of incidence
 (print "incl.: " (- 90 chi_deg) " [degree]\n") ; interface inclination with respect to the x-axis
-(print "kw_0:  " kw_0  "\n"  )
-(print "kr_w:  " krw   "\n"  )
+(print "kw_0:  " kw_0  "\n")
+(print "kr_w:  " kr_w  "\n")
 (print "k_vac: " k_vac "\n")
 (print "polarisation: " (if s-pol? "s" "p") "\n")
 (print "\n")
