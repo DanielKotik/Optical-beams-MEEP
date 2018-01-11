@@ -95,10 +95,8 @@
         (lambda (r) (exp (* -1.0 (expt (/ (vector3-y r) W_y) 2.0)))
         ))
 
-;(define (Asymmetric sigma)
-;        (lambda (r) (if (< (vector3-y r) (* -1.5 sigma)) 0.0
-;                        (* (/ 2.0 3.0) (exp 1.5) (+ (/ (vector3-y r) sigma) 1.5)
-;                        (exp (* -1.0 (+ (/ (vector3-y r) sigma) 1.5)))))
+;(define (Asymmetric W_y)
+;        (lambda (r) ...
 ;        ))
 
 ;;------------------------------------------------------------------------------------------------
@@ -108,15 +106,14 @@
         (lambda (k_y) (* (/ W_y (* 2.0 (sqrt pi)))
                          (exp (* -1.0 (expt (* 0.5 k_y W_y) 2.0))))
         ))
-        
-;(define (f_asymmetric a b)
-;        (lambda (k_y) (* (/ w_0 (* 2.0 (sqrt pi)))
-;                         (exp (* -1.0 (expt (* 0.5 k_y w_0) 2.0))))
+
+;(define (f_asymmetric W_y)
+;        (lambda (k_y) ...
 ;        ))
 
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
-;; (aim: calculate field amplitude at light source position if not coinciding with beam waist)
+;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
 ;;------------------------------------------------------------------------------------------------
 (define (integrand f y x k)
         (lambda (k_y) (* (f k_y)
