@@ -140,7 +140,9 @@
 (print "incl.: " (- 90 chi_deg) " [degree]\n") ; interface inclination with respect to the x-axis
 (print "kw_0:  " kw_0  "\n"  )
 (print "kr_w:  " krw   "\n"  )
-(print "k_vac: " k_vac "\n\n")
+(print "k_vac: " k_vac "\n")
+(print "polarisation: " (if s-pol? "s" "p") "\n")
+(print "\n")
 ;(print "The value of our Gaussian spectrum amplitude is: " ((f_Gauss w_0) 20.0) "\n")
 ;(print "integrand " ((integrand 0.8 2.0 k_vac w_0) 20.0) "\n")
 ;(print "Field amplitude: " ((psi 1.0 k_vac w_0) 0.5) "\n")
