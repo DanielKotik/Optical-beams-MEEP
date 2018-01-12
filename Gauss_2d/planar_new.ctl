@@ -13,12 +13,13 @@
 ;;                                                                      v y
 ;;------------------------------------------------------------------------------------------------ 
 
-(use-output-directory)                      ; move generated files to separate folder 'planar_new-out' 
-
 ;;------------------------------------------------------------------------------------------------
 ;; physical parameters characterizing light source and interface characteristics 
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
+(define-input-var interface "planar" 'string (lambda type (or (string=? type "planar" ) 
+                                                              (string=? type "concave") 
+                                                              (string=? type "convex" ))))
 (define-param s-pol? true )                 ; true for s-spol, false for p-pol
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
@@ -164,15 +165,19 @@
                 ))
 
 
+;;------------------------------------------------------------------------------------------------
+;; specify output functions and run simulation
+;;------------------------------------------------------------------------------------------------
+(use-output-directory interface)            ; put output files in a separate folder
+(set! force-complex-fields? false)          ; default: false
+(set! eps-averaging? true)                  ; default: true
+
 (define (eSquared r ex ey ez)
         (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
            (* (magnitude ez) (magnitude ez))))
 
 (define (output-efield2) (output-field-function (if s-pol? "e2_s" "e2_p")
                                                 (list Ex Ey Ez) eSquared))
-
-(set! force-complex-fields? false)          ; default: false
-(set! eps-averaging? true)                  ; default: true
 
 (run-until runtime
      (at-beginning output-epsilon)          ; output of dielectric function
