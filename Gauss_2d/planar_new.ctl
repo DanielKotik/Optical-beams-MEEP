@@ -5,7 +5,10 @@
 ;; author: Daniel Kotik
 ;; date:   2013-2018
 ;;
-;; example invocation: meep s-pol\?=false planar_new.ctl
+;; example invocations: a) launch serial version of meep with specified polarisation (p)
+;;                         meep s-pol\?=false planar_new.ctl
+;;                      b) launch parallel version of meep using 8 cores and specified interface (concave)
+;;                         mpirun -np 8 meep-mpi interface='"concave"' planar_new.ctl
 ;;
 ;; coordinate system in meep (defines center of computational cell):  --|-----> x
 ;;                                                                      |
