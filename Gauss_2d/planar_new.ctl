@@ -22,7 +22,7 @@
 (define-param s-pol? true )                 ; true for s-spol, false for p-pol
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
-                                            ; k is then equivalent to k_medium with: k_1 = k_0*n_1 or k_2 = k_0*n_2
+                                            ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
 (define-param n1 1.54)                      ; index of refraction of the incident medium
 (define-param n2 1.00)                      ; index of refraction of the refracted medium
 (define-param kw_0  5)                      ; beam width (10 is good)
@@ -60,8 +60,12 @@
 ;; derived Meep parameters (do not change)
 ;;------------------------------------------------------------------------------------------------
 (define k_vac (* 2.0 pi freq))
-(define rw  (/ kr_w (* 1.00 k_vac)))        ;TODO: generalise to handle k_1r_w as well as k_2r_w
-(define w_0 (/ kw_0 (* 1.00 k_vac)))        ;TODO: generalise to handle k_1w_0 as well as k_2w_0
+(define n_ref (cond ((= ref_medium 0) 1.0)  ; index of refraction of the reference medium
+                    ((= ref_medium 1)  n1)
+                    ((= red_medium 2)  n2)))
+                    
+(define rw  (/ kr_w (* n_ref k_vac)))
+(define w_0 (/ kw_0 (* n_ref k_vac)))
 (define shift (+ source_shift rw))          ; distance from source position to beam waist (along y-axis)
 
 ;;------------------------------------------------------------------------------------------------
