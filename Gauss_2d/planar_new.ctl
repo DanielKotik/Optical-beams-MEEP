@@ -147,6 +147,7 @@
 (print "kr_w:  " kr_w  "\n")
 (print "k_vac: " k_vac "\n")
 (print "polarisation: " (if s-pol? "s" "p") "\n")
+(print "interface: " interface "\n")
 (print "\n")
 ;(print "The value of our Gaussian spectrum amplitude is: " ((f_Gauss w_0) 20.0) "\n")
 ;(print "integrand " ((integrand 0.8 2.0 k_vac w_0) 20.0) "\n")
