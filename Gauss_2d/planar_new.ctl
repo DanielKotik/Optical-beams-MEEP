@@ -68,6 +68,7 @@
                     
 (define rw  (/ kr_w (* n_ref k_vac)))
 (define w_0 (/ kw_0 (* n_ref k_vac)))
+(define r_c (/ kr_c (* n_ref k_vac)))
 (define shift (+ source_shift rw))          ; distance from source position to beam waist (along y-axis)
 
 ;;------------------------------------------------------------------------------------------------
