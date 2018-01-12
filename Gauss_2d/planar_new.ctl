@@ -17,7 +17,7 @@
 ;; physical parameters characterizing light source and interface characteristics 
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
-(define-input-var interface "convex"        ; specifiy type of interface 
+(define-input-var interface "planar"        ; specifiy type of interface 
                             'string (lambda type (or (string=? type "planar" ) 
                                                      (string=? type "concave") 
                                                      (string=? type "convex" ))))
@@ -175,6 +175,8 @@
 (print "incl.: " (- 90 chi_deg) " [degree]\n") ; interface inclination with respect to the x-axis
 (print "kw_0:  " kw_0  "\n")
 (print "kr_w:  " kr_w  "\n")
+(if (not (string=? interface "planar")) 
+(print "kr_c:  " kr_c  "\n"))
 (print "k_vac: " k_vac "\n")
 (print "polarisation: " (if s-pol? "s" "p") "\n")
 (print "interface: " interface "\n")
