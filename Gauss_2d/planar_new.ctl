@@ -79,16 +79,21 @@
 (define (Delta_x _alpha)                    ; inclined plane offset to the center of the cell
         (* (/ sx 2.0) (/ (-(- (sqrt 2.0) (cos _alpha)) (sin _alpha)) (sin _alpha))))
 
-(set! geometry-lattice (make lattice (size sx sy no-size)))
-(set! default-material (make dielectric (index n1)))
-(set! geometry (list
-                (make block                 ; located at lower right edge for 45 degree tilt
-                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
-                (size infinity (* (sqrt 2.0) sx) infinity)
-                    (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
-                    (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
-                    (e3 0 0 1)
-                (material (make dielectric (index n2))))))
+(cond
+    ((string=? interface "planar")
+        (set! geometry-lattice (make lattice (size sx sy no-size)))
+        (set! default-material (make dielectric (index n1)))
+        (set! geometry (list
+                        (make block                 ; located at lower right edge for 45 degree tilt
+                        (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
+                        (size infinity (* (sqrt 2.0) sx) infinity)
+                            (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
+                            (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
+                            (e3 0 0 1)
+                        (material (make dielectric (index n2)))))))
+    ((string=? interface "concave") )
+    ((string=? interface "convex" ) )
+)
 
 ;;------------------------------------------------------------------------------------------------
 ;; add absorbing boundary conditions and discretize structure
