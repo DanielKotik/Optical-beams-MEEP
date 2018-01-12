@@ -1,26 +1,29 @@
 ;;-------------------------------------------------------------------------------------------------
-;; file:   planar_new.ctl
+;; file:   Gauss2d.ctl
 ;; brief:  Scheme configuration input file for the FDTD solver Meep simulating the scattering of a 
 ;;         Gaussian beam at a plane dielectric interface
 ;; author: Daniel Kotik
 ;; date:   2013-2018
 ;;
-;; example invocations: a) launch serial version of meep with specified polarisation (p)
-;;                         meep s-pol\?=false planar_new.ctl
-;;                      b) launch parallel version of meep using 8 cores and specified interface (concave)
-;;                         mpirun -np 8 meep-mpi interface='"concave"' planar_new.ctl
+;; example invocations: a) launch the serial version of meep with specified polarisation (p)
+;;
+;;                              meep s-pol\?=false Gauss2d.ctl
+;;
+;;                      b) launch the parallel version of meep using 8 cores with specified interface (concave)
+;;
+;;                              mpirun -np 8 meep-mpi interface='"concave"' Gauss2d.ctl
 ;;
 ;; coordinate system in meep (defines center of computational cell):  --|-----> x
 ;;                                                                      |
 ;;                                                                      |
 ;;                                                                      v y
-;;------------------------------------------------------------------------------------------------ 
+;;------------------------------------------------------------------------------------------------
 
 ;;------------------------------------------------------------------------------------------------
 ;; physical parameters characterizing light source and interface characteristics 
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
-(define-input-var interface "planar"        ; specifiy type of interface 
+(define-input-var interface "planar"        ; specify type of interface 
                             'string (lambda type (or (string=? type "planar" ) 
                                                      (string=? type "concave") 
                                                      (string=? type "convex" ))))
