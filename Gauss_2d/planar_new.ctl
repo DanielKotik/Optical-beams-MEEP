@@ -17,9 +17,10 @@
 ;; physical parameters characterizing light source and interface characteristics 
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
-(define-input-var interface "concave" 'string (lambda type (or (string=? type "planar" ) 
-                                                               (string=? type "concave") 
-                                                               (string=? type "convex" ))))
+(define-input-var interface "convex"        ; specifiy type of interface 
+                            'string (lambda type (or (string=? type "planar" ) 
+                                                     (string=? type "concave") 
+                                                     (string=? type "convex" ))))
 (define-param s-pol? true )                 ; true for s-spol, false for p-pol
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
@@ -105,7 +106,16 @@
                     (height infinity)
                     (radius r_c)
                     (material (make dielectric (index n1)))))))
-    ((string=? interface "convex" ) )
+    ((string=? interface "convex" )
+        (set! default-material (make dielectric (index n1)))
+        (set! geometry (list
+                    (make cylinder
+                    (center (* r_c (cos (chi_rad chi_deg))) (* -1.0 (* r_c (sin (chi_rad chi_deg))))) 
+                                          ; move center to the right in order to ensure that the point of impact is
+                                          ; always centrally placed
+                    (height infinity)
+                    (radius r_c)
+                    (material (make dielectric (index n2)))))))
 )
 
 ;;------------------------------------------------------------------------------------------------
