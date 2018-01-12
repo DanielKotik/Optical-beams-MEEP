@@ -18,18 +18,18 @@
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
 (define-input-var interface "concave" 'string (lambda type (or (string=? type "planar" ) 
-                                                              (string=? type "concave") 
-                                                              (string=? type "convex" ))))
+                                                               (string=? type "concave") 
+                                                               (string=? type "convex" ))))
 (define-param s-pol? true )                 ; true for s-spol, false for p-pol
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
 (define-param n1  1.54)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
-(define-param kw_0  10)                     ; beam width (10 is good)
-(define-param kr_w  50)                     ; beam waist distance to interface (30 to 50 is good if
+(define-param kw_0   8)                     ; beam width (>5 is good)
+(define-param kr_w  60)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
-(define-param kr_c 470)                     ; radius of curvature (if interface is either concave of convex)
+(define-param kr_c 150)                     ; radius of curvature (if interface is either concave of convex)
 
 (define Critical                            ; calculates the critical angle in degrees
     (cond
@@ -72,7 +72,7 @@
 (define shift (+ source_shift rw))          ; distance from source position to beam waist (along y-axis)
 
 ;;------------------------------------------------------------------------------------------------
-;; placement of the planar dielectric interface within the computational cell
+;; placement of the dielectric interface within the computational cell
 ;;------------------------------------------------------------------------------------------------
 ;; helper functions
 (define (alpha _chi_deg)                    ; angle of inclined plane with y-axis
@@ -100,8 +100,8 @@
         (set! geometry (list
                     (make cylinder
                     (center (* -1 (* r_c (cos (chi_rad chi_deg)))) (* r_c (sin (chi_rad chi_deg)))) 
-                                          ; Mittelpunkt wird nach rechts verschoben,
-                                          ; so dass der Auftreffpkt immer mittig liegt
+                                          ; move center to the right in order to ensure that the point of impact is
+                                          ; always centrally placed
                     (height infinity)
                     (radius r_c)
                     (material (make dielectric (index n1)))))))
