@@ -17,7 +17,7 @@
 ;; physical parameters characterizing light source and interface characteristics 
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
-(define-input-var interface "planar" 'string (lambda type (or (string=? type "planar" ) 
+(define-input-var interface "concave" 'string (lambda type (or (string=? type "planar" ) 
                                                               (string=? type "concave") 
                                                               (string=? type "convex" ))))
 (define-param s-pol? true )                 ; true for s-spol, false for p-pol
@@ -26,8 +26,8 @@
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
 (define-param n1  1.54)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
-(define-param kw_0   5)                     ; beam width (10 is good)
-(define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
+(define-param kw_0  10)                     ; beam width (10 is good)
+(define-param kr_w  50)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 (define-param kr_c 470)                     ; radius of curvature (if interface is either concave of convex)
 
@@ -74,24 +74,37 @@
 ;;------------------------------------------------------------------------------------------------
 ;; placement of the planar dielectric interface within the computational cell
 ;;------------------------------------------------------------------------------------------------
+;; helper functions
 (define (alpha _chi_deg)                    ; angle of inclined plane with y-axis
         (- (/ pi 2.0) (* (/ _chi_deg 360) 2 pi)))
 (define (Delta_x _alpha)                    ; inclined plane offset to the center of the cell
         (* (/ sx 2.0) (/ (-(- (sqrt 2.0) (cos _alpha)) (sin _alpha)) (sin _alpha))))
+(define (chi_rad _chi_deg)                  ; conversion degrees to radians
+        (* (/ _chi_deg 360.0) (* 2.0 pi)))
+
+(set! geometry-lattice (make lattice (size sx sy no-size)))
 
 (cond
     ((string=? interface "planar")
-        (set! geometry-lattice (make lattice (size sx sy no-size)))
         (set! default-material (make dielectric (index n1)))
         (set! geometry (list
-                        (make block                 ; located at lower right edge for 45 degree tilt
+                        (make block         ; located at lower right edge for 45 degree tilt
                         (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
                         (size infinity (* (sqrt 2.0) sx) infinity)
                             (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
                             (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
                             (e3 0 0 1)
                         (material (make dielectric (index n2)))))))
-    ((string=? interface "concave") )
+    ((string=? interface "concave")
+        (set! default-material (make dielectric (index n2)))
+        (set! geometry (list
+                    (make cylinder
+                    (center (* -1 (* r_c (cos (chi_rad chi_deg)))) (* r_c (sin (chi_rad chi_deg)))) 
+                                          ; Mittelpunkt wird nach rechts verschoben,
+                                          ; so dass der Auftreffpkt immer mittig liegt
+                    (height infinity)
+                    (radius r_c)
+                    (material (make dielectric (index n1)))))))
     ((string=? interface "convex" ) )
 )
 
