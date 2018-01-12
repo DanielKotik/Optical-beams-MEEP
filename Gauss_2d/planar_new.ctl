@@ -24,11 +24,12 @@
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
-(define-param n1 1.54)                      ; index of refraction of the incident medium
-(define-param n2 1.00)                      ; index of refraction of the refracted medium
-(define-param kw_0  5)                      ; beam width (10 is good)
-(define-param kr_w  0)                      ; beam waist distance to interface (30 to 50 is good if
+(define-param n1  1.54)                     ; index of refraction of the incident medium
+(define-param n2  1.00)                     ; index of refraction of the refracted medium
+(define-param kw_0   5)                     ; beam width (10 is good)
+(define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
+(define-param kr_c 470)                     ; radius of curvature (if interface is either concave of convex)
 
 (define Critical                            ; calculates the critical angle in degrees
     (cond
