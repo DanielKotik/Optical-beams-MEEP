@@ -8,18 +8,18 @@ FDTD simulation of reflection and refraction of polarised optical beams at plane
     source current distribution
 
 ## Invocation
-A Scheme configuration file (extension ``.ctl``) may be launched with the parallel version of Meep by executing the command 
+A Scheme configuration file (extension ``.ctl``) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments by executing the command 
 
-``mpirun -np X meep-mpi planar_new.ctl``
+``mpirun -np X meep-mpi interface='"concave"' Gauss2d.ctl`` (notice the combined single and double quotes)
 
  with ``X`` indicating the number of cores.
 The generated HDF5 files can be processed by different visualisation toolkits. [Meep](https://github.com/stevengj/meep) 
-comes bundled with the [h5utils](https://github.com/stevengj/h5utils) programs. Utilising these tools, visualisation is easily performed by issuing the commands
+comes bundled with the [h5utils](https://github.com/stevengj/h5utils) programs. Utilising these tools, visualisation is easily performed by issuing the commands (examples)
 
 ``h5topng -S2 -Zc dkbluered -a gray -A eps-000000000.h5 ez-000003696.h5`` (real part of the field pattern, optical 
-denser material is shaded in gray)
+denser material is shaded in grey)
 
-``h5topng -S2 -c hot -d e2_s.r e2_s-000003696.h5`` (intensity distribution)
+``h5topng -S2 -c hot -a yarg -A eps-000000000.h5 -d e2_s.r e2_s-000003696.h5`` (intensity distribution)
 
 The [Meep Scheme tutorial](https://meep.readthedocs.io/en/latest/Scheme_Tutorials/Basics/) provides further useful 
 information and assistance.
@@ -28,7 +28,7 @@ thesis. Available soon.
 
 ## Currently supported _beam - interface - polarisation_ configurations
 -   [x] Gaussian beams (2d), planar, s- and p-polarisation
--   [ ] Gaussian beams (2d), concave, s- and p-polarisation
--   [ ] Gaussian beams (2d), convex, s- and p-polarisation
+-   [x] Gaussian beams (2d), concave, s- and p-polarisation
+-   [x] Gaussian beams (2d), convex, s- and p-polarisation
 -   [ ] Laguerre-Gaussian (vortex) beams (3d), arbitrary complex polarisation
 -   [ ] Airy beams (2d) (free space propagation)
