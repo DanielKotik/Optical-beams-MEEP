@@ -21,7 +21,8 @@ comes bundled with the [h5utils](https://github.com/stevengj/h5utils) programs. 
 ``h5topng -S2 -Zc dkbluered -a gray -A eps-000000000.h5 ez-000003696.h5`` (real part of the field pattern, optical 
 denser material is shaded in grey)
 
-``h5topng -S2 -c hot -a yarg -A eps-000000000.h5 -d e2_s.r e2_s-000003696.h5`` (intensity distribution)
+``h5topng -S2 -c hot -a yarg -A eps-000000000.h5 -d e2_s.r e2_s-000003696.h5`` (intensity distribution, optical 
+denser material is shaded in grey)
 
 The [Meep Scheme tutorial](https://meep.readthedocs.io/en/latest/Scheme_Tutorials/Basics/) provides further useful 
 information and assistance.
