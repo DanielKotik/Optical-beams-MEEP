@@ -1,4 +1,6 @@
-![planar](Gauss_2d/img/planar_cropped_rotated_resized.png) 
+![concave](Gauss_2d/img/concave_intensity_cropped_rotated_resized.png) 
+![planar](Gauss_2d/img/planar_intensity_cropped_rotated_resized.png)
+![convex](Gauss_2d/img/convex_intensity_cropped_rotated_resized.png)
 # Optical-beams-MEEP
 FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces.
 *   Collection of Scheme configuration files for Gaussian beams (2d) impinging upon planar, concave and convex
