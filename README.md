@@ -10,7 +10,7 @@ FDTD simulation of reflection and refraction of polarised optical beams at plane
     source current distribution
 
 ## Invocation
-A Scheme configuration file (extension ``.ctl``) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments by executing the command 
+A Scheme configuration file (extension ``.ctl``) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, e.g. by executing the command 
 
 ``mpirun -np X meep-mpi interface='"concave"' Gauss2d.ctl`` (notice the combined single and double quotes)
 
@@ -33,5 +33,5 @@ thesis. Available soon.
 -   [x] Gaussian beams (2d), planar, s- and p-polarisation
 -   [x] Gaussian beams (2d), concave, s- and p-polarisation
 -   [x] Gaussian beams (2d), convex, s- and p-polarisation
--   [ ] Laguerre-Gaussian (vortex) beams (3d), arbitrary complex polarisation
+-   [ ] Laguerre-Gaussian (vortex) beams (3d), planar, arbitrary complex polarisation
 -   [ ] Airy beams (2d) (free space propagation)
