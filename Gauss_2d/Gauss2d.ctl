@@ -1,7 +1,7 @@
 ;;-------------------------------------------------------------------------------------------------
 ;; file:   Gauss2d.ctl
 ;; brief:  Scheme configuration input file for the FDTD solver Meep simulating the scattering of a 
-;;         Gaussian beam at a plane dielectric interface
+;;         Gaussian beam at planar and curved dielectric interfaces
 ;; author: Daniel Kotik
 ;; date:   2013-2018
 ;;
@@ -191,25 +191,24 @@
 ;(print "integrand " ((integrand 0.8 2.0 k_vac w_0) 20.0) "\n")
 ;(print "Field amplitude: " ((psi 1.0 k_vac w_0) 0.5) "\n")
 
-(set! sources (list
-                (make source
-                    (src (make continuous-src (frequency freq) (width 0.5)))
-                    (if s-pol? (component Ez) (component Hz))
-                    (amplitude 3.0)
-                    (size 0 2.0 0)
-                    (center source_shift 0 0)
-                    ;(amp-func (Gauss w_0)))
-                    ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
-                    (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
-                ))
-
-
 ;;------------------------------------------------------------------------------------------------
-;; specify output functions and run simulation
+;; specify current source, output functions and run simulation
 ;;------------------------------------------------------------------------------------------------
 (use-output-directory interface)            ; put output files in a separate folder
 (set! force-complex-fields? false)          ; default: false
 (set! eps-averaging? true)                  ; default: true
+
+(set! sources (list
+                  (make source
+                      (src (make continuous-src (frequency freq) (width 0.5)))
+                      (if s-pol? (component Ez) (component Hz))
+                      (amplitude 3.0)
+                      (size 0 2.0 0)
+                      (center source_shift 0 0)
+                      ;(amp-func (Gauss w_0)))
+                      ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
+                      (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
+                  ))
 
 (define (eSquared r ex ey ez)
         (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
