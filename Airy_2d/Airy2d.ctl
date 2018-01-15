@@ -48,16 +48,17 @@
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
-(define-param sx 5)                         ; size of cell including PML in x-direction
-(define-param sy 5)                         ; size of cell including PML in y-direction
-(define-param pml_thickness 0.25)           ; thickness of PML layer
-(define-param freq    12)                   ; vacuum frequency of source (5 to 12 is good)
-(define-param runtime 10)                   ; runs simulation for 10 times freq periods
+(define-param sx 30)                        ; size of cell including PML in x-direction
+(define-param sy 30)                        ; size of cell including PML in y-direction
+(define-param pml_thickness 1)              ; thickness of PML layer
+(define-param freq     5)                   ; vacuum frequency of source (5 to 12 is good)
+(define-param runtime 20)                   ; runs simulation for 10 times freq periods
 (define-param pixel   10)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
-(define-param source_shift -2.15)           ; source position with respect to the center (point of impact) in Meep
+;(define-param source_shift -2.15)          ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 rw))    ; units (-2.15 good); if equal -rw, then source position coincides with
                                             ; waist position
+(define-param source_shift 0.0)
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
 
 ;;------------------------------------------------------------------------------------------------
@@ -86,14 +87,14 @@
 (set! geometry-lattice (make lattice (size sx sy no-size)))
 
 (set! default-material (make dielectric (index n1)))
-(set! geometry (list
-                (make block         ; located at lower right edge for 45 degree tilt
-                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
-                (size infinity (* (sqrt 2.0) sx) infinity)
-                    (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
-                    (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
-                    (e3 0 0 1)
-                (material (make dielectric (index n2))))))
+;(set! geometry (list
+;                (make block         ; located at lower right edge for 45 degree tilt
+;                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
+;                (size infinity (* (sqrt 2.0) sx) infinity)
+;                    (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
+;                    (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
+;                    (e3 0 0 1)
+;                (material (make dielectric (index n2))))))
 
 ;;------------------------------------------------------------------------------------------------
 ;; add absorbing boundary conditions and discretize structure
@@ -106,12 +107,40 @@
 ;;------------------------------------------------------------------------------------------------
 ;; beam profile distribution (field amplitude) at the waist of the beam
 ;;------------------------------------------------------------------------------------------------
+(define (Gauss W_y)
+        (lambda (r) (exp (* -1.0 (expt (/ (vector3-y r) W_y) 2.0)))
+        ))
+
+(define (airy_integrand xi Y)
+        (* (/ 1 (* 2 pi)) (exp (* 0+1i (+ (* (/ 1 3) (expt xi 3)) (* xi Y))))
+        ))
+
+;; incomplete Airy function (Eq. (3) in OL by Ring, Howls and Dennis)
+(define (Ai_inc1 M W)
+        (lambda (r) (car (integrate (lambda (xi) (airy_integrand xi (vector3-y r))) (- M W) (+ M W) relerr))
+        ))
+
+;; combined version
+(define (Ai_inc2 M W)
+        (lambda (r) (car
+        (integrate (lambda (xi) (* (/ 1 (* 2 pi))
+                                   (exp (* 0+1i (+ (* (/ 1 3) (expt xi 3)) (* xi (vector3-y r)))))))
+                   (- M W) (+ M W) relerr))
+        ))
+
+;; simple test outputs
+(print "Airy integrand: " (airy_integrand 0.1 0.2) "\n")
+(print "Integral 1: " ((Ai_inc1 0.2 4) (vector3 1 -0.3 1)) "\n")
+(print "Integral 2: " ((Ai_inc2 0.2 4) (vector3 1 -0.3 1)) "\n")
 
 
 ;;------------------------------------------------------------------------------------------------
 ;; spectrum amplitude distribution
 ;;------------------------------------------------------------------------------------------------
-
+(define (f_Gauss W_y)
+        (lambda (k_y) (* (/ W_y (* 2.0 (sqrt pi)))
+                         (exp (* -1.0 (expt (* 0.5 k_y W_y) 2.0))))
+        ))
 
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
@@ -119,15 +148,15 @@
 ;;------------------------------------------------------------------------------------------------
 (define (integrand f y x k)
         (lambda (k_y) (* (f k_y)
-                        (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
-                        (exp (* 0+1i k_y y)))
+                         (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
+                         (exp (* 0+1i k_y y)))
         ))
 
 ;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
 ;; (one may have to adjust the 'relerr' parameter value in the integrate function)
 (define (psi f x k)
         (lambda (r) (car (integrate (integrand f (vector3-y r) x k)
-                          (* -1.0 k) (* 1.0 k) relerr))
+                         (* -1.0 k) (* 1.0 k) relerr))
         ))
 
 ;;------------------------------------------------------------------------------------------------
@@ -154,12 +183,12 @@
                   (make source
                       (src (make continuous-src (frequency freq) (width 0.5)))
                       (if s-pol? (component Ez) (component Hz))
-                      (amplitude 3.0)
-                      (size 0 2.0 0)
+                      (amplitude 1.0)
+                      (size 0 22 0)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
-                      ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
-                      (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
+                      (amp-func (Ai_inc2 0 2)))
+                      ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                   ))
 
 (define (eSquared r ex ey ez)
