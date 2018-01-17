@@ -50,10 +50,11 @@
 ;;------------------------------------------------------------------------------------------------
 (define-param sx 5)                         ; size of cell including PML in x-direction
 (define-param sy 5)                         ; size of cell including PML in y-direction
+(define-param sz 5)                         ; size of cell including PML in z-direction
 (define-param pml_thickness 0.25)           ; thickness of PML layer
-(define-param freq    12)                   ; vacuum frequency of source (5 to 12 is good)
+(define-param freq    6)                   ; vacuum frequency of source (5 to 12 is good)
 (define-param runtime 10)                   ; runs simulation for 10 times freq periods
-(define-param pixel   10)                   ; number of pixels per wavelength in the denser
+(define-param pixel   8)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
 ;(define-param source_shift -2.15)          ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
@@ -84,7 +85,7 @@
 (define (chi_rad _chi_deg)                  ; conversion degrees to radians
         (* (/ _chi_deg 360.0) (* 2.0 pi)))
 
-(set! geometry-lattice (make lattice (size sx sy no-size)))
+(set! geometry-lattice (make lattice (size sx sy sz)))
 (set! default-material (make dielectric (index n1)))
 
 ;(set! geometry (list
@@ -105,15 +106,17 @@
       (* pixel (* (if (> n1 n2) n1 n2) freq))) 
 
 ;;------------------------------------------------------------------------------------------------
-;; beam profile distribution(s) (field amplitude) at the waist of the beam
+;; 2d-beam profile distribution (field amplitude) at the waist of the beam
 ;;------------------------------------------------------------------------------------------------
 (define (Gauss W_y)
-        (lambda (r) (exp (* -1.0 (expt (/ (vector3-y r) W_y) 2.0)))
+        ;(lambda (r) (exp (* -1.0 (expt (/ (vector3-y r) W_y) 2.0)))
+        (lambda (r) (exp (* -1.0 (/ (+ (* (vector3-y r) (vector3-y r)) (* (vector3-z r) (vector3-z r))) (* W_y W_y))))
         ))
 
-;(define (Asymmetric W_y)
-;        (lambda (r) ...
-;        ))
+;; some test outputs
+(print "Gauss 2d beam profile: " ((Gauss 20) (vector3 0 0.5 0.2)) "\n")
+;(exit)
+
 
 ;;------------------------------------------------------------------------------------------------
 ;; spectrum amplitude distribution(s)
@@ -142,7 +145,7 @@
 (define (psi f x k)
         (lambda (r) (car (integrate (integrand f (vector3-y r) x k)
                           (* -1.0 k) (* 1.0 k) relerr))
-        ))
+        ))true
 
 ;;------------------------------------------------------------------------------------------------
 ;; display values of physical variables
@@ -165,14 +168,14 @@
 ;;------------------------------------------------------------------------------------------------
 (use-output-directory)                      ; put output files in a separate folder
 (set! force-complex-fields? false)          ; default: false
-(set! eps-averaging? true)                  ; default: true
+(set! eps-averaging? false)                  ; default: true
 
 (set! sources (list
                   (make source
                       (src (make continuous-src (frequency freq) (width 0.5)))
                       (if s-pol? (component Ez) (component Hz))
                       (amplitude 3.0)
-                      (size 0 2.0 0)
+                      (size 0 2 2)
                       (center source_shift 0 0)
                       (amp-func (Gauss w_0)))
                       ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
