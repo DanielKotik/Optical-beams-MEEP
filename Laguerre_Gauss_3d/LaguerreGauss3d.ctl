@@ -23,10 +23,6 @@
 ;; physical parameters characterizing light source and interface characteristics 
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
-(define-input-var interface "planar"        ; specify type of interface 
-                            'string (lambda type (or (string=? type "planar" ) 
-                                                     (string=? type "concave") 
-                                                     (string=? type "convex" ))))
 (define-param s-pol? true )                 ; true for s-spol, false for p-pol
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
@@ -79,7 +75,7 @@
 (define shift (+ source_shift rw))          ; distance from source position to beam waist (along y-axis)
 
 ;;------------------------------------------------------------------------------------------------
-;; placement of the dielectric interface within the computational cell
+;; placement of the planar dielectric interface within the computational cell
 ;;------------------------------------------------------------------------------------------------
 ;; helper functions
 (define (alpha _chi_deg)                    ; angle of inclined plane with y-axis
@@ -158,11 +154,8 @@
 (print "incl.: " (- 90 chi_deg) " [degree]\n") ; interface inclination with respect to the x-axis
 (print "kw_0:  " kw_0  "\n")
 (print "kr_w:  " kr_w  "\n")
-(if (not (string=? interface "planar")) 
-(print "kr_c:  " kr_c  "\n"))
 (print "k_vac: " k_vac "\n")
 (print "polarisation: " (if s-pol? "s" "p") "\n")
-(print "interface: " interface "\n")
 (print "\n")
 ;(print "The value of our Gaussian spectrum amplitude is: " ((f_Gauss w_0) 20.0) "\n")
 ;(print "integrand " ((integrand 0.8 2.0 k_vac w_0) 20.0) "\n")
@@ -171,7 +164,7 @@
 ;;------------------------------------------------------------------------------------------------
 ;; specify current source, output functions and run simulation
 ;;------------------------------------------------------------------------------------------------
-(use-output-directory interface)            ; put output files in a separate folder
+(use-output-directory)                      ; put output files in a separate folder
 (set! force-complex-fields? false)          ; default: false
 (set! eps-averaging? true)                  ; default: true
 
