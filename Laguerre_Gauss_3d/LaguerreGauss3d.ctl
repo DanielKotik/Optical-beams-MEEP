@@ -31,10 +31,10 @@
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
-(define-param n1  1.54)                     ; index of refraction of the incident medium
+(define-param n1  1.01)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
 (define-param kw_0   8)                     ; beam width (>5 is good)
-(define-param kr_w  60)                     ; beam waist distance to interface (30 to 50 is good if
+(define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 (define-param kr_c 150)                     ; radius of curvature (if interface is either concave of convex)
 
@@ -90,39 +90,16 @@
         (* (/ _chi_deg 360.0) (* 2.0 pi)))
 
 (set! geometry-lattice (make lattice (size sx sy no-size)))
+(set! default-material (make dielectric (index n1)))
 
-(cond
-    ((string=? interface "planar")
-        (set! default-material (make dielectric (index n1)))
-        (set! geometry (list
-                        (make block         ; located at lower right edge for 45 degree tilt
-                        (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
-                        (size infinity (* (sqrt 2.0) sx) infinity)
-                            (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
-                            (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
-                            (e3 0 0 1)
-                        (material (make dielectric (index n2)))))))
-    ((string=? interface "concave")
-        (set! default-material (make dielectric (index n2)))
-        (set! geometry (list
-                    (make cylinder
-                    (center (* -1 (* r_c (cos (chi_rad chi_deg)))) (* r_c (sin (chi_rad chi_deg)))) 
-                                          ; move center to the right in order to ensure that the point of impact is
-                                          ; always centrally placed
-                    (height infinity)
-                    (radius r_c)
-                    (material (make dielectric (index n1)))))))
-    ((string=? interface "convex" )
-        (set! default-material (make dielectric (index n1)))
-        (set! geometry (list
-                    (make cylinder
-                    (center (* r_c (cos (chi_rad chi_deg))) (* -1.0 (* r_c (sin (chi_rad chi_deg))))) 
-                                          ; move center to the right in order to ensure that the point of impact is
-                                          ; always centrally placed
-                    (height infinity)
-                    (radius r_c)
-                    (material (make dielectric (index n2)))))))
-)
+(set! geometry (list
+                (make block         ; located at lower right edge for 45 degree tilt
+                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
+                (size infinity (* (sqrt 2.0) sx) infinity)
+                    (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
+                    (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
+                    (e3 0 0 1)
+                (material (make dielectric (index n2))))))
 
 ;;------------------------------------------------------------------------------------------------
 ;; add absorbing boundary conditions and discretize structure
