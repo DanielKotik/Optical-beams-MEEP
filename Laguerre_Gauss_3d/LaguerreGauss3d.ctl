@@ -32,7 +32,6 @@
 (define-param kw_0   8)                     ; beam width (>5 is good)
 (define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
-(define-param kr_c 150)                     ; radius of curvature (if interface is either concave of convex)
 
 (define Critical                            ; calculates the critical angle in degrees
     (cond
@@ -56,9 +55,10 @@
 (define-param runtime 10)                   ; runs simulation for 10 times freq periods
 (define-param pixel   10)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
-(define-param source_shift -2.15)           ; source position with respect to the center (point of impact) in Meep
-;(define-param source_shift (* -1.0 rw))    ; units (-2.15 good); if equal -rw, then source position coincides with
+;(define-param source_shift -2.15)          ; source position with respect to the center (point of impact) in Meep
+;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
+(define-param source_shift 0.0)
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
 
 ;;------------------------------------------------------------------------------------------------
@@ -69,10 +69,9 @@
                     ((= ref_medium 1)  n1)
                     ((= red_medium 2)  n2)))
                     
-(define rw  (/ kr_w (* n_ref k_vac)))
+(define r_w  (/ kr_w (* n_ref k_vac)))
 (define w_0 (/ kw_0 (* n_ref k_vac)))
-(define r_c (/ kr_c (* n_ref k_vac)))
-(define shift (+ source_shift rw))          ; distance from source position to beam waist (along y-axis)
+(define shift (+ source_shift r_w))         ; distance from source position to beam waist (along y-axis)
 
 ;;------------------------------------------------------------------------------------------------
 ;; placement of the planar dielectric interface within the computational cell
@@ -88,14 +87,14 @@
 (set! geometry-lattice (make lattice (size sx sy no-size)))
 (set! default-material (make dielectric (index n1)))
 
-(set! geometry (list
-                (make block         ; located at lower right edge for 45 degree tilt
-                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
-                (size infinity (* (sqrt 2.0) sx) infinity)
-                    (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
-                    (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
-                    (e3 0 0 1)
-                (material (make dielectric (index n2))))))
+;(set! geometry (list
+;                (make block         ; located at lower right edge for 45 degree tilt
+;                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
+;                (size infinity (* (sqrt 2.0) sx) infinity)
+;                    (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
+;                    (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
+;                    (e3 0 0 1)
+;                (material (make dielectric (index n2))))))
 
 ;;------------------------------------------------------------------------------------------------
 ;; add absorbing boundary conditions and discretize structure
@@ -175,9 +174,9 @@
                       (amplitude 3.0)
                       (size 0 2.0 0)
                       (center source_shift 0 0)
-                      ;(amp-func (Gauss w_0)))
+                      (amp-func (Gauss w_0)))
                       ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
-                      (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
+                      ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                   ))
 
 (define (eSquared r ex ey ez)
