@@ -49,11 +49,11 @@
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
 (define-param sx 50)                        ; size of cell including PML in x-direction
-(define-param sy 45)                        ; size of cell including PML in y-direction
+(define-param sy 50)                        ; size of cell including PML in y-direction
 (define-param pml_thickness 1)              ; thickness of PML layer
-(define-param freq    10)                   ; vacuum frequency of source (5 to 12 is good)
+(define-param freq    5)                   ; vacuum frequency of source (5 to 12 is good)
 (define-param runtime 35)                   ; runs simulation for 10 times freq periods
-(define-param pixel   10)                   ; number of pixels per wavelength in the denser
+(define-param pixel   8)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
 ;(define-param source_shift -2.15)          ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 rw))    ; units (-2.15 good); if equal -rw, then source position coincides with
@@ -184,7 +184,7 @@
                       (src (make continuous-src (frequency freq) (width 0.5)))
                       (if s-pol? (component Ez) (component Hz))
                       (amplitude 1.0)
-                      (size 0 42 0)
+                      (size 0 45 0)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
                       (amp-func (Ai_inc2 0 4)))
