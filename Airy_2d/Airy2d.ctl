@@ -27,9 +27,9 @@
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
-(define-param n1  1.54)                     ; index of refraction of the incident medium
+(define-param n1  1.01)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
-(define-param kw_0   8)                     ; beam width (>5 is good)
+(define-param kw_0 100)                     ; beam width (>5 is good)
 (define-param kr_w  60)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 
@@ -48,17 +48,17 @@
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
-(define-param sx 30)                        ; size of cell including PML in x-direction
-(define-param sy 30)                        ; size of cell including PML in y-direction
+(define-param sx 50)                        ; size of cell including PML in x-direction
+(define-param sy 45)                        ; size of cell including PML in y-direction
 (define-param pml_thickness 1)              ; thickness of PML layer
-(define-param freq     5)                   ; vacuum frequency of source (5 to 12 is good)
-(define-param runtime 20)                   ; runs simulation for 10 times freq periods
+(define-param freq    10)                   ; vacuum frequency of source (5 to 12 is good)
+(define-param runtime 35)                   ; runs simulation for 10 times freq periods
 (define-param pixel   10)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
 ;(define-param source_shift -2.15)          ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 rw))    ; units (-2.15 good); if equal -rw, then source position coincides with
                                             ; waist position
-(define-param source_shift 0.0)
+(define-param source_shift -10.0)
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
 
 ;;------------------------------------------------------------------------------------------------
@@ -184,10 +184,10 @@
                       (src (make continuous-src (frequency freq) (width 0.5)))
                       (if s-pol? (component Ez) (component Hz))
                       (amplitude 1.0)
-                      (size 0 22 0)
+                      (size 0 42 0)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
-                      (amp-func (Ai_inc2 0 2)))
+                      (amp-func (Ai_inc2 0 4)))
                       ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                   ))
 
