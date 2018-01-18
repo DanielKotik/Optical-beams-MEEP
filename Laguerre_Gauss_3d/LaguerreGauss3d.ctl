@@ -17,6 +17,7 @@
 ;;                                                                      |
 ;;                                                                      |
 ;;                                                                      v y
+;; visualise: h5topng -S2 -0 -y 0 -c hot -d e2_s.r e2_s-000010.00.h5
 ;;------------------------------------------------------------------------------------------------
 
 ;;------------------------------------------------------------------------------------------------
@@ -168,7 +169,7 @@
 ;;------------------------------------------------------------------------------------------------
 (use-output-directory)                      ; put output files in a separate folder
 (set! force-complex-fields? false)          ; default: false
-(set! eps-averaging? false)                  ; default: true
+(set! eps-averaging? true)                  ; default: true
 
 (set! sources (list
                   (make source
