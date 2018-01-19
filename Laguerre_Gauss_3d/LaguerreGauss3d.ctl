@@ -18,6 +18,7 @@
 ;;                                                                      |
 ;;                                                                      v y
 ;; visualise: h5topng -S2 -0 -y 0 -c hot -d e2_s.r e2_s-000010.00.h5
+;;            h5topng -S2 -Zc dkbluered ez-000010.00.h5
 ;;------------------------------------------------------------------------------------------------
 
 ;;------------------------------------------------------------------------------------------------
@@ -28,7 +29,7 @@
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
-(define-param n1  1.01)                     ; index of refraction of the incident medium
+(define-param n1  1.00)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
 (define-param kw_0   8)                     ; beam width (>5 is good)
 (define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
@@ -43,8 +44,8 @@
 (define Brewster                            ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
-(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
-;(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
+;(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
+(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
@@ -53,9 +54,9 @@
 (define-param sy 5)                         ; size of cell including PML in y-direction
 (define-param sz 5)                         ; size of cell including PML in z-direction
 (define-param pml_thickness 0.25)           ; thickness of PML layer
-(define-param freq    6)                   ; vacuum frequency of source (5 to 12 is good)
+(define-param freq     4)                   ; vacuum frequency of source (5 to 12 is good)
 (define-param runtime 10)                   ; runs simulation for 10 times freq periods
-(define-param pixel   8)                   ; number of pixels per wavelength in the denser
+(define-param pixel   10)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
 ;(define-param source_shift -2.15)          ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
@@ -182,6 +183,12 @@
                       ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
                       ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                   ))
+
+;; exploiting symmetries: plane of incidence (x-y-plane) is a mirror plane characterised as to be
+;;                        orthogonal to the z-axis (symmetry of the geometric structure); if either Ez
+;;                        or Hz is specified, then we have to add a phase to ensure symmetrie of the sources
+;;                        TODO: is it possible to quarantee source symmetry for arbitrarily complex polarisations?
+(set! symmetries (list (make mirror-sym (direction Z) (phase -1))))
 
 (define (eSquared r ex ey ez)
         (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
