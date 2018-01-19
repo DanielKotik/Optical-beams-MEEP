@@ -17,8 +17,8 @@
 ;;                                                                      |
 ;;                                                                      |
 ;;                                                                      v y
-;; visualise: h5topng -S2 -0 -y 0 -c hot -d e2_s.r e2_s-000010.00.h5
-;;            h5topng -S2 -Zc dkbluered ez-000010.00.h5
+;; visualise: h5topng -S2 -0 -y 0 -c  hot        e2_s-000010.00.h5
+;;            h5topng -S2         -Zc dkbluered    ez-000010.00.h5
 ;;------------------------------------------------------------------------------------------------
 
 ;;------------------------------------------------------------------------------------------------
@@ -194,8 +194,8 @@
         (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
            (* (magnitude ez) (magnitude ez))))
 
-(define (output-efield2) (output-field-function (if s-pol? "e2_s" "e2_p")
-                                                (list Ex Ey Ez) eSquared))
+(define (output-efield2) (output-real-field-function (if s-pol? "e2_s" "e2_p")
+                                                     (list Ex Ey Ez) eSquared))
 
 (run-until runtime
      (at-beginning output-epsilon)          ; output of dielectric function
