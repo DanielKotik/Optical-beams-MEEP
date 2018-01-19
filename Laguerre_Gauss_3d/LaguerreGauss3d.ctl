@@ -117,7 +117,7 @@
         ))
 
 ;; some test outputs
-(print "Gauss 2d beam profile: " ((Gauss 20) (vector3 0 0.5 0.2)) "\n")
+;(print "Gauss 2d beam profile: " ((Gauss 20) (vector3 0 0.5 0.2)) "\n")
 ;(exit)
 
 
@@ -129,18 +129,19 @@
         (lambda (k_y k_z) (* (/ W_y (sqrt (* 2 pi))) (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4)))))
         ))
 
-;(define (f_asymmetric W_y)
-;        (lambda (k_y) ...
-;        ))
+;; some test outputs
+;(print "Gauss 2d spectrum: " ((f_Gauss 20) 0.1 0.1) "\n")
+;(exit)
 
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
 ;;------------------------------------------------------------------------------------------------
 (define (integrand f y x k)
-        (lambda (k_y) (* (f k_y)
-                        (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
-                        (exp (* 0+1i k_y y)))
+        (lambda (k_y k_z) (* (f k_y k_z)
+                             (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
+                             (exp (* 0+1i y k_y))
+                             (exp (* 0+1i z k_z)))
         ))
 
 ;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
