@@ -34,16 +34,7 @@ _for 2d simulations_
 denser material is shaded in grey)
 
 ``h5topng -S2 -c hot -a yarg -A eps-000000000.h5 e2_s-000003696.h5`` (intensity distribution, optical 
-denser material is shaded in grey)  
-
-_for 3d simulations_  
-``h5topng -S2 -0 -z 0  -c hot e_real2_p-000001500.h5`` (slice within the plane of incidence)
-
-``h5topng -S2 -x INDEX -c hot e_real2_p-000001500.h5`` (slice transversal to the incident propagation axis with INDEX specifying the slice index)
-
-``h5tovtk e_real2_p-000001500.h5`` (creates a VTK file to be opened by e.g. the [MayaVi](https://github.com/enthought/mayavi) or [ParaView](https://github.com/Kitware/ParaView) visualisation application)
-
-
+denser material is shaded in grey)
 
 The [Meep Scheme tutorial](https://meep.readthedocs.io/en/latest/Scheme_Tutorials/Basics/) provides further useful 
 information and assistance.
