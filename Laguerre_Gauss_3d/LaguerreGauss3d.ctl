@@ -125,8 +125,8 @@
 ;; spectrum amplitude distribution(s)
 ;;------------------------------------------------------------------------------------------------
 (define (f_Gauss W_y)
-        (lambda (k_y) (* (/ W_y (* 2.0 (sqrt pi)))
-                         (exp (* -1.0 (expt (* 0.5 k_y W_y) 2.0))))
+        ;(lambda (k_y) (* (/ W_y (* 2 (sqrt pi))) (exp (* -1 (expt (* 0.5 k_y W_y) 2))))
+        (lambda (k_y k_z) (* (/ W_y (sqrt (* 2 pi))) (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4)))))
         ))
 
 ;(define (f_asymmetric W_y)
