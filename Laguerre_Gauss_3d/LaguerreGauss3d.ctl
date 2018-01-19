@@ -17,8 +17,8 @@
 ;;                                                                      |
 ;;                                                                      |
 ;;                                                                      v y
-;; visualise: h5topng -S2 -0 -y 0 -c  hot        e2_s-000010.00.h5
-;;            h5topng -S2         -Zc dkbluered    ez-000010.00.h5
+;; visualise: h5topng -S2 -0 -z 0 -c  hot       -a yarg -A eps-000000000.h5 e2_s-000001232.h5
+;;            h5topng -S2 -0 -z 0 -Zc dkbluered -a gray -A eps-000000000.h5   ez-000001232.h5
 ;;------------------------------------------------------------------------------------------------
 
 ;;------------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
-(define-param n1  1.00)                     ; index of refraction of the incident medium
+(define-param n1  1.54)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
 (define-param kw_0   8)                     ; beam width (>5 is good)
 (define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
@@ -54,7 +54,7 @@
 (define-param sy 5)                         ; size of cell including PML in y-direction
 (define-param sz 5)                         ; size of cell including PML in z-direction
 (define-param pml_thickness 0.25)           ; thickness of PML layer
-(define-param freq     4)                   ; vacuum frequency of source (5 to 12 is good)
+(define-param freq     4)                   ; vacuum frequency of source (default 4)
 (define-param runtime 10)                   ; runs simulation for 10 times freq periods
 (define-param pixel   10)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
@@ -90,14 +90,14 @@
 (set! geometry-lattice (make lattice (size sx sy sz)))
 (set! default-material (make dielectric (index n1)))
 
-;(set! geometry (list
-;                (make block         ; located at lower right edge for 45 degree tilt
-;                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
-;                (size infinity (* (sqrt 2.0) sx) infinity)
-;                    (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
-;                    (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
-;                    (e3 0 0 1)
-;                (material (make dielectric (index n2))))))
+(set! geometry (list
+                (make block         ; located at lower right edge for 45 degree tilt
+                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
+                (size infinity (* (sqrt 2.0) sx) infinity)
+                    (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
+                    (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
+                    (e3 0 0 1)
+                (material (make dielectric (index n2))))))
 
 ;;------------------------------------------------------------------------------------------------
 ;; add absorbing boundary conditions and discretize structure
