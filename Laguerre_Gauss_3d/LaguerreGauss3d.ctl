@@ -137,7 +137,7 @@
 ;; plane wave decomposition 
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
 ;;------------------------------------------------------------------------------------------------
-(define (integrand f y x k)
+(define (integrand f x y z k)
         (lambda (k_y k_z) (* (f k_y k_z)
                              (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
                              (exp (* 0+1i y k_y))
@@ -147,9 +147,9 @@
 ;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
 ;; (one may have to adjust the 'relerr' parameter value in the integrate function)
 (define (psi f x k)
-        (lambda (r) (car (integrate (integrand f (vector3-y r) x k)
-                          (* -1.0 k) (* 1.0 k) relerr))
-        ))true
+        (lambda (r) (car (integrate (integrand f x (vector3-y r) (vector3-z r) k)
+                         (list [(* -1.0 k) (* -1.0 k)]) (list [(* 1.0 k) (* 1.0 k)]) relerr))
+        ))
 
 ;;------------------------------------------------------------------------------------------------
 ;; display values of physical variables
@@ -172,7 +172,7 @@
 ;;------------------------------------------------------------------------------------------------
 (use-output-directory)                      ; put output files in a separate folder
 (set! force-complex-fields? false)          ; default: false
-(set! eps-averaging? true)                  ; default: true
+(set! eps-averaging? false)                  ; default: true
 
 (set! sources (list
                   (make source
@@ -181,9 +181,8 @@
                       (amplitude 3.0)
                       (size 0 2 2)
                       (center source_shift 0 0)
-                      (amp-func (Gauss w_0)))
-                      ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
-                      ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
+                      ;(amp-func (Gauss w_0)))
+                      (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                   ))
 
 ;; exploiting symmetries to reduce computational effort:
