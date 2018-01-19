@@ -17,8 +17,9 @@
 ;;                                                                      |
 ;;                                                                      |
 ;;                                                                      v y
-;; visualise: h5topng -S2 -0 -z 0 -c  hot       -a yarg -A eps-000000000.h5 e2_s-000001232.h5
-;;            h5topng -S2 -0 -z 0 -Zc dkbluered -a gray -A eps-000000000.h5   ez-000001232.h5
+;;
+;; visualisation: h5topng -S2 -0 -z 0 -c  hot       -a yarg -A eps-000000000.h5 e2_s-000001232.h5
+;;                h5topng -S2 -0 -z 0 -Zc dkbluered -a gray -A eps-000000000.h5   ez-000001232.h5
 ;;------------------------------------------------------------------------------------------------
 
 ;;------------------------------------------------------------------------------------------------
@@ -44,8 +45,8 @@
 (define Brewster                            ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
-;(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
-(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
+(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
+;(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
@@ -58,10 +59,9 @@
 (define-param runtime 10)                   ; runs simulation for 10 times freq periods
 (define-param pixel   10)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
-;(define-param source_shift -2.15)          ; source position with respect to the center (point of impact) in Meep
+(define-param source_shift -2.15)           ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
-(define-param source_shift 0.0)
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
 
 ;;------------------------------------------------------------------------------------------------
@@ -91,13 +91,14 @@
 (set! default-material (make dielectric (index n1)))
 
 (set! geometry (list
-                (make block         ; located at lower right edge for 45 degree tilt
+                (make block                 ; located at lower right edge for 45 degree tilt
                 (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
                 (size infinity (* (sqrt 2.0) sx) infinity)
-                    (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
-                    (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
-                    (e3 0 0 1)
-                (material (make dielectric (index n2))))))
+                (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
+                (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
+                (e3 0 0 1)
+                (material (make dielectric (index n2))))
+                ))
 
 ;;------------------------------------------------------------------------------------------------
 ;; add absorbing boundary conditions and discretize structure
@@ -184,10 +185,11 @@
                       ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                   ))
 
-;; exploiting symmetries: plane of incidence (x-y-plane) is a mirror plane characterised as to be
-;;                        orthogonal to the z-axis (symmetry of the geometric structure); if either Ez
-;;                        or Hz is specified, then we have to add a phase to ensure symmetrie of the sources
-;;                        TODO: is it possible to quarantee source symmetry for arbitrarily complex polarisations?
+;; exploiting symmetries to reduce computational effort:
+;; The plane of incidence (x-y-plane) is a mirror plane which is characterised to be orthogonal to the z-axis
+;; (symmetry of the geometric structure). Symmetry of the sources must be ensured simultaneously, which is possible 
+;; for certain cases by adding a phase. This works for example for pure s- or p-polarisation, where either only
+;; the Ez or Hz component is specified.
 (set! symmetries (list (make mirror-sym (direction Z) (phase -1))))
 
 (define (eSquared r ex ey ez)
