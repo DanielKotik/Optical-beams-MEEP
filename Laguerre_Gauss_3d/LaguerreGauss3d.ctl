@@ -17,8 +17,9 @@
 ;;                                                                      |
 ;;                                                                      |
 ;;                                                                      v y
-;; visualise: h5topng -S2 -0 -y 0 -c  hot        e2_s-000010.00.h5
-;;            h5topng -S2         -Zc dkbluered    ez-000010.00.h5
+;;
+;; visualisation: h5topng -S2 -0 -z 0 -c  hot       -a yarg -A eps-000000000.h5 e2_s-000001232.h5
+;;                h5topng -S2 -0 -z 0 -Zc dkbluered -a gray -A eps-000000000.h5   ez-000001232.h5
 ;;------------------------------------------------------------------------------------------------
 
 ;;------------------------------------------------------------------------------------------------
@@ -29,7 +30,7 @@
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
-(define-param n1  1.00)                     ; index of refraction of the incident medium
+(define-param n1  1.54)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
 (define-param kw_0   8)                     ; beam width (>5 is good)
 (define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
@@ -54,14 +55,13 @@
 (define-param sy 5)                         ; size of cell including PML in y-direction
 (define-param sz 5)                         ; size of cell including PML in z-direction
 (define-param pml_thickness 0.25)           ; thickness of PML layer
-(define-param freq     4)                   ; vacuum frequency of source (5 to 12 is good)
+(define-param freq     4)                   ; vacuum frequency of source (default 4)
 (define-param runtime 10)                   ; runs simulation for 10 times freq periods
 (define-param pixel   10)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
-;(define-param source_shift -2.15)          ; source position with respect to the center (point of impact) in Meep
+(define-param source_shift -2.15)           ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
-(define-param source_shift 0.0)
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
 
 ;;------------------------------------------------------------------------------------------------
@@ -90,14 +90,15 @@
 (set! geometry-lattice (make lattice (size sx sy sz)))
 (set! default-material (make dielectric (index n1)))
 
-;(set! geometry (list
-;                (make block         ; located at lower right edge for 45 degree tilt
-;                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
-;                (size infinity (* (sqrt 2.0) sx) infinity)
-;                    (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
-;                    (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
-;                    (e3 0 0 1)
-;                (material (make dielectric (index n2))))))
+(set! geometry (list
+                (make block                 ; located at lower right edge for 45 degree tilt
+                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
+                (size infinity (* (sqrt 2.0) sx) infinity)
+                (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
+                (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
+                (e3 0 0 1)
+                (material (make dielectric (index n2))))
+                ))
 
 ;;------------------------------------------------------------------------------------------------
 ;; add absorbing boundary conditions and discretize structure
@@ -116,7 +117,7 @@
         ))
 
 ;; some test outputs
-(print "Gauss 2d beam profile: " ((Gauss 20) (vector3 0 0.5 0.2)) "\n")
+;(print "Gauss 2d beam profile: " ((Gauss 20) (vector3 0 0.5 0.2)) "\n")
 ;(exit)
 
 
@@ -124,30 +125,31 @@
 ;; spectrum amplitude distribution(s)
 ;;------------------------------------------------------------------------------------------------
 (define (f_Gauss W_y)
-        (lambda (k_y) (* (/ W_y (* 2.0 (sqrt pi)))
-                         (exp (* -1.0 (expt (* 0.5 k_y W_y) 2.0))))
+        ;(lambda (k_y) (* (/ W_y (* 2 (sqrt pi))) (exp (* -1 (expt (* 0.5 k_y W_y) 2))))
+        (lambda (k_y k_z) (* (/ W_y (sqrt (* 2 pi))) (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4)))))
         ))
 
-;(define (f_asymmetric W_y)
-;        (lambda (k_y) ...
-;        ))
+;; some test outputs
+;(print "Gauss 2d spectrum: " ((f_Gauss 20) 0.1 0.1) "\n")
+;(exit)
 
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
 ;;------------------------------------------------------------------------------------------------
-(define (integrand f y x k)
-        (lambda (k_y) (* (f k_y)
-                        (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
-                        (exp (* 0+1i k_y y)))
+(define (integrand f x y z k)
+        (lambda (k_y k_z) (* (f k_y k_z)
+                             (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
+                             (exp (* 0+1i y k_y))
+                             (exp (* 0+1i z k_z)))
         ))
 
 ;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
 ;; (one may have to adjust the 'relerr' parameter value in the integrate function)
 (define (psi f x k)
-        (lambda (r) (car (integrate (integrand f (vector3-y r) x k)
-                          (* -1.0 k) (* 1.0 k) relerr))
-        ))true
+        (lambda (r) (car (integrate (integrand f x (vector3-y r) (vector3-z r) k)
+                         (list [(* -1.0 k) (* -1.0 k)]) (list [(* 1.0 k) (* 1.0 k)]) relerr))
+        ))
 
 ;;------------------------------------------------------------------------------------------------
 ;; display values of physical variables
@@ -179,15 +181,15 @@
                       (amplitude 3.0)
                       (size 0 2 2)
                       (center source_shift 0 0)
-                      (amp-func (Gauss w_0)))
-                      ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
-                      ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
+                      ;(amp-func (Gauss w_0)))
+                      (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                   ))
 
-;; exploiting symmetries: plane of incidence (x-y-plane) is a mirror plane characterised as to be
-;;                        orthogonal to the z-axis (symmetry of the geometric structure); if either Ez
-;;                        or Hz is specified, then we have to add a phase to ensure symmetrie of the sources
-;;                        TODO: is it possible to quarantee source symmetry for arbitrarily complex polarisations?
+;; exploiting symmetries to reduce computational effort:
+;; The plane of incidence (x-y-plane) is a mirror plane which is characterised to be orthogonal to the z-axis
+;; (symmetry of the geometric structure). Symmetry of the sources must be ensured simultaneously, which is possible 
+;; for certain cases by adding a phase. This works for example for pure s- or p-polarisation, where either only
+;; the Ez or Hz component is specified.
 (set! symmetries (list (make mirror-sym (direction Z) (phase -1))))
 
 (define (eSquared r ex ey ez)
