@@ -63,6 +63,7 @@
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
+(define-param maxeval  1000)                ; maximum evaluations for integration routine
 
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters (do not change)
@@ -112,12 +113,12 @@
 ;; 2d-beam profile distribution (field amplitude) at the waist of the beam
 ;;------------------------------------------------------------------------------------------------
 (define (Gauss W_y)
-        ;(lambda (r) (exp (* -1.0 (expt (/ (vector3-y r) W_y) 2.0)))
-        (lambda (r) (exp (* -1.0 (/ (+ (* (vector3-y r) (vector3-y r)) (* (vector3-z r) (vector3-z r))) (* W_y W_y))))
+        (lambda (r) (exp (* -1.0 (/ (+ (* (vector3-y r) (vector3-y r)) (* (vector3-z r) (vector3-z r))) 
+                                    (* W_y W_y))))
         ))
 
 ;; some test outputs
-;(print "Gauss 2d beam profile: " ((Gauss 20) (vector3 0 0.5 0.2)) "\n")
+;(print "Gauss 2d beam profile: " ((Gauss w_0) (vector3 0 0.5 0.2)) "\n")
 ;(exit)
 
 
@@ -125,8 +126,8 @@
 ;; spectrum amplitude distribution(s)
 ;;------------------------------------------------------------------------------------------------
 (define (f_Gauss W_y)
-        ;(lambda (k_y) (* (/ W_y (* 2 (sqrt pi))) (exp (* -1 (expt (* 0.5 k_y W_y) 2))))
-        (lambda (k_y k_z) (* (/ W_y (sqrt (* 2 pi))) (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4)))))
+        (lambda (k_y k_z) (* (/ W_y (sqrt (* 2 pi))) 
+                             (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4)))))
         ))
 
 ;; some test outputs
@@ -144,13 +145,17 @@
                              (exp (* 0+1i z k_z)))
         ))
 
+
 ;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
-;; (one may have to adjust the 'relerr' parameter value in the integrate function)
+;; (one may have to adjust the 'relerr' and 'maxeval' parameter values in the integrate function)
 (define (psi f x k)
         (lambda (r) (car (integrate (integrand f x (vector3-y r) (vector3-z r) k)
-                         (list [(* -1.0 k) (* -1.0 k)]) (list [(* 1.0 k) (* 1.0 k)]) relerr))
+                         (list (* -1.0 k) (* -1.0 k)) (list (* 1.0 k) (* 1.0 k)) relerr 0 maxeval))
         ))
 
+;(print "Gauss 2d beam profile: " ((psi (f_Gauss w_0) 0.0 (* n1 k_vac)) (vector3 0 0.0 0.0)) "\n")
+;(print "Gauss 2d beam profile: " ((Gauss w_0)                          (vector3 0 0.0 0.0)) "\n")
+;(exit)
 ;;------------------------------------------------------------------------------------------------
 ;; display values of physical variables
 ;;------------------------------------------------------------------------------------------------
