@@ -32,8 +32,8 @@ data_optimised = np.transpose(data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutof
 
 mlab.figure(bgcolor=(1,1,1))
 
-mlab.contour3d(data_optimised, contours=10, colormap="hot", transparent=True, opacity=0.5)
-#mlab.pipeline.volume(mlab.pipeline.scalar_field(data_optimised), vmin=0.2, vmax=1) #intensity
+#mlab.contour3d(data_optimised, contours=10, colormap="hot", transparent=True, opacity=0.5)
+mlab.pipeline.volume(mlab.pipeline.scalar_field(data_optimised), vmin=0.2, vmax=1) #intensity
 #mlab.pipeline.volume(mlab.pipeline.scalar_field(data_optimised)) #interface
 #mlab.pipeline.image_plane_widget(mlab.pipeline.scalar_field(data_optimised),
 #                            plane_orientation='x_axes',
