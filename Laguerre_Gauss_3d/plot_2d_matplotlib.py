@@ -16,6 +16,8 @@ import sys
 filename = sys.argv[1]
 #filename = "LaguerreGauss3d-out/e2_s-000010.00.h5"
 
+cutoff = 30   # cut-off borders of data (removing PML layer and line source placment is desired)
+
 with h5py.File(filename, 'r') as hf:
     print("Keys: %s" % hf.keys())
     #data = hf['e2_s'][:]
@@ -24,7 +26,9 @@ with h5py.File(filename, 'r') as hf:
 print(np.shape(data))
 center_index = np.int(data.shape[2]/2)
 
-plt.imshow(np.transpose(data[:, :, center_index]), origin='lower', cmap=plt.cm.hot, interpolation='None')
+data_optimised = np.transpose(data[cutoff:-cutoff, cutoff:-cutoff, center_index])
+
+plt.imshow(data_optimised, origin='lower', cmap=plt.cm.hot, interpolation='None')
 plt.show()
 
 
