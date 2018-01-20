@@ -12,9 +12,12 @@ import numpy as np
 import h5py
 import sys
 from   mayavi import mlab
+import matplotlib.pyplot as plt
 
 filename = sys.argv[1]
 #filename = "LaguerreGauss3d-out/e2_s-000010.00.h5"
+
+cutoff = 30   # cut-off borders of data (removing PML layer and line source placment is desired)
 
 with h5py.File(filename, 'r') as hf:
     print("Keys: %s" % hf.keys())
@@ -23,15 +26,20 @@ with h5py.File(filename, 'r') as hf:
 
 print(np.shape(data))
 
+print(data.max(), data.min())
 
+data_optimised = np.transpose(data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff])
 
-mlab.contour3d(data, contours=10, colormap="autumn", transparent=True, opacity=0.5)
-#mlab.pipeline.volume(mlab.pipeline.scalar_field(data), vmin=0, vmax=0.8)
-#mlab.pipeline.image_plane_widget(mlab.pipeline.scalar_field(data),
+mlab.figure(bgcolor=(1,1,1))
+
+#mlab.contour3d(data_optimised, contours=10, colormap="hot", transparent=True, opacity=0.5)
+mlab.pipeline.volume(mlab.pipeline.scalar_field(data_optimised), vmin=0.2, vmax=1) #intensity
+#mlab.pipeline.volume(mlab.pipeline.scalar_field(data_optimised)) #interface
+#mlab.pipeline.image_plane_widget(mlab.pipeline.scalar_field(data_optimised),
 #                            plane_orientation='x_axes',
 #                            slice_index=10,
 #                        )
-#mlab.pipeline.image_plane_widget(mlab.pipeline.scalar_field(data),
+#mlab.pipeline.image_plane_widget(mlab.pipeline.scalar_field(data_optimised),
 #                            plane_orientation='y_axes',
 #                            slice_index=10,
 #                        )
