@@ -214,8 +214,8 @@
         (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
            (* (magnitude ez) (magnitude ez))))
 
-(define (output-efield2) (output-field-function (if s-pol? "e2_s" "e2_p")
-                                                (list Ex Ey Ez) eSquared))
+(define (output-efield2) (output-real-field-function (if s-pol? "e2_s" "e2_p")
+                                                     (list Ex Ey Ez) eSquared))
 
 (run-until runtime
      (at-beginning output-epsilon)          ; output of dielectric function
