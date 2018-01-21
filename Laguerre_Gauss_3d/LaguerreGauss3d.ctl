@@ -45,8 +45,8 @@
 (define Brewster                            ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
-;(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
-(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
+(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
+;(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
@@ -63,7 +63,7 @@
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
-(define-param maxeval  1000)                ; maximum evaluations for integration routine
+(define-param maxeval 10000)                ; maximum evaluations for integration routine
 
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters (do not change)
@@ -205,7 +205,7 @@
                                                      (list Ex Ey Ez) eSquared))
 
 (run-until runtime
-     (at-beginning output-epsilon)          ; output of dielectric function
+;     (at-beginning output-epsilon)          ; output of dielectric function
      (if s-pol?
          (at-end output-efield-z)           ; output of E_z component (for s-polarisation)
          (at-end output-hfield-z))          ; output of H_z component (for p-polarisation)
