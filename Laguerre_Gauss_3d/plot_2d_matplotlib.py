@@ -26,9 +26,10 @@ with h5py.File(filename, 'r') as hf:
 print(np.shape(data))
 center_index = np.int(data.shape[2]/2)
 
-data_optimised = np.transpose(data[cutoff:-cutoff, cutoff:-cutoff, center_index])
+data_optimised = np.transpose(data[cutoff:-cutoff, cutoff:-cutoff, center_index]) / data.max()
 
 plt.imshow(data_optimised, origin='lower', cmap=plt.cm.hot, interpolation='None')
+plt.colorbar()
 plt.show()
 
 
