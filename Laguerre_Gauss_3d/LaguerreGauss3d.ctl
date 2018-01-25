@@ -140,7 +140,7 @@
 ;;------------------------------------------------------------------------------------------------
 (define (integrand f x y z k)
         (lambda (k_y k_z) (* (f k_y k_z)
-                             (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
+                             (exp (* 0+1i x (real-part (sqrt (- (* k k) (* k_y k_y) (* k_z k_z))))))
                              (exp (* 0+1i y k_y))
                              (exp (* 0+1i z k_z)))
         ))
