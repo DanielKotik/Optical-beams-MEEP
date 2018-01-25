@@ -126,9 +126,13 @@
 ;; spectrum amplitude distribution(s)
 ;;------------------------------------------------------------------------------------------------
 (define (f_Gauss W_y)
-        (lambda (k_y k_z) (* (/ W_y (sqrt (* 2 pi))) 
+        (lambda (k_y k_z) (* (/ W_y (sqrt (* 2 pi))) ;TODO: remove unnecessary prefactor
                              (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4)))))
         ))
+
+(define (f_Laguerre_Gauss W_y)
+        (lambda (k_y k_z) (* ((f_Gauss W_y) k_y k_z) (exp (* 0+1i m_charge phi)) (expt theta (abs m_charge)))
+))
 
 ;; some test outputs
 ;(print "Gauss 2d spectrum: " ((f_Gauss 20) 0.1 0.1) "\n")
