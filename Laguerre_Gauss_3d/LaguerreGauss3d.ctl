@@ -30,7 +30,7 @@
 (define-param e_z        0)                 ; z-component of Jones vector (s-polarisation: e_z = 1, e_y = 0)
 (define-param e_y        1)                 ; y-component of Jones vector (p-polarisation: e_z = 0, e_y = 1)
                                             ;                      (circular-polarisation: ...             )
-(define-param m_charge   0)                 ; vortex charge m
+(define-param m_charge   0)                 ; vortex charge (positive/negative integer number)
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
@@ -134,7 +134,7 @@
                              (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4)))))
         ))
 
-;; spherical coordinate transformation
+;; spherical coordinate transformation in k-space
 (define (phi k)
         (lambda (k_y k_z) (atan2 (/ k_y k) (/ (* -1 k_z) / k))
         ))
