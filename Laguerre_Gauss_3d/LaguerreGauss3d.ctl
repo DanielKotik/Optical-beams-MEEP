@@ -27,6 +27,9 @@
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
 (define-param s-pol? true )                 ; true for s-spol, false for p-pol
+(define-param e_z        0)                 ; z-component of Jones vector (s-polarisation: e_z = 1, e_y = 0)
+(define-param e_y        1)                 ; y-component of Jones vector (p-polarisation: e_z = 0, e_y = 1)
+                                            ;                      (circular-polarisation: ...             )
 (define-param m_charge   0)                 ; vortex charge m
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
