@@ -202,7 +202,8 @@
                       (size 0 2 2)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
-                      (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
+                      ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
+                      (amp-func (psi (f_Laguerre_Gauss w_0 (* n1 k_vac)) shift (* n1 k_vac))))
                   ))
 
 ;; exploiting symmetries to reduce computational effort:
