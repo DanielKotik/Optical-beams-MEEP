@@ -131,8 +131,18 @@
                              (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4)))))
         ))
 
-(define (f_Laguerre_Gauss W_y)
-        (lambda (k_y k_z) (* ((f_Gauss W_y) k_y k_z) (exp (* 0+1i m_charge phi)) (expt theta (abs m_charge)))
+;; spherical coordinate transformation
+(define (phi k)
+        (lambda (k_y k_z) (atan2 (/ k_y k) (/ (* -1 k_z) / k))
+        ))
+
+(define (theta k)
+        (lambda (k_z) (acos (/ (* -1 k_z) / k))
+        ))
+
+(define (f_Laguerre_Gauss W_y k)
+        (lambda (k_y k_z) (* ((f_Gauss W_y) k_y k_z) (exp (* 0+1i m_charge ((phi k) k_y k_z))) 
+                             (expt ((theta k) k_z) (abs m_charge)))
 ))
 
 ;; some test outputs
