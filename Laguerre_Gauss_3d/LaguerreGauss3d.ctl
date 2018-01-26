@@ -30,7 +30,7 @@
 (define-param e_z        1)                 ; z-component of Jones vector (s-polarisation: e_z = 1, e_y = 0)
 (define-param e_y        0)                 ; y-component of Jones vector (p-polarisation: e_z = 0, e_y = 1)
                                             ;                      (circular-polarisation: ...             )
-(define-param m_charge   2)                 ; vortex charge (positive/negative integer number)
+(define-param m_charge   2)                 ; vortex charge (azimuthal quantum number, integer number)
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
@@ -179,14 +179,19 @@
 ;; display values of physical variables
 ;;------------------------------------------------------------------------------------------------
 (print "\n")
-(print "Values of specified variables:    \n")
+(print "Specified variables and derived values: \n")
 (print "chi:   " chi_deg        " [degree]\n") ; angle of incidence
 (print "incl.: " (- 90 chi_deg) " [degree]\n") ; interface inclination with respect to the x-axis
 (print "kw_0:  " kw_0  "\n")
 (print "kr_w:  " kr_w  "\n")
 (print "k_vac: " k_vac "\n")
+(print "vortex charge: " m_charge "\n")
+(print "Jones vector components (e_z, e_y): ("e_z", "e_y")" "\n")
+(print "degree of linear polarisation at pi/4: " (* 2 (imag-part (* (conj e_y) e_z)))   "\n")
+(print "degree of circular polarisation: " (* 2 (real-part (* (conj e_y) e_z)))   "\n")
 (print "polarisation: " (if s-pol? "s" "p") "\n")
 (print "\n")
+(exit)
 ;(print "The value of our Gaussian spectrum amplitude is: " ((f_Gauss w_0) 20.0) "\n")
 ;(print "integrand " ((integrand 0.8 2.0 k_vac w_0) 20.0) "\n")
 ;(print "Field amplitude: " ((psi 1.0 k_vac w_0) 0.5) "\n")
