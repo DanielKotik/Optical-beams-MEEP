@@ -127,9 +127,12 @@
 ;;------------------------------------------------------------------------------------------------
 ;; spectrum amplitude distribution(s)
 ;;------------------------------------------------------------------------------------------------
-(define (f_Gauss W_y)
-        (lambda (k_y k_z) (* (/ W_y (sqrt (* 2 pi))) ;TODO: remove unnecessary prefactor
-                             (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4)))))
+(define (f_Gauss_cartesian W_y)
+        (lambda (k_y k_z) (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4))))
+        ))
+        
+(define (f_Gauss_spherical W_y k)
+        (lambda (theta) (exp (* -1 (expt (/ (* k W_y theta) 2) 2)))
         ))
 
 ;; spherical coordinate transformation in k-space
@@ -141,15 +144,21 @@
         (lambda (k_z) (acos (/ (* -1 k_z) k))
         ))
 
-(define (f_Laguerre_Gauss W_y k)
-        (lambda (k_y k_z) (* ((f_Gauss W_y) k_y k_z) (exp (* 0+1i m_charge ((phi k) k_y k_z))) 
+(define (f_Laguerre_Gauss_cartesian W_y k)
+        (lambda (k_y k_z) (* ((f_Gauss_cartesian W_y) k_y k_z) (exp (* 0+1i m_charge ((phi k) k_y k_z))) 
                              (expt ((theta k) k_z) (abs m_charge)))
+        ))
+        
+(define (f_Laguerre_Gauss_spherical W_y k)
+        (lambda (theta phi) (* ((f_Gauss_spherical W_y k) theta) (expt theta (abs m_charge)) (exp (* 0+1i m_charge phi)))
         ))
 
 ;; some test outputs
-;(print "Gauss 2d spectrum: "          ((f_Gauss 20) 0.1 0.1)                "\n")
-;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss 20 k_vac) 0.1 0.1) "\n")
-;(exit)
+;(print "         Gauss 2d spectrum: " ((f_Gauss_cartesian 20) 0.1 0.1)                "\n")
+;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_cartesian 20 k_vac) 0.1 0.1) "\n")
+(print "         Gauss 2d spectrum: " ((f_Gauss_spherical w_0 k_vac) 0.5)              "\n")
+(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_spherical w_0 k_vac) 0.5 0.5) "\n")
+(exit)
 
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
@@ -189,7 +198,7 @@
 (print "degree of circular polarisation: " (* 2 (real-part (* (conj e_y) e_z)))   "\n")
 (print "polarisation: " (if s-pol? "s" "p") "\n")
 (print "\n")
-(exit)
+
 ;(print "The value of our Gaussian spectrum amplitude is: " ((f_Gauss w_0) 20.0) "\n")
 ;(print "integrand " ((integrand 0.8 2.0 k_vac w_0) 20.0) "\n")
 ;(print "Field amplitude: " ((psi 1.0 k_vac w_0) 0.5) "\n")
