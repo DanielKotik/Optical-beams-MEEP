@@ -27,14 +27,14 @@
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
 (define-param s-pol? true )                 ; true for s-spol, false for p-pol
-(define-param e_z        0)                 ; z-component of Jones vector (s-polarisation: e_z = 1, e_y = 0)
-(define-param e_y        1)                 ; y-component of Jones vector (p-polarisation: e_z = 0, e_y = 1)
+(define-param e_z        1)                 ; z-component of Jones vector (s-polarisation: e_z = 1, e_y = 0)
+(define-param e_y        0)                 ; y-component of Jones vector (p-polarisation: e_z = 0, e_y = 1)
                                             ;                      (circular-polarisation: ...             )
-(define-param m_charge   0)                 ; vortex charge (positive/negative integer number)
+(define-param m_charge   2)                 ; vortex charge (positive/negative integer number)
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
-(define-param n1  1.54)                     ; index of refraction of the incident medium
+(define-param n1  1.00)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
 (define-param kw_0   8)                     ; beam width (>5 is good)
 (define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
@@ -49,8 +49,8 @@
 (define Brewster                            ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
-(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
-;(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
+;(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
+(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
@@ -152,8 +152,6 @@
 ;(print "Gauss 2d spectrum: "          ((f_Gauss 20) 0.1 0.1)                "\n")
 ;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss 20 k_vac) 0.1 0.1) "\n")
 ;(exit)
-
-
 
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
