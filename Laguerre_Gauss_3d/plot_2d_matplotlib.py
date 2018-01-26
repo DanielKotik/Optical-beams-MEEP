@@ -16,7 +16,7 @@ import sys
 filename = sys.argv[1]
 #filename = "LaguerreGauss3d-out/e2_s-000010.00.h5"
 
-cutoff = 30   # cut-off borders of data (removing PML layer and line source placment is desired)
+cutoff = 30   # cut-off borders of data (removing PML layer and line source placment as desired)
 
 with h5py.File(filename, 'r') as hf:
     print("Keys: %s" % hf.keys())

@@ -30,7 +30,7 @@
 (define-param e_z        1)                 ; z-component of Jones vector (s-polarisation: e_z = 1, e_y = 0)
 (define-param e_y        0)                 ; y-component of Jones vector (p-polarisation: e_z = 0, e_y = 1)
                                             ;                      (circular-polarisation: ...             )
-(define-param m_charge   2)                 ; vortex charge (azimuthal quantum number, integer number)
+(define-param m_charge   1)                 ; vortex charge (azimuthal quantum number, integer number)
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
@@ -63,7 +63,7 @@
 (define-param runtime 10)                   ; runs simulation for 10 times freq periods
 (define-param pixel   10)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
-(define-param source_shift 0)           ; source position with respect to the center (point of impact) in Meep
+(define-param source_shift 2.15)           ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
@@ -109,7 +109,7 @@
 (set! pml-layers 
     (list (make pml (thickness pml_thickness))))
 (set! resolution                            ; set resolution in pixels per Meep distance unit
-      (* pixel (* (if (> n1 n2) n1 n2) freq))) 
+      (* pixel (* (if (> n1 n2) n1 n2) freq)))
 
 ;;------------------------------------------------------------------------------------------------
 ;; 2d-beam profile distribution (field amplitude) at the waist of the beam
@@ -127,12 +127,9 @@
 ;;------------------------------------------------------------------------------------------------
 ;; spectrum amplitude distribution(s)
 ;;------------------------------------------------------------------------------------------------
-(define (f_Gauss_cartesian W_y)
+;;cartesian coordinates (depracted) ---------------------------------------------
+(define (f_Gauss_cartesian W_y k)
         (lambda (k_y k_z) (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4))))
-        ))
-        
-(define (f_Gauss_spherical W_y k)
-        (lambda (theta) (exp (* -1 (expt (/ (* k W_y theta) 2) 2)))
         ))
 
 ;; spherical coordinate transformation in k-space
@@ -145,10 +142,14 @@
         ))
 
 (define (f_Laguerre_Gauss_cartesian W_y k)
-        (lambda (k_y k_z) (* ((f_Gauss_cartesian W_y) k_y k_z) (exp (* 0+1i m_charge ((phi k) k_y k_z))) 
-                             (expt ((theta k) k_z) (abs m_charge)))
+        (lambda (k_y k_z)   (* ((f_Gauss_cartesian W_y k) k_y k_z) (exp (* 0+1i m_charge ((phi k) k_y k_z))) 
+                               (expt ((theta k) k_z) (abs m_charge)))
         ))
-        
+;; spherical coordinates --------------------------------------------
+(define (f_Gauss_spherical W_y k)
+        (lambda (theta) (exp (* -1 (expt (/ (* k W_y theta) 2) 2)))
+        ))
+
 (define (f_Laguerre_Gauss_spherical W_y k)
         (lambda (theta phi) (* ((f_Gauss_spherical W_y k) theta) (expt theta (abs m_charge)) (exp (* 0+1i m_charge phi)))
         ))
@@ -156,31 +157,47 @@
 ;; some test outputs
 ;(print "         Gauss 2d spectrum: " ((f_Gauss_cartesian 20) 0.1 0.1)                "\n")
 ;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_cartesian 20 k_vac) 0.1 0.1) "\n")
-(print "         Gauss 2d spectrum: " ((f_Gauss_spherical w_0 k_vac) 0.5)              "\n")
-(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_spherical w_0 k_vac) 0.5 0.5) "\n")
-(exit)
+;(print "         Gauss 2d spectrum: " ((f_Gauss_spherical w_0 k_vac) 0.5)              "\n")
+;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_spherical w_0 k_vac) 0.5 0.5) "\n")
+;(exit)
 
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
 ;;------------------------------------------------------------------------------------------------
-(define (integrand f x y z k)
+(define (integrand_cartesian f x y z k)
         (lambda (k_y k_z) (* (f k_y k_z)
                              (exp (* 0+1i x (real-part (sqrt (- (* k k) (* k_y k_y) (* k_z k_z))))))
                              (exp (* 0+1i y k_y))
                              (exp (* 0+1i z k_z)))
         ))
 
+(define (integrand_sphercial f x y z k)
+        (lambda (theta phi) (* (sin theta) (cos theta) (f theta phi)
+                               (exp (* 0-1i k z (sin theta) (cos phi)))
+                               (exp (* 0+1i k y (sin theta) (sin phi)))
+                               (exp (* 0+1i k x (cos theta))))
+        ))
 
 ;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
 ;; (one may have to adjust the 'relerr' and 'maxeval' parameter values in the integrate function)
-(define (psi f x k)
-        (lambda (r) (car (integrate (integrand f x (vector3-y r) (vector3-z r) k)
+(define (psi_cartesian f x k)
+        (lambda (r) (car (integrate (integrand_cartesian f x (vector3-y r) (vector3-z r) k)
                          (list (* -1.0 k) (* -1.0 k)) (list (* 1.0 k) (* 1.0 k)) relerr 0 maxeval))
         ))
 
-;(print "Gauss 2d beam profile: " ((psi (f_Gauss w_0) 0.0 (* n1 k_vac)) (vector3 0 0.0 0.0)) "\n")
-;(print "Gauss 2d beam profile: " ((Gauss w_0)                          (vector3 0 0.0 0.0)) "\n")
+(define (psi_spherical f x k)
+        (lambda (r) (car (integrate (integrand_sphercial f x (vector3-y r) (vector3-z r) k)
+                         (list 0 0) (list (/ pi 2) (* 2 pi)) relerr 0 maxeval))
+        ))
+
+;(print "Gauss 2d beam profile: " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0 (* n1 k_vac)) -0.1 (* n1 k_vac)) 
+;                                  (vector3 0 0.2 0.2)) "\n")
+
+;(print "Gauss 2d beam profile: " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 (* n1 k_vac)) -0.1 (* n1 k_vac)) 
+;                                  (vector3 0 0.2 0.2)) "\n")
+                                  
+;(print "Gauss 2d beam profile: " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
 ;(exit)
 ;;------------------------------------------------------------------------------------------------
 ;; display values of physical variables
@@ -219,7 +236,8 @@
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
                       ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
-                      (amp-func (psi (f_Laguerre_Gauss w_0 (* n1 k_vac)) shift (* n1 k_vac))))
+                      ;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0 (* n1 k_vac)) shift (* n1 k_vac))))
+                      (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0 (* n1 k_vac)) shift (* n1 k_vac))))
                   ))
 
 ;; exploiting symmetries to reduce computational effort:
