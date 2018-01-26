@@ -89,8 +89,6 @@
         (- (/ pi 2.0) (* (/ _chi_deg 360) 2 pi)))
 (define (Delta_x _alpha)                    ; inclined plane offset to the center of the cell
         (* (/ sx 2.0) (/ (-(- (sqrt 2.0) (cos _alpha)) (sin _alpha)) (sin _alpha))))
-(define (chi_rad _chi_deg)                  ; conversion degrees to radians
-        (* (/ _chi_deg 360.0) (* 2.0 pi)))
 
 (set! geometry-lattice (make lattice (size sx sy sz)))
 (set! default-material (make dielectric (index n1)))
