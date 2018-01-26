@@ -63,11 +63,11 @@
 (define-param runtime 10)                   ; runs simulation for 10 times freq periods
 (define-param pixel   10)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
-(define-param source_shift -2.15)           ; source position with respect to the center (point of impact) in Meep
+(define-param source_shift 0)           ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
-(define-param maxeval 10000)                ; maximum evaluations for integration routine
+(define-param maxeval 1000)                ; maximum evaluations for integration routine
 
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters (do not change)
@@ -136,21 +136,24 @@
 
 ;; spherical coordinate transformation in k-space
 (define (phi k)
-        (lambda (k_y k_z) (atan2 (/ k_y k) (/ (* -1 k_z) / k))
+        (lambda (k_y k_z) (atan (/ k_y k) (/ (* -1 k_z) k))
         ))
 
 (define (theta k)
-        (lambda (k_z) (acos (/ (* -1 k_z) / k))
+        (lambda (k_z) (acos (/ (* -1 k_z) k))
         ))
 
 (define (f_Laguerre_Gauss W_y k)
         (lambda (k_y k_z) (* ((f_Gauss W_y) k_y k_z) (exp (* 0+1i m_charge ((phi k) k_y k_z))) 
                              (expt ((theta k) k_z) (abs m_charge)))
-))
+        ))
 
 ;; some test outputs
-;(print "Gauss 2d spectrum: " ((f_Gauss 20) 0.1 0.1) "\n")
+;(print "Gauss 2d spectrum: "          ((f_Gauss 20) 0.1 0.1)                "\n")
+;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss 20 k_vac) 0.1 0.1) "\n")
 ;(exit)
+
+
 
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
@@ -195,13 +198,13 @@
 ;;------------------------------------------------------------------------------------------------
 (use-output-directory)                      ; put output files in a separate folder
 (set! force-complex-fields? false)          ; default: false
-(set! eps-averaging? true)                  ; default: true
+(set! eps-averaging? false)                  ; default: true
 
 (set! sources (list
                   (make source
                       (src (make continuous-src (frequency freq) (width 0.5)))
                       (if s-pol? (component Ez) (component Hz))
-                      (amplitude 3.0)
+                      (amplitude 1.0)
                       (size 0 2 2)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
