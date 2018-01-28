@@ -67,7 +67,7 @@
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
-(define-param maxeval 1000)                ; maximum evaluations for integration routine
+(define-param maxeval 1000)                ; maximum evaluations for integration routine (10^3 - 10^4)
 
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters (do not change)
@@ -77,7 +77,7 @@
                     ((= ref_medium 1)  n1)
                     ((= red_medium 2)  n2)))
                     
-(define r_w  (/ kr_w (* n_ref k_vac)))
+(define r_w (/ kr_w (* n_ref k_vac)))
 (define w_0 (/ kw_0 (* n_ref k_vac)))
 (define shift (+ source_shift r_w))         ; distance from source position to beam waist (along y-axis)
 
@@ -155,8 +155,8 @@
         ))
 
 ;; some test outputs
-;(print "         Gauss 2d spectrum: " ((f_Gauss_cartesian 20) 0.1 0.1)                "\n")
-;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_cartesian 20 k_vac) 0.1 0.1) "\n")
+;(print "         Gauss 2d spectrum: " ((f_Gauss_cartesian w_0 k_vac) 0.1 0.1)          "\n")
+;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_cartesian w_0 k_vac) 0.1 0.1) "\n")
 ;(print "         Gauss 2d spectrum: " ((f_Gauss_spherical w_0 k_vac) 0.5)              "\n")
 ;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_spherical w_0 k_vac) 0.5 0.5) "\n")
 ;(exit)
@@ -210,9 +210,9 @@
 (print "kr_w:  " kr_w  "\n")
 (print "k_vac: " k_vac "\n")
 (print "vortex charge: " m_charge "\n")
-(print "Jones vector components (e_z, e_y): ("e_z", "e_y")" "\n")
-(print "degree of linear polarisation at pi/4: " (* 2 (imag-part (* (conj e_y) e_z)))   "\n")
-(print "degree of circular polarisation: " (* 2 (real-part (* (conj e_y) e_z)))   "\n")
+(print "Jones vector components (e_z=" e_z ", e_y=" e_y ")" "\n")
+(print "degree of linear polarisation at pi/4: " (* 2 (imag-part (* (conj e_y) e_z))) "\n")
+(print "degree of circular polarisation: "       (* 2 (real-part (* (conj e_y) e_z))) "\n")
 (print "polarisation: " (if s-pol? "s" "p") "\n")
 (print "\n")
 
