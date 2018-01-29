@@ -67,7 +67,7 @@
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
-(define-param maxeval 1000)                ; maximum evaluations for integration routine (10^3 - 10^4)
+(define-param maxeval 10000)                ; maximum evaluations for integration routine (10000 or higher)
 
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters (do not change)
@@ -155,9 +155,10 @@
         ))
 
 ;; some test outputs
-;(print "         Gauss 2d spectrum: " ((f_Gauss_cartesian w_0 k_vac) 0.1 0.1)          "\n")
+
+(print "Gauss 2d spectrum: " ((f_Gauss_cartesian w_0 k_vac) 1 5.2)          "\n")
 ;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_cartesian w_0 k_vac) 0.1 0.1) "\n")
-;(print "         Gauss 2d spectrum: " ((f_Gauss_spherical w_0 k_vac) 0.5)              "\n")
+;(print "Gauss 2d spectrum: " ((f_Gauss_spherical w_0 k_vac) 0.5)              "\n")
 ;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_spherical w_0 k_vac) 0.5 0.5) "\n")
 ;(exit)
 
@@ -191,14 +192,15 @@
                          (list 0 0) (list (/ pi 2) (* 2 pi)) relerr 0 maxeval))
         ))
 
-;(print "Gauss 2d beam profile: " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0 (* n1 k_vac)) -0.1 (* n1 k_vac)) 
-;                                  (vector3 0 0.2 0.2)) "\n")
+(print "integrand (cartesian): " ((integrand_cartesian (f_Gauss_cartesian w_0 k_vac) -2.0 0.3 0.5 k_vac) 4 0) "\n")
+(print "psi (cartesian): " ((psi_cartesian (f_Gauss_cartesian w_0 (* n1 k_vac)) 
+                                                          -2.0 (* n1 k_vac)) (vector3 0 0.3 0.1)) "\n")
 
-;(print "Gauss 2d beam profile: " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 (* n1 k_vac)) -0.1 (* n1 k_vac)) 
+;(print "psi (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 (* n1 k_vac)) -0.1 (* n1 k_vac)) 
 ;                                  (vector3 0 0.2 0.2)) "\n")
                                   
-;(print "Gauss 2d beam profile: " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
-;(exit)
+;(print "psi (origin, simple): " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
+(exit)
 ;;------------------------------------------------------------------------------------------------
 ;; display values of physical variables
 ;;------------------------------------------------------------------------------------------------
@@ -215,10 +217,6 @@
 (print "degree of circular polarisation: "       (* 2 (real-part (* (conj e_y) e_z))) "\n")
 (print "polarisation: " (if s-pol? "s" "p") "\n")
 (print "\n")
-
-;(print "The value of our Gaussian spectrum amplitude is: " ((f_Gauss w_0) 20.0) "\n")
-;(print "integrand " ((integrand 0.8 2.0 k_vac w_0) 20.0) "\n")
-;(print "Field amplitude: " ((psi 1.0 k_vac w_0) 0.5) "\n")
 
 ;;------------------------------------------------------------------------------------------------
 ;; specify current source, output functions and run simulation

@@ -26,8 +26,8 @@ def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
 
 
 ## test paramters (free space propagation, i.e. n1=n2=n_ref=1.0)
-kw_0  = 8.0
-freq  = 4.0
+kw_0 = 8.0
+freq = 4.0
 
 ## derived values
 k_vac = 2.0 * np.pi * freq
@@ -68,9 +68,9 @@ print "Gauss spectrum (cartesian): ", f_Gauss_cartesian(w_0, 1.0, 5.2)
 print "integrand (cartesian):      ", integrand_cartesian(x_shift, 0.3, 0.5, k_vac, 4, 0)
 print "psi (cartesian):            ", psi_cartesian(x_shift, 0.3, 0.1, k_vac)
 
-K_y = np.linspace(-k_vac, k_vac, 200)
+K_y = np.linspace(-k_vac, k_vac, 100)
 
-#INTEGRAND = integrand(x_shift, 0.0, 0.0, k_vac, K_y, 0.0)
+#INTEGRAND = integrand_cartesian(x_shift, 0.0, 0.0, k_vac, K_y, 0.0)
 #plt.plot(K_y, INTEGRAND.real)
 #plt.plot(K_y, INTEGRAND.imag)
 #plt.show()
