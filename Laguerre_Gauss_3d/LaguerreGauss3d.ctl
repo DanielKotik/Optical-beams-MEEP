@@ -174,7 +174,7 @@
                              (exp (* 0+1i z k_z)))
         ))
 
-(define (integrand_sphercial f x y z k)
+(define (integrand_spherical f x y z k)
         (lambda (theta phi) (* (sin theta) (cos theta) (f theta phi)
                                (exp (* 0-1i k z (sin theta) (cos phi)))
                                (exp (* 0+1i k y (sin theta) (sin phi)))
@@ -189,7 +189,7 @@
         ))
 
 (define (psi_spherical f x k)
-        (lambda (r) (car (integrate (integrand_sphercial f x (vector3-y r) (vector3-z r) k)
+        (lambda (r) (car (integrate (integrand_spherical f x (vector3-y r) (vector3-z r) k)
                          (list 0 0) (list (/ pi 2) (* 2 pi)) relerr 0 maxeval))
         ))
 
