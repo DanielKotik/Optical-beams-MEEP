@@ -27,8 +27,8 @@ def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
 
 ## test paramters (free space propagation, i.e. n1=n2=n_ref=1)
 kw_0     = 8.0
-m_charge = 0.0
-n1      = 1.0
+m_charge = 1
+n1       = 1.0
 
 ## meep specific
 freq = 4.0
@@ -43,9 +43,11 @@ def f_Gauss_cartesian(W_y, k_y, k_z):
     """
     return sp.exp(-(W_y ** 2.0) * (k_y ** 2.0 + k_z ** 2.0) / 4.0)
     
-def f_Laguerre_Gauss_cartesian(W_y, m_charge, k_x, k_y, k_z):
+def f_Laguerre_Gauss_cartesian(W_y, m_charge, k_y, k_z):
     """
     """
+    k_x = sp.sqrt(k1**2 - k_y**2 - k_z**2)
+    
     phi   = np.arctan2(k_y / k1, -k_z / k1)
     theta = np.arccos(k_x / k1)
     
@@ -60,9 +62,13 @@ def integrand_cartesian(x, y, z, k_y, k_z):
     #                                                         z * k_z))
     
     ## second variant (leave square root as is, but perform second integration with non-constant bounds)
-    return f_Gauss_cartesian(w_0, k_y, k_z) * sp.exp(1.0j * (x * sp.sqrt(k1**2 - k_y**2 - k_z**2) + 
-                                                             y * k_y + 
-                                                             z * k_z))
+    ## Gauss
+    #k_x = sp.sqrt(k1**2 - k_y**2 - k_z**2)
+    #return f_Gauss_cartesian(w_0, k_y, k_z) * sp.exp(1.0j * (x * k_x + y * k_y + z * k_z))
+    
+    ## Laguerre-Gauss
+    k_x = sp.sqrt(k1**2 - k_y**2 - k_z**2)
+    return f_Laguerre_Gauss_cartesian(w_0, m_charge, k_y, k_z) * sp.exp(1.0j * (x * k_x + y * k_y + z * k_z))
 
 def psi_cartesian(x, y, z):
     """
@@ -78,12 +84,11 @@ def psi_cartesian(x, y, z):
     
 x_shift = -2.0
 print "Gauss spectrum (cartesian): ", f_Gauss_cartesian(w_0, 1.0, 5.2)
-print "L-G spectrum   (cartesian): ", f_Laguerre_Gauss_cartesian(w_0, 1.0, 0.1, 1.0, 5.2)
-print "integrand      (cartesian): ", integrand_cartesian(x_shift, 0.3, 0.5, 4, 0)
-print "psi            (cartesian): ", psi_cartesian(x_shift, 0.3, 0.1)
+print "L-G spectrum   (cartesian): ", f_Laguerre_Gauss_cartesian(w_0, m_charge, 1.0, 5.2)
+print "integrand      (cartesian): ", integrand_cartesian(x_shift, 0.3, 0.5, 4.0, 0.0)
+print "psi            (cartesian): ", psi_cartesian(x_shift, 0.3, 0.5)
 
-K_y = np.linspace(-k1, k1, 100)
-
+#K_y = np.linspace(-k1, k1, 100)
 #INTEGRAND = integrand_cartesian(x_shift, 0.0, 0.0, K_y, 0.0)
 #plt.plot(K_y, INTEGRAND.real)
 #plt.plot(K_y, INTEGRAND.imag)
