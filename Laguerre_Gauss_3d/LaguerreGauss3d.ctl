@@ -72,7 +72,7 @@
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters (do not change)
 ;;------------------------------------------------------------------------------------------------
-(define k_vac (* 2.0 pi freq))
+(define k_vac (* 2.0 pi freq))              ; vacuum wave number
 (define n_ref (cond ((= ref_medium 0) 1.0)  ; index of refraction of the reference medium
                     ((= ref_medium 1)  n1)
                     ((= red_medium 2)  n2)))
@@ -138,13 +138,14 @@
         ))
 
 (define (theta k)
-        (lambda (k_z) (acos (/ (* -1 k_z) k))
+        (lambda (k_x) (acos (/ k_x k))
         ))
 
 (define (f_Laguerre_Gauss_cartesian W_y k)
-        (lambda (k_y k_z)   (* ((f_Gauss_cartesian W_y k) k_y k_z) (exp (* 0+1i m_charge ((phi k) k_y k_z))) 
-                               (expt ((theta k) k_z) (abs m_charge)))
+        (lambda (k_x k_y k_z) (* ((f_Gauss_cartesian W_y k) k_y k_z) (exp (* 0+1i m_charge ((phi k) k_y k_z))) 
+                                 (expt ((theta k) k_x) (abs m_charge)))
         ))
+
 ;; spherical coordinates --------------------------------------------
 (define (f_Gauss_spherical W_y k)
         (lambda (theta) (exp (* -1 (expt (/ (* k W_y theta) 2) 2)))
@@ -156,8 +157,8 @@
 
 ;; some test outputs
 
-(print "Gauss 2d spectrum: " ((f_Gauss_cartesian w_0 k_vac) 1 5.2)          "\n")
-;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_cartesian w_0 k_vac) 0.1 0.1) "\n")
+(print "Gauss spectrum (cartesian): " ((f_Gauss_cartesian w_0 k_vac) 1.0 5.2)          "\n")
+(print "L-G spectrum   (cartesain): " ((f_Laguerre_Gauss_cartesian w_0 k_vac) 0.1 1.0 5.2) "\n")
 ;(print "Gauss 2d spectrum: " ((f_Gauss_spherical w_0 k_vac) 0.5)              "\n")
 ;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_spherical w_0 k_vac) 0.5 0.5) "\n")
 ;(exit)
@@ -192,8 +193,8 @@
                          (list 0 0) (list (/ pi 2) (* 2 pi)) relerr 0 maxeval))
         ))
 
-(print "integrand (cartesian): " ((integrand_cartesian (f_Gauss_cartesian w_0 k_vac) -2.0 0.3 0.5 k_vac) 4 0) "\n")
-(print "psi (cartesian): " ((psi_cartesian (f_Gauss_cartesian w_0 (* n1 k_vac)) 
+(print "integrand      (cartesian): " ((integrand_cartesian (f_Gauss_cartesian w_0 k_vac) -2.0 0.3 0.5 k_vac) 4 0) "\n")
+(print "psi            (cartesian): " ((psi_cartesian (f_Gauss_cartesian w_0 (* n1 k_vac)) 
                                                           -2.0 (* n1 k_vac)) (vector3 0 0.3 0.1)) "\n")
 
 ;(print "psi (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 (* n1 k_vac)) -0.1 (* n1 k_vac)) 
