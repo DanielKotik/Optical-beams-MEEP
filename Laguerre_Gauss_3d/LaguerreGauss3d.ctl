@@ -159,7 +159,10 @@
 ;; some test outputs
 
 (print "Gauss spectrum (cartesian): " ((f_Gauss_cartesian w_0 k_vac) 1.0 5.2)          "\n")
+(print "Gauss spectrum (spherical): " ((f_Gauss_spherical w_0 k_vac) 0.5)              "\n\n")
 (print "L-G spectrum   (cartesain): " ((f_Laguerre_Gauss_cartesian w_0 k_vac) 1.0 5.2) "\n")
+(print "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0 k_vac) 0.5 0.6) "\n\n")
+
 ;(print "Gauss 2d spectrum: " ((f_Gauss_spherical w_0 k_vac) 0.5)              "\n")
 ;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_spherical w_0 k_vac) 0.5 0.5) "\n")
 ;(exit)
