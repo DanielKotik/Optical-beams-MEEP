@@ -42,8 +42,13 @@ def f_Gauss_cartesian(W_y, k_y, k_z):
     """
     """
     return sp.exp(-(W_y ** 2.0) * (k_y ** 2.0 + k_z ** 2.0) / 4.0)
-    
-def f_Laguerre_Gauss_cartesian(W_y, m_charge, k_y, k_z):
+
+def f_Gauss_spherical(W_y, theta):
+    """
+    """
+    return sp.exp(-((k1 * W_y) * theta / 2.0) ** 2)
+
+def f_Laguerre_Gauss_cartesian(W_y, m, k_y, k_z):
     """
     """
     k_x = sp.sqrt(k1**2 - k_y**2 - k_z**2)
@@ -51,7 +56,12 @@ def f_Laguerre_Gauss_cartesian(W_y, m_charge, k_y, k_z):
     phi   = np.arctan2(k_y / k1, -k_z / k1)
     theta = np.arccos(k_x / k1)
     
-    return f_Gauss_cartesian(W_y, k_y, k_z) * (theta ** np.abs(m_charge)) * sp.exp(1.0j * m_charge * phi)
+    return f_Gauss_cartesian(W_y, k_y, k_z) * (theta ** np.abs(m)) * sp.exp(1.0j * m * phi)
+
+def f_Laguerre_Gauss_spherical(W_y, m, theta, phi):
+    """
+    """
+    return f_Gauss_spherical(W_y, theta) * (theta ** np.abs(m)) * sp.exp(1.0j * m * phi)
 
 def integrand_cartesian(x, y, z, k_y, k_z):
     """
@@ -84,9 +94,13 @@ def psi_cartesian(x, y, z):
     
 x_shift = -2.0
 print "Gauss spectrum (cartesian): ", f_Gauss_cartesian(w_0, 1.0, 5.2)
+print "Gauss spectrum (spherical): ", f_Gauss_spherical(w_0, 0.5)
+print "\n"
 print "L-G spectrum   (cartesian): ", f_Laguerre_Gauss_cartesian(w_0, m_charge, 1.0, 5.2)
-print "integrand      (cartesian): ", integrand_cartesian(x_shift, 0.3, 0.5, 4.0, 0.0)
-print "psi            (cartesian): ", psi_cartesian(x_shift, 0.3, 0.5)
+print "L-G spectrum   (spherical): ", f_Laguerre_Gauss_spherical(w_0, m_charge, 0.5, 0.6)
+
+#print "integrand      (cartesian): ", integrand_cartesian(x_shift, 0.3, 0.5, 4.0, 0.0)
+#print "psi            (cartesian): ", psi_cartesian(x_shift, 0.3, 0.5)
 
 #K_y = np.linspace(-k1, k1, 100)
 #INTEGRAND = integrand_cartesian(x_shift, 0.0, 0.0, K_y, 0.0)
