@@ -159,12 +159,11 @@
 ;; some test outputs
 
 (print "Gauss spectrum (cartesian): " ((f_Gauss_cartesian w_0 k_vac) 1.0 5.2)          "\n")
-(print "Gauss spectrum (spherical): " ((f_Gauss_spherical w_0 k_vac) 0.5)              "\n\n")
-(print "L-G spectrum   (cartesain): " ((f_Laguerre_Gauss_cartesian w_0 k_vac) 1.0 5.2) "\n")
-(print "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0 k_vac) 0.5 0.6) "\n\n")
+(print "Gauss spectrum (spherical): " ((f_Gauss_spherical w_0 k_vac) (/ pi 3))         "\n\n")
 
-;(print "Gauss 2d spectrum: " ((f_Gauss_spherical w_0 k_vac) 0.5)              "\n")
-;(print "Laguerre-Gauss 2d spectrum: " ((f_Laguerre_Gauss_spherical w_0 k_vac) 0.5 0.5) "\n")
+(print "L-G spectrum   (cartesain): " ((f_Laguerre_Gauss_cartesian w_0 k_vac) 1.0 5.2) "\n")
+(print "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0 k_vac) (/ pi 3) (/ pi 4)) "\n\n")
+
 ;(exit)
 
 ;;------------------------------------------------------------------------------------------------
@@ -179,7 +178,7 @@
         ))
 
 (define (integrand_spherical f x y z k)
-        (lambda (theta phi) (* (sin theta) (cos theta) (f theta phi)
+        (lambda (theta phi) (* k k (sin theta) (cos theta) (f theta phi)
                                (exp (* 0-1i k z (sin theta) (cos phi)))
                                (exp (* 0+1i k y (sin theta) (sin phi)))
                                (exp (* 0+1i k x (cos theta))))
@@ -198,12 +197,15 @@
         ))
 
 (print "integrand      (cartesian): " ((integrand_cartesian (f_Laguerre_Gauss_cartesian w_0 (* n1 k_vac))
-                                                            -2.0 0.3 0.5 (* n1 k_vac)) 4.0 0.0) "\n")
-(print "psi            (cartesian): " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0 (* n1 k_vac)) 
-                                                      -2.0 (* n1 k_vac)) (vector3 0 0.3 0.5)) "\n")
+                                                            -2.15 0.3 0.5 (* n1 k_vac)) 4.0 0.0) "\n")
+(print "integrand      (spherical): " ((integrand_spherical (f_Laguerre_Gauss_spherical w_0 (* n1 k_vac))
+                                                            -2.15 0.3 0.5 (* n1 k_vac)) (/ pi 3) (/ pi 4)) "\n\n")
 
-;(print "psi (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 (* n1 k_vac)) -0.1 (* n1 k_vac)) 
-;                                  (vector3 0 0.2 0.2)) "\n")
+(print "psi            (cartesian): " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0 (* n1 k_vac)) 
+                                                      -2.15 (* n1 k_vac)) (vector3 0 0.3 0.5)) "\n")
+
+(print "psi            (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 (* n1 k_vac))
+                                                      -2.15 (* n1 k_vac)) (vector3 0 0.3 0.5)) "\n")
                                   
 ;(print "psi (origin, simple): " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
 (exit)
