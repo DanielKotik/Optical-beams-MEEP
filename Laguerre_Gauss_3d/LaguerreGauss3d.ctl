@@ -30,7 +30,7 @@
 (define-param e_z        1)                 ; z-component of Jones vector (s-polarisation: e_z = 1, e_y = 0)
 (define-param e_y        0)                 ; y-component of Jones vector (p-polarisation: e_z = 0, e_y = 1)
                                             ;                      (circular-polarisation: ...             )
-(define-param m_charge   1)                 ; vortex charge (azimuthal quantum number, integer number)
+(define-param m_charge   2)                 ; vortex charge (azimuthal quantum number, integer number)
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
@@ -63,11 +63,11 @@
 (define-param runtime 10)                   ; runs simulation for 10 times freq periods
 (define-param pixel   10)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
-(define-param source_shift 2.15)           ; source position with respect to the center (point of impact) in Meep
+(define-param source_shift 0.0)           ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
-(define-param maxeval 10000)                ; maximum evaluations for integration routine (10000 or higher)
+(define-param maxeval 1000)                ; maximum evaluations for integration routine (10000 or higher)
 
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters (do not change)
@@ -161,7 +161,7 @@
 (print "Gauss spectrum (cartesian): " ((f_Gauss_cartesian w_0 k_vac) 1.0 5.2)          "\n")
 (print "Gauss spectrum (spherical): " ((f_Gauss_spherical w_0 k_vac) (/ pi 3))         "\n\n")
 
-(print "L-G spectrum   (cartesain): " ((f_Laguerre_Gauss_cartesian w_0 k_vac) 1.0 5.2) "\n")
+(print "L-G spectrum   (cartesian): " ((f_Laguerre_Gauss_cartesian w_0 k_vac) 1.0 5.2) "\n")
 (print "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0 k_vac) (/ pi 3) (/ pi 4)) "\n\n")
 
 ;(exit)
@@ -179,9 +179,11 @@
 
 (define (integrand_spherical f x y z k)
         (lambda (theta phi) (* k k (sin theta) (cos theta) (f theta phi)
-                               (exp (* 0-1i k z (sin theta) (cos phi)))
-                               (exp (* 0+1i k y (sin theta) (sin phi)))
-                               (exp (* 0+1i k x (cos theta))))
+                               ;(exp (* 0-1i k z (sin theta) (cos phi)))
+                               ;(exp (* 0+1i k y (sin theta) (sin phi)))
+                               ;(exp (* 0+1i k x (cos theta))))
+                               (exp (* 0+1i k (+ (* (sin theta) (- (* y (sin phi)) (* z (cos phi)))) 
+                                                 (* (cos theta) x)))))
         ))
 
 ;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
@@ -208,7 +210,7 @@
                                                       -2.15 (* n1 k_vac)) (vector3 0 0.3 0.5)) "\n")
                                   
 ;(print "psi (origin, simple): " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
-(exit)
+;(exit)
 ;;------------------------------------------------------------------------------------------------
 ;; display values of physical variables
 ;;------------------------------------------------------------------------------------------------
@@ -238,7 +240,7 @@
                       (src (make continuous-src (frequency freq) (width 0.5)))
                       (if s-pol? (component Ez) (component Hz))
                       (amplitude 1.0)
-                      (size 0 2 2)
+                      (size 0 3 3)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
                       ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
