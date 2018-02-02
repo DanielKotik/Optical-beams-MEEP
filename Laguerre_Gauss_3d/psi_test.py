@@ -27,7 +27,7 @@ def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
 
 ## test paramters (free space propagation, i.e. n1=n2=n_ref=1)
 kw_0     = 8.0
-m_charge = 1
+m_charge = 2
 n1       = 1.0
 
 ## meep specific
@@ -86,8 +86,7 @@ def integrand_spherical(x, y, z, theta, phi):
     """
     """
     return (k1 ** 2) * np.sin(theta) * np.cos(theta) * f_Laguerre_Gauss_spherical(w_0, m_charge, theta, phi) * \
-           sp.exp(1.0j * k1 * (-z * np.sin(theta) * np.cos(phi) + y * np.sin(theta) * np.sin(phi))) * \
-           sp.exp(1.0j * k1 * x * np.cos(theta))
+           sp.exp(1.0j * k1 * (np.sin(theta) * (y * np.sin(phi) - z * np.cos(phi)) + np.cos(theta) * x))
 
 def psi_cartesian(x, y, z):
     """
@@ -131,15 +130,16 @@ print "psi            (spherical): ", psi_spherical(x_shift, 0.3, 0.5)
 
 
 #-----------------------------------
-Y = np.linspace(-5, 5, 30)
-#PSI = vec_psi_cartesian(0.0, Y, 0.0)   # at origin
-#np.save('PSI_cartesian.npy', PSI)
+Z = np.linspace(-2, 2, 50)
+#PSI = vec_psi_spherical(-2.0, 0.0, Z)   # at origin
+#np.save('PSIz_spherical_m_2_x_-2.npy', PSI)
 #PSI = np.load('PSI_cartesian.npy')
-#PSI = np.load('PSI_spherical.npy')
+PSI = np.load('PSIy_spherical_m_2.npy')
+#np.save('PSIy_spherical_m_2.npy', PSI)
 #print PSI 
 
-#plt.plot(Y, PSI.real,    label='real')
-#plt.plot(Y, PSI.imag,    label='imag')
-#plt.plot(Y, np.abs(PSI), label='abs', ls='dotted')
-#plt.legend()
-#plt.show()
+plt.plot(Z, PSI.real,    label='real', marker='x')
+plt.plot(Z, PSI.imag,    label='imag')
+plt.plot(Z, np.abs(PSI), label='abs', marker='o')
+plt.legend()
+plt.show()
