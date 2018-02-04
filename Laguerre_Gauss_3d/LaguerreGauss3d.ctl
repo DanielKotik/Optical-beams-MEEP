@@ -18,8 +18,17 @@
 ;;                                                                      |
 ;;                                                                      v y
 ;;
-;; visualisation: h5topng -S2 -0 -z 0 -c  hot       -a yarg -A eps-000000000.h5 e2_s-000001232.h5
-;;                h5topng -S2 -0 -z 0 -Zc dkbluered -a gray -A eps-000000000.h5   ez-000001232.h5
+;; example visualisations (square brackets contain optional arguments for overlaying the dielectric function)
+;;      - slice within plane of incidence (x-y plane)
+;;          h5topng -S2 -0 -z 0 -c  hot       [-a yarg -A eps-000000000.h5] e2_s-000001232.h5
+;;          h5topng -S2 -0 -z 0 -Zc dkbluered [-a gray -A eps-000000000.h5]   ez-000001232.h5
+
+;;      - slice transversal to the incident propagation axis (INDEX specifies slice index)
+;;          h5topng -S2 -x IDNEX -c  hot       [-a yarg -A eps-000000000.h5] e2_s-000001232.h5
+;;          h5topng -S2 -x INDEX -Zc dkbluered [-a gray -A eps-000000000.h5]   ez-000001232.h5
+
+;;      - full 3D simulation (creating a VTK file to be opened e.g., with MayaVi)
+;;          h5tovtk e2_s-000001232.h5 
 ;;------------------------------------------------------------------------------------------------
 
 ;;------------------------------------------------------------------------------------------------
@@ -63,11 +72,12 @@
 (define-param runtime 10)                   ; runs simulation for 10 times freq periods
 (define-param pixel   10)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
-(define-param source_shift 0.0)           ; source position with respect to the center (point of impact) in Meep
+(define-param source_shift -2.15)           ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
-(define-param maxeval 1000)                ; maximum evaluations for integration routine (10000 or higher)
+(define-param maxeval 10000)                ; maximum evaluations for integration routine (we recommend 1000 for testing
+                                            ; purposes and 10000 or higher for a final simulation run)
 
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters (do not change)
@@ -253,7 +263,7 @@
 ;; (symmetry of the geometric structure). Symmetry of the sources must be ensured simultaneously, which is possible 
 ;; for certain cases by adding a phase. This works for example for pure s- or p-polarisation, where either only
 ;; the Ez or Hz component is specified.
-(set! symmetries (list (make mirror-sym (direction Z) (phase -1))))
+;(set! symmetries (list (make mirror-sym (direction Z) (phase -1))))
 
 (define (eSquared r ex ey ez)
         (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
