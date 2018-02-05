@@ -2,7 +2,8 @@
 ![planar](Gauss_2d/img/planar_intensity_cropped_rotated_resized.png)
 ![convex](Gauss_2d/img/convex_intensity_cropped_rotated_resized.png)
 
-![snap](Laguerre_Gauss_3d/img/example.png)
+![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_longitudinal_resized.png)
+![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_transverse_resized.png)
 # Optical-beams-MEEP
 FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces.
 *   Collection of Scheme configuration files for Gaussian beams (2d) impinging upon planar, concave and convex
@@ -31,9 +32,9 @@ information and assistance.
 For a more detailed explanation of our configuration files and the physical background, please see my dissertation 
 thesis. Available soon.
 
-## Currently supported _beam - interface - polarisation_ configurations
+## Supported _beam - interface - polarisation_ configurations
 -   [x] Gaussian beams (2d), planar, s- and p-polarisation
 -   [x] Gaussian beams (2d), concave, s- and p-polarisation
 -   [x] Gaussian beams (2d), convex, s- and p-polarisation
--   [ ] Laguerre-Gaussian (vortex) beams (3d), planar, arbitrary complex polarisation
+-   [x] Laguerre-Gaussian (vortex) beams (3d), planar, arbitrary complex polarisation
 -   [ ] Airy beams (2d) (free space propagation)
