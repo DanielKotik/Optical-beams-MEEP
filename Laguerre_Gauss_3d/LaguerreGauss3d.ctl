@@ -83,6 +83,7 @@
 ;; derived Meep parameters (do not change)
 ;;------------------------------------------------------------------------------------------------
 (define k_vac (* 2.0 pi freq))              ; vacuum wave number
+(define k1    (* n1  k_vac  ))              ; wave number inside the incident medium
 (define n_ref (cond ((= ref_medium 0) 1.0)  ; index of refraction of the reference medium
                     ((= ref_medium 1)  n1)
                     ((= red_medium 2)  n2)))
@@ -139,7 +140,7 @@
 ;;------------------------------------------------------------------------------------------------
 
 ;;cartesian coordinates (not recommended) ---------------------------------------------
-(define (f_Gauss_cartesian W_y k)
+(define (f_Gauss_cartesian W_y)
         (lambda (k_y k_z) (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4))))
         ))
 
@@ -152,27 +153,27 @@
         (lambda (k_y k_z) (acos (/ (real-part (sqrt (- (* k k) (* k_y k_y) (* k_z k_z)))) k))
         ))
 
-(define (f_Laguerre_Gauss_cartesian W_y k)
-        (lambda (k_y k_z) (* ((f_Gauss_cartesian W_y k) k_y k_z) (exp (* 0+1i m_charge ((phi k) k_y k_z))) 
-                             (expt ((theta k) k_y k_z) (abs m_charge)))
+(define (f_Laguerre_Gauss_cartesian W_y)
+        (lambda (k_y k_z) (* ((f_Gauss_cartesian W_y) k_y k_z) (exp (* 0+1i m_charge ((phi k1) k_y k_z))) 
+                             (expt ((theta k1) k_y k_z) (abs m_charge)))
         ))
 
 ;; spherical coordinates --------------------------------------------
-(define (f_Gauss_spherical W_y k)
-        (lambda (theta) (exp (* -1 (expt (/ (* k W_y theta) 2) 2)))
+(define (f_Gauss_spherical W_y)
+        (lambda (theta) (exp (* -1 (expt (/ (* k1 W_y theta) 2) 2)))
         ))
 
-(define (f_Laguerre_Gauss_spherical W_y k)
-        (lambda (theta phi) (* ((f_Gauss_spherical W_y k) theta) (expt theta (abs m_charge)) (exp (* 0+1i m_charge phi)))
+(define (f_Laguerre_Gauss_spherical W_y)
+        (lambda (theta phi) (* ((f_Gauss_spherical W_y) theta) (expt theta (abs m_charge)) (exp (* 0+1i m_charge phi)))
         ))
 
 ;; some test outputs
 
-(print "Gauss spectrum (cartesian): " ((f_Gauss_cartesian w_0 k_vac) 1.0 5.2)          "\n")
-(print "Gauss spectrum (spherical): " ((f_Gauss_spherical w_0 k_vac) (/ pi 3))         "\n\n")
+(print "Gauss spectrum (cartesian): " ((f_Gauss_cartesian w_0) 1.0 5.2)          "\n")
+(print "Gauss spectrum (spherical): " ((f_Gauss_spherical w_0) (/ pi 3))         "\n\n")
 
-(print "L-G spectrum   (cartesian): " ((f_Laguerre_Gauss_cartesian w_0 k_vac) 1.0 5.2) "\n")
-(print "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0 k_vac) (/ pi 3) (/ pi 4)) "\n\n")
+(print "L-G spectrum   (cartesian): " ((f_Laguerre_Gauss_cartesian w_0) 1.0 5.2) "\n")
+(print "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0) (/ pi 3) (/ pi 4)) "\n\n")
 
 ;(exit)
 
@@ -180,44 +181,44 @@
 ;; plane wave decomposition 
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
 ;;------------------------------------------------------------------------------------------------
-(define (integrand_cartesian f x y z k)
+(define (integrand_cartesian f x y z)
         (lambda (k_y k_z) (* (f k_y k_z)
-                             (exp (* 0+1i x (real-part (sqrt (- (* k k) (* k_y k_y) (* k_z k_z))))))
-                             (exp (* 0+1i y k_y))
-                             (exp (* 0+1i z k_z)))
+                             ;(exp (* 0+1i x (real-part (sqrt (- (* k1 k1) (* k_y k_y) (* k_z k_z))))))
+                             ;(exp (* 0+1i y k_y))
+                             ;(exp (* 0+1i z k_z)))
+                             (exp (* 0+1i (+ (* x (real-part (sqrt (- (* k1 k1) (* k_y k_y) (* k_z k_z))))) 
+                                             (* y k_y) (* z k_z)))))
         ))
 
-(define (integrand_spherical f x y z k)
-        (lambda (theta phi) (* k k (sin theta) (cos theta) (f theta phi)
-                               ;(exp (* 0-1i k z (sin theta) (cos phi)))
-                               ;(exp (* 0+1i k y (sin theta) (sin phi)))
-                               ;(exp (* 0+1i k x (cos theta))))
-                               (exp (* 0+1i k (+ (* (sin theta) (- (* y (sin phi)) (* z (cos phi)))) 
-                                                 (* (cos theta) x)))))
+(define (integrand_spherical f x y z)
+        (lambda (theta phi) (* k1 k1 (sin theta) (cos theta) (f theta phi)
+                               ;(exp (* 0-1i k1 z (sin theta) (cos phi)))
+                               ;(exp (* 0+1i k1 y (sin theta) (sin phi)))
+                               ;(exp (* 0+1i k1 x (cos theta))))
+                               (exp (* 0+1i k1 (+ (* (sin theta) (- (* y (sin phi)) (* z (cos phi)))) 
+                                                  (* (cos theta) x)))))
         ))
 
 ;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
 ;; (one may have to adjust the 'relerr' and 'maxeval' parameter values in the integrate function)
-(define (psi_cartesian f x k)
-        (lambda (r) (car (integrate (integrand_cartesian f x (vector3-y r) (vector3-z r) k)
-                         (list (* -1.0 k) (* -1.0 k)) (list (* 1.0 k) (* 1.0 k)) relerr 0 maxeval))
+(define (psi_cartesian f x)
+        (lambda (r) (car (integrate (integrand_cartesian f x (vector3-y r) (vector3-z r))
+                         (list (* -1.0 k1) (* -1.0 k1)) (list (* 1.0 k1) (* 1.0 k1)) relerr 0 maxeval))
         ))
 
-(define (psi_spherical f x k)
-        (lambda (r) (car (integrate (integrand_spherical f x (vector3-y r) (vector3-z r) k)
+(define (psi_spherical f x)
+        (lambda (r) (car (integrate (integrand_spherical f x (vector3-y r) (vector3-z r))
                          (list 0 0) (list (/ pi 2) (* 2 pi)) relerr 0 maxeval))
         ))
 
-(print "integrand      (cartesian): " ((integrand_cartesian (f_Laguerre_Gauss_cartesian w_0 (* n1 k_vac))
-                                                            -2.15 0.3 0.5 (* n1 k_vac)) 4.0 0.0) "\n")
-(print "integrand      (spherical): " ((integrand_spherical (f_Laguerre_Gauss_spherical w_0 (* n1 k_vac))
-                                                            -2.15 0.3 0.5 (* n1 k_vac)) (/ pi 3) (/ pi 4)) "\n\n")
+(print "integrand      (cartesian): " ((integrand_cartesian (f_Laguerre_Gauss_cartesian w_0)
+                                                            -2.15 0.3 0.5)    4.0      0.0  )   "\n")
+(print "integrand      (spherical): " ((integrand_spherical (f_Laguerre_Gauss_spherical w_0)
+                                                            -2.15 0.3 0.5) (/ pi 3) (/ pi 4)) "\n\n")
 
-(print "psi            (cartesian): " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0 (* n1 k_vac)) 
-                                                      -2.15 (* n1 k_vac)) (vector3 0 0.3 0.5)) "\n")
+(print "psi            (cartesian): " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0) -2.15) (vector3 0 0.3 0.5)) "\n")
 
-(print "psi            (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 (* n1 k_vac))
-                                                      -2.15 (* n1 k_vac)) (vector3 0 0.3 0.5)) "\n")
+(print "psi            (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0) -2.15) (vector3 0 0.3 0.5)) "\n")
                                   
 ;(print "psi (origin, simple): " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
 ;(exit)
@@ -253,9 +254,8 @@
                       (size 0 3 3)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
-                      ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
-                      ;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0 (* n1 k_vac)) shift (* n1 k_vac))))
-                      (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0 (* n1 k_vac)) shift (* n1 k_vac))))
+                      ;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift)))
+                      (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift)))
                   ))
 
 ;; exploiting symmetries to reduce computational effort:
