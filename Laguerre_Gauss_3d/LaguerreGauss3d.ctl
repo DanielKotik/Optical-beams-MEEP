@@ -175,8 +175,6 @@
 (print "L-G spectrum   (cartesian): " ((f_Laguerre_Gauss_cartesian w_0) 1.0 5.2) "\n")
 (print "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0) (/ pi 3) (/ pi 4)) "\n\n")
 
-;(exit)
-
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
@@ -211,6 +209,8 @@
                          (list 0 0) (list (/ pi 2) (* 2 pi)) relerr 0 maxeval))
         ))
 
+(define PSI_SPHERICAL (memoize (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift)))
+
 (print "integrand      (cartesian): " ((integrand_cartesian (f_Laguerre_Gauss_cartesian w_0)
                                                             -2.15 0.3 0.5)    4.0      0.0  )   "\n")
 (print "integrand      (spherical): " ((integrand_spherical (f_Laguerre_Gauss_spherical w_0)
@@ -219,6 +219,7 @@
 (print "psi            (cartesian): " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0) -2.15) (vector3 0 0.3 0.5)) "\n")
 
 (print "psi            (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0) -2.15) (vector3 0 0.3 0.5)) "\n")
+(print "PSI            (SPHERICAL): " (PSI_SPHERICAL (vector3 0 0.3 0.5)) "\n")
                                   
 ;(print "psi (origin, simple): " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
 ;(exit)
@@ -249,13 +250,14 @@
 (set! sources (list
                   (make source
                       (src (make continuous-src (frequency freq) (width 0.5)))
-                      (if s-pol? (component Ez) (component Hz))
-                      (amplitude 1.0)
+                      (component Ez)
+                      (amplitude e_z)
                       (size 0 3 3)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
                       ;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift)))
-                      (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift)))
+                      ;(amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift)))
+                      (amp-func PSI_SPHERICAL))
                   ))
 
 ;; exploiting symmetries to reduce computational effort:
