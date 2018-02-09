@@ -232,11 +232,29 @@
 (print "kr_w:  " kr_w  "\n")
 (print "k_vac: " k_vac "\n")
 (print "vortex charge: " m_charge "\n")
-(print "Jones vector components (e_z=" e_z ", e_y=" e_y ")" "\n")
+(print "Jones vector components: (e_z=" e_z ", e_y=" e_y ")" "\n")
 (print "degree of linear polarisation at pi/4: " (* 2 (imag-part (* (conj e_y) e_z))) "\n")
 (print "degree of circular polarisation: "       (* 2 (real-part (* (conj e_y) e_z))) "\n")
 (print "polarisation: " (if s-pol? "s" "p") "\n")
 (print "\n")
+
+;;------------------------------------------------------------------------------------------------
+;; exploiting symmetries to reduce computational effort
+;; (works only for beams without intrinsic orbital angular momentum, i.e. no vortex charge)
+;;------------------------------------------------------------------------------------------------
+
+;; The plane of incidence (x-y-plane) is a mirror plane which is characterised to be orthogonal to the z-axis
+;; (symmetry of the geometric structure). Symmetry of the sources must be ensured simultaneously, which is only
+;; possible for certain cases. If I am not mistaken this can only be achieved for vortex free beams with pure s- or
+;; p-polarisation, i.e. where either the Ez or Ey component is specified.
+(if (equal? m_charge 0)
+    (if (and (= e_z 1) (= e_y 0))           ; s-polarisation
+        (set! symmetries (list (make mirror-sym (direction Z) (phase -1))))
+    )
+    (if (and (= e_z 0) (= e_y 1))           ; p-polarisation
+        (set! symmetries (list (make mirror-sym (direction Z)           )))
+    )
+)
 
 ;;------------------------------------------------------------------------------------------------
 ;; specify current source, output functions and run simulation
@@ -280,13 +298,6 @@
                   )
               )
 )
-
-;; exploiting symmetries to reduce computational effort:
-;; The plane of incidence (x-y-plane) is a mirror plane which is characterised to be orthogonal to the z-axis
-;; (symmetry of the geometric structure). Symmetry of the sources must be ensured simultaneously, which is possible 
-;; for certain cases by adding a phase. This works for example for pure s- or p-polarisation, where either only
-;; the Ez or Hz component is specified.
-;(set! symmetries (list (make mirror-sym (direction Z) (phase -1))))
 
 (define (eSquared r ex ey ez)
         (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
