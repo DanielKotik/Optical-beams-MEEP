@@ -258,6 +258,16 @@
                       ;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift)))
                       ;(amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift)))
                       (amp-func PSI_SPHERICAL))
+                  (make source
+                      (src (make continuous-src (frequency freq) (width 0.5)))
+                      (component Ey)
+                      (amplitude e_y)
+                      (size 0 3 3)
+                      (center source_shift 0 0)
+                      ;(amp-func (Gauss w_0)))
+                      ;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift)))
+                      ;(amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift)))
+                      (amp-func PSI_SPHERICAL))
                   ))
 
 ;; exploiting symmetries to reduce computational effort:
