@@ -76,7 +76,7 @@
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
-(define-param maxeval 100)                ; maximum evaluations for integration routine (we recommend 1000 for testing
+(define-param maxeval 10000)                ; maximum evaluations for integration routine (we recommend 1000 for testing
                                             ; purposes and 10000 or higher for a final simulation run)
 
 ;;------------------------------------------------------------------------------------------------
@@ -160,7 +160,8 @@
 
 ;; spherical coordinates --------------------------------------------
 (define (f_Gauss_spherical W_y)
-        (lambda (theta) (exp (* -1 (expt (/ (* k1 W_y theta) 2) 2)))
+        (lambda (theta . phi)               ; phi is an optional argument that may be passed, but is not used here
+                (exp (* -1 (expt (/ (* k1 W_y theta) 2) 2)))
         ))
 
 (define (f_Laguerre_Gauss_spherical W_y)
@@ -252,9 +253,13 @@
                           (amplitude e_z)
                           (size 0 3 3)
                           (center source_shift 0 0)
-                          ;(amp-func (Gauss w_0))
-                          ;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift))
-                          (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift))
+                          ;;(amp-func (Gauss w_0))
+                          ;;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift))
+                          (if (equal? m_charge 0)
+                              ; if vortex charge is zero directly use Gauss spectrum distribution (improves perfomance)
+                              (amp-func (psi_spherical (f_Gauss_spherical w_0) shift))
+                              (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift))
+                          )
                        )
                   )
                   (if (not (equal? e_y 0))
@@ -264,9 +269,13 @@
                           (amplitude e_y)
                           (size 0 3 3)
                           (center source_shift 0 0)
-                          ;(amp-func (Gauss w_0))
-                          ;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift))
-                          (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift))
+                          ;;(amp-func (Gauss w_0))
+                          ;;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift))
+                          (if (equal? m_charge 0)
+                              ; if vortex charge is zero directly use Gauss spectrum distribution (improves perfomance)
+                              (amp-func (psi_spherical (f_Gauss_spherical w_0) shift))
+                              (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift))
+                          )
                       )
                   )
               )
