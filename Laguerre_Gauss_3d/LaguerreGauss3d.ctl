@@ -209,8 +209,6 @@
                          (list 0 0) (list (/ pi 2) (* 2 pi)) relerr 0 maxeval))
         ))
 
-(define PSI_SPHERICAL (memoize (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift)))
-
 (print "integrand      (cartesian): " ((integrand_cartesian (f_Laguerre_Gauss_cartesian w_0)
                                                             -2.15 0.3 0.5)    4.0      0.0  )   "\n")
 (print "integrand      (spherical): " ((integrand_spherical (f_Laguerre_Gauss_spherical w_0)
@@ -219,7 +217,6 @@
 (print "psi            (cartesian): " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0) -2.15) (vector3 0 0.3 0.5)) "\n")
 
 (print "psi            (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0) -2.15) (vector3 0 0.3 0.5)) "\n")
-(print "PSI            (SPHERICAL): " (PSI_SPHERICAL (vector3 0 0.3 0.5)) "\n")
                                   
 ;(print "psi (origin, simple): " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
 ;(exit)
@@ -257,7 +254,6 @@
                       ;(amp-func (Gauss w_0)))
                       ;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift)))
                       ;(amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift)))
-                      (amp-func PSI_SPHERICAL))
                   (make source
                       (src (make continuous-src (frequency freq) (width 0.5)))
                       (component Ey)
@@ -267,7 +263,6 @@
                       ;(amp-func (Gauss w_0)))
                       ;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift)))
                       ;(amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift)))
-                      (amp-func PSI_SPHERICAL))
                   ))
 
 ;; exploiting symmetries to reduce computational effort:
