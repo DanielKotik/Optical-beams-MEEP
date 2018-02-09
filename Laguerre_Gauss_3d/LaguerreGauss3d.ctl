@@ -7,7 +7,7 @@
 ;;
 ;; example invocations: a) launch the serial version of meep with specified polarisation (p)
 ;;
-;;                              meep s-pol\?=false LaguerreGauss3d.ctl
+;;                              meep e_z=0 e_y=1 LaguerreGauss3d.ctl
 ;;
 ;;                      b) launch the parallel version of meep using 8 cores
 ;;
@@ -35,7 +35,6 @@
 ;; physical parameters characterizing light source and interface characteristics 
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
-(define-param s-pol? true )                 ; true for s-spol, false for p-pol
 (define-param e_z        1)                 ; z-component of Jones vector (s-polarisation: e_z = 1, e_y = 0)
 (define-param e_y        0)                 ; y-component of Jones vector (p-polarisation: e_z = 0, e_y = 1)
                                             ;                      (circular-polarisation: ...             )
@@ -53,7 +52,7 @@
     (cond
       ((> n1 n2) (* (/ (asin (/ n2 n1)) (* 2.0 pi)) 360.0))
       (else      (display "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
-    ))  
+    ))
 
 (define Brewster                            ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
@@ -92,6 +91,12 @@
 (define w_0 (/ kw_0 (* n_ref k_vac)))
 (define shift (+ source_shift r_w))         ; distance from source position to beam waist (along y-axis)
 
+(define s-pol?                              ; true if s-polarised
+       (if (and (= e_z   1 ) (= e_y   0 )) true false))
+(define p-pol?                              ; true if p-polarised
+       (if (and (= e_z   0 ) (= e_y   1 )) true false))
+(define a-pol?                              ; true if arbitrary (complex) polarised
+       (if (and (not s-pol?) (not p-pol?)) true false))
 ;;------------------------------------------------------------------------------------------------
 ;; placement of the planar dielectric interface within the computational cell
 ;;------------------------------------------------------------------------------------------------
@@ -160,7 +165,7 @@
 
 ;; spherical coordinates --------------------------------------------
 (define (f_Gauss_spherical W_y)
-        (lambda (theta . phi)               ; phi is an optional argument that may be passed, but is not used here
+        (lambda (theta . phi)               ; phi is an optional argument that can be passed (but is not used here)
                 (exp (* -1 (expt (/ (* k1 W_y theta) 2) 2)))
         ))
 
@@ -232,15 +237,16 @@
 (print "kr_w:  " kr_w  "\n")
 (print "k_vac: " k_vac "\n")
 (print "vortex charge: " m_charge "\n")
-(print "Jones vector components: (e_z=" e_z ", e_y=" e_y ")" "\n")
-(print "degree of linear polarisation at pi/4: " (* 2 (imag-part (* (conj e_y) e_z))) "\n")
-(print "degree of circular polarisation: "       (* 2 (real-part (* (conj e_y) e_z))) "\n")
-(print "polarisation: " (if s-pol? "s" "p") "\n")
+(print "Jones vector components: (e_z=" e_z ", e_y=" e_y ")")
+(print " ---> " (cond (s-pol? "s-") (p-pol? "p-") (a-pol? "mixed-")) "polarisation" "\n")
+
+(print "degree of linear   polarisation at pi/4: " (* 2 (imag-part (* (conj e_y) e_z))) "\n")
+(print "degree of circular polarisation: "         (* 2 (real-part (* (conj e_y) e_z))) "\n")
 (print "\n")
 
 ;;------------------------------------------------------------------------------------------------
 ;; exploiting symmetries to reduce computational effort
-;; (works only for beams without intrinsic orbital angular momentum, i.e. no vortex charge)
+;; (only possible for beams without intrinsic orbital angular momentum, i.e. no vortex charge)
 ;;------------------------------------------------------------------------------------------------
 
 ;; The plane of incidence (x-y-plane) is a mirror plane which is characterised to be orthogonal to the z-axis
@@ -248,10 +254,10 @@
 ;; possible for certain cases. If I am not mistaken this can only be achieved for vortex free beams with pure s- or
 ;; p-polarisation, i.e. where either the Ez or Ey component is specified.
 (if (equal? m_charge 0)
-    (if (and (= e_z 1) (= e_y 0))           ; s-polarisation
+    (if s-pol?                              ; s-polarisation
         (set! symmetries (list (make mirror-sym (direction Z) (phase -1))))
     )
-    (if (and (= e_z 0) (= e_y 1))           ; p-polarisation
+    (if p-pol?                              ; p-polarisation
         (set! symmetries (list (make mirror-sym (direction Z)           )))
     )
 )
@@ -274,7 +280,7 @@
                           ;;(amp-func (Gauss w_0))
                           ;;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift))
                           (if (equal? m_charge 0)
-                              ; if vortex charge is zero directly use Gauss spectrum distribution (improves perfomance)
+                              ; if vortex charge is zero use Gauss spectrum distribution (improves perfomance)
                               (amp-func (psi_spherical (f_Gauss_spherical w_0) shift))
                               (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift))
                           )
@@ -290,7 +296,7 @@
                           ;;(amp-func (Gauss w_0))
                           ;;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift))
                           (if (equal? m_charge 0)
-                              ; if vortex charge is zero directly use Gauss spectrum distribution (improves perfomance)
+                              ; if vortex charge is zero use Gauss spectrum distribution (improves perfomance)
                               (amp-func (psi_spherical (f_Gauss_spherical w_0) shift))
                               (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift))
                           )
@@ -303,12 +309,11 @@
         (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
            (* (magnitude ez) (magnitude ez))))
 
-(define (output-efield2) (output-real-field-function (if s-pol? "e2_s" "e2_p")
+(define (output-efield2) (output-real-field-function (cond (s-pol? "e2_s") (p-pol? "e2_p") (a-pol? "e2_mixed"))
                                                      (list Ex Ey Ez) eSquared))
 
 (run-until runtime
 ;     (at-beginning output-epsilon)          ; output of dielectric function
-     (if s-pol?
-         (at-end output-efield-z)           ; output of E_z component (for s-polarisation)
-         (at-end output-hfield-z))          ; output of H_z component (for p-polarisation)
+     (if s-pol? (at-end output-efield-z))   ; output of E_z component (for s-polarisation)
+     (if p-pol? (at-end output-efield-y))   ; output of E_y component (for p-polarisation)
      (at-end output-efield2))               ; output of electric field intensity
