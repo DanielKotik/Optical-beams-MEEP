@@ -51,7 +51,8 @@
 (define Critical                            ; calculates the critical angle in degrees
     (cond
       ((> n1 n2) (* (/ (asin (/ n2 n1)) (* 2.0 pi)) 360.0))
-      (else      (display "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
+      ((< n1 n2) (display "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
+      ((= n1 n2) (display "\nWarning: Critical angle is not defined, since n1 = n2!\n\n"))
     ))
 
 (define Brewster                            ; calculates the Brewster angle in degrees
