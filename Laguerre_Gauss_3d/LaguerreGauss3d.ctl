@@ -254,12 +254,11 @@
 ;; possible for certain cases. If I am not mistaken this can only be achieved for vortex free beams with pure s- or
 ;; p-polarisation, i.e. where either the Ez or Ey component is specified.
 (if (equal? m_charge 0)
-    (if s-pol?                              ; s-polarisation
-        (set! symmetries (list (make mirror-sym (direction Z) (phase -1))))
-    )
-    (if p-pol?                              ; p-polarisation
-        (set! symmetries (list (make mirror-sym (direction Z)           )))
-    )
+        (cond (s-pol?                       ; s-polarisation
+              (set! symmetries (list (make mirror-sym (direction Z) (phase -1)))))
+              (p-pol?                       ; p-polarisation
+              (set! symmetries (list (make mirror-sym (direction Z)           ))))
+        )
 )
 
 ;;------------------------------------------------------------------------------------------------
@@ -269,7 +268,8 @@
 (set! force-complex-fields? false)          ; default: false
 (set! eps-averaging? false)                  ; default: true
 
-(set! sources (list
+(set! sources (filter (compose not unspecified?)
+              (list
                   (if (not (equal? e_z 0))
                       (make source
                           (src (make continuous-src (frequency freq) (width 0.5)))
@@ -302,7 +302,7 @@
                           )
                       )
                   )
-              )
+              ))
 )
 
 (define (eSquared r ex ey ez)
@@ -314,6 +314,6 @@
 
 (run-until runtime
 ;     (at-beginning output-epsilon)          ; output of dielectric function
-     (if s-pol? (at-end output-efield-z))   ; output of E_z component (for s-polarisation)
-     (if p-pol? (at-end output-efield-y))   ; output of E_y component (for p-polarisation)
+     (at-end output-efield-z)   ; output of E_z component (for s-polarisation)
+     (at-end output-efield-y)   ; output of E_y component (for p-polarisation)
      (at-end output-efield2))               ; output of electric field intensity
