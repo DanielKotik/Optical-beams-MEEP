@@ -316,6 +316,7 @@
                                                      (list Ex Ey Ez) eSquared))
 
 (run-until runtime
+      (at-beginning (lambda () (print "Calculating inital field configuration. This will take some time...\n")))
 ;     (at-beginning output-epsilon)          ; output of dielectric function
 ;     (at-end output-efield-x)               ; output of E_x component 
 ;     (at-end output-efield-y)               ; output of E_y component 
