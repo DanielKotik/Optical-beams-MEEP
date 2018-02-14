@@ -31,6 +31,8 @@
 ;;          h5tovtk e2_s-000001232.h5 
 ;;------------------------------------------------------------------------------------------------
 
+(print "\nstart time: "(strftime "%c" (localtime (current-time))) "\n")
+
 ;;------------------------------------------------------------------------------------------------
 ;; physical parameters characterizing light source and interface characteristics 
 ;; (must be adjusted - either here or via command line)
@@ -43,7 +45,7 @@
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
 (define-param n1  1.00)                     ; index of refraction of the incident medium
-(define-param n2  1.00)                     ; index of refraction of the refracted medium
+(define-param n2  1.54)                     ; index of refraction of the refracted medium
 (define-param kw_0   8)                     ; beam width (>5 is good)
 (define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
@@ -319,3 +321,5 @@
 ;     (at-end output-efield-y)               ; output of E_y component 
 ;     (at-end output-efield-z)               ; output of E_z component
      (at-end output-efield2))               ; output of electric field intensity
+
+(print "\nend time: "(strftime "%c" (localtime (current-time))) "\n")
