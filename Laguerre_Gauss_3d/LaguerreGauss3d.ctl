@@ -51,8 +51,8 @@
 (define Critical                            ; calculates the critical angle in degrees
     (cond
       ((> n1 n2) (* (/ (asin (/ n2 n1)) (* 2.0 pi)) 360.0))
-      ((< n1 n2) (display "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
-      ((= n1 n2) (display "\nWarning: Critical angle is not defined, since n1 = n2!\n\n"))
+      ((< n1 n2) (print "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
+      ((= n1 n2) (print "\nWarning: Critical angle is not defined, since n1 = n2!\n\n"))
     ))
 
 (define Brewster                            ; calculates the Brewster angle in degrees
@@ -315,6 +315,7 @@
 
 (run-until runtime
 ;     (at-beginning output-epsilon)          ; output of dielectric function
-     (at-end output-efield-z)   ; output of E_z component (for s-polarisation)
-     (at-end output-efield-y)   ; output of E_y component (for p-polarisation)
+;     (at-end output-efield-x)               ; output of E_x component 
+;     (at-end output-efield-y)               ; output of E_y component 
+;     (at-end output-efield-z)               ; output of E_z component
      (at-end output-efield2))               ; output of electric field intensity
