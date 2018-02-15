@@ -333,7 +333,7 @@
 ;     (at-end output-efield-y)               ; output of E_y component 
 ;     (at-end output-efield-z)               ; output of E_z component
       (at-end output-efield-real-squared)    ; output of electric field intensity
-      (at-end (if force-complex-fields? output-efield-imag-squared))
+      (at-end (when-true (lambda () force-complex-fields?) output-efield-imag-squared))
 )
 
 (print "\nend time: "(strftime "%c" (localtime (current-time))) "\n")
