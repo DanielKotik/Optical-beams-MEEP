@@ -269,8 +269,8 @@
 ;; specify current source, output functions and run simulation
 ;;------------------------------------------------------------------------------------------------
 (use-output-directory)                      ; put output files in a separate folder
-(set! force-complex-fields? false)          ; default: false
-(set! eps-averaging? false)                  ; default: true
+(set! force-complex-fields? true)           ; default: true
+(set! eps-averaging? true)                  ; default: true
 
 (set! sources (filter (compose not unspecified?)
               (list
@@ -281,10 +281,10 @@
                           (amplitude e_z)
                           (size 0 3 3)
                           (center source_shift 0 0)
-                          ;;(amp-func (Gauss w_0))
-                          ;;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) shift))
+                          ;(amp-func (Gauss w_0))
+                          ;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) shift))
                           (if (equal? m_charge 0)
-                              ; if vortex charge is zero use Gauss spectrum distribution (improves perfomance)
+                              ;; if vortex charge is zero use Gauss spectrum distribution (improves perfomance)
                               (amp-func (psi_spherical (f_Gauss_spherical w_0) shift))
                               (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0 m_charge) shift))
                           )
@@ -297,10 +297,10 @@
                           (amplitude e_y)
                           (size 0 3 3)
                           (center source_shift 0 0)
-                          ;;(amp-func (Gauss w_0))
-                          ;;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) shift))
+                          ;(amp-func (Gauss w_0))
+                          ;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) shift))
                           (if (equal? m_charge 0)
-                              ; if vortex charge is zero use Gauss spectrum distribution (improves perfomance)
+                              ;; if vortex charge is zero use Gauss spectrum distribution (improves perfomance)
                               (amp-func (psi_spherical (f_Gauss_spherical w_0) shift))
                               (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0 m_charge) shift))
                           )
@@ -309,21 +309,31 @@
               ))
 )
 
-(define (eSquared r ex ey ez)
-        (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
-           (* (magnitude ez) (magnitude ez))))
 
-(define (output-efield2) (output-real-field-function (cond (s-pol? "e2_s") (p-pol? "e2_p") (a-pol? "e2_mixed"))
-                                                     (list Ex Ey Ez) eSquared))
+(define (efield-real-squared r ex ey ez)    ; calculates |Re E|^2
+        (+ (expt (real-part ex) 2) (expt (real-part ey) 2) (expt (real-part ez) 2)))
 
-(init-fields)
+(define (efield-imag-squared r ex ey ez)    ; calculates |Im E|^2
+        (+ (expt (imag-part ex) 2) (expt (imag-part ey) 2) (expt (imag-part ez) 2)))
+
+
+(define (output-efield-real-squared) (output-real-field-function (cond (s-pol? "e_real2_s") (p-pol? "e_real2_p") 
+                                                                       (a-pol? "e_real2_mixed"))
+                                                                 (list Ex Ey Ez) efield-real-squared))
+
+(define (output-efield-imag-squared) (output-real-field-function (cond (s-pol? "e_imag2_s") (p-pol? "e_imag2_p") 
+                                                                       (a-pol? "e_imag2_mixed"))
+                                                                 (list Ex Ey Ez) efield-imag-squared))
+
 
 (run-until runtime
-      (at-beginning (lambda () (print "Calculating inital field configuration. This will take some time...\n")))
+      (at-beginning (lambda () (print "\nCalculating inital field configuration. This will take some time...\n\n")))
 ;     (at-beginning output-epsilon)          ; output of dielectric function
 ;     (at-end output-efield-x)               ; output of E_x component 
 ;     (at-end output-efield-y)               ; output of E_y component 
 ;     (at-end output-efield-z)               ; output of E_z component
-     (at-end output-efield2))               ; output of electric field intensity
+      (at-end output-efield-real-squared)    ; output of electric field intensity
+      (at-end (if force-complex-fields? output-efield-imag-squared))
+)
 
 (print "\nend time: "(strftime "%c" (localtime (current-time))) "\n")
