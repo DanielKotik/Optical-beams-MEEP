@@ -161,9 +161,9 @@
         (lambda (k_y k_z) (acos (/ (real-part (sqrt (- (* k k) (* k_y k_y) (* k_z k_z)))) k))
         ))
 
-(define (f_Laguerre_Gauss_cartesian W_y)
-        (lambda (k_y k_z) (* ((f_Gauss_cartesian W_y) k_y k_z) (exp (* 0+1i m_charge ((phi k1) k_y k_z))) 
-                             (expt ((theta k1) k_y k_z) (abs m_charge)))
+(define (f_Laguerre_Gauss_cartesian W_y m)
+        (lambda (k_y k_z) (* ((f_Gauss_cartesian W_y) k_y k_z) (exp (* 0+1i m ((phi k1) k_y k_z))) 
+                             (expt ((theta k1) k_y k_z) (abs m)))
         ))
 
 ;; spherical coordinates --------------------------------------------
@@ -172,17 +172,16 @@
                 (exp (* -1 (expt (/ (* k1 W_y theta) 2) 2)))
         ))
 
-(define (f_Laguerre_Gauss_spherical W_y)
-        (lambda (theta phi) (* ((f_Gauss_spherical W_y) theta) (expt theta (abs m_charge)) (exp (* 0+1i m_charge phi)))
+(define (f_Laguerre_Gauss_spherical W_y m)
+        (lambda (theta phi) (* ((f_Gauss_spherical W_y) theta) (expt theta (abs m)) (exp (* 0+1i m phi)))
         ))
 
 ;; some test outputs
-
 (print "Gauss spectrum (cartesian): " ((f_Gauss_cartesian w_0) 1.0 5.2)          "\n")
 (print "Gauss spectrum (spherical): " ((f_Gauss_spherical w_0) (/ pi 3))         "\n\n")
 
-(print "L-G spectrum   (cartesian): " ((f_Laguerre_Gauss_cartesian w_0) 1.0 5.2) "\n")
-(print "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0) (/ pi 3) (/ pi 4)) "\n\n")
+(print "L-G spectrum   (cartesian): " ((f_Laguerre_Gauss_cartesian w_0 m_charge) 1.0 5.2) "\n")
+(print "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0 m_charge) (/ pi 3) (/ pi 4)) "\n\n")
 
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
@@ -218,16 +217,18 @@
                          (list 0 0) (list (/ pi 2) (* 2 pi)) relerr 0 maxeval))
         ))
 
-(print "integrand      (cartesian): " ((integrand_cartesian (f_Laguerre_Gauss_cartesian w_0)
+(print "integrand      (cartesian): " ((integrand_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge)
                                                             -2.15 0.3 0.5)    4.0      0.0  )   "\n")
-(print "integrand      (spherical): " ((integrand_spherical (f_Laguerre_Gauss_spherical w_0)
+(print "integrand      (spherical): " ((integrand_spherical (f_Laguerre_Gauss_spherical w_0 m_charge)
                                                             -2.15 0.3 0.5) (/ pi 3) (/ pi 4)) "\n\n")
 
-(print "psi            (cartesian): " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0) -2.15) (vector3 0 0.3 0.5)) "\n")
+(print "psi            (cartesian): " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) -2.15)
+                                       (vector3 0 0.3 0.5)) "\n")
 
-(print "psi            (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0) -2.15) (vector3 0 0.3 0.5)) "\n")
-                                  
-;(print "psi (origin, simple): " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
+(print "psi            (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 m_charge) -2.15) 
+                                       (vector3 0 0.3 0.5)) "\n")
+
+;(print "psi       (origin, simple): " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
 ;(exit)
 ;;------------------------------------------------------------------------------------------------
 ;; display values of physical variables
@@ -281,11 +282,11 @@
                           (size 0 3 3)
                           (center source_shift 0 0)
                           ;;(amp-func (Gauss w_0))
-                          ;;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift))
+                          ;;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) shift))
                           (if (equal? m_charge 0)
                               ; if vortex charge is zero use Gauss spectrum distribution (improves perfomance)
                               (amp-func (psi_spherical (f_Gauss_spherical w_0) shift))
-                              (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift))
+                              (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0 m_charge) shift))
                           )
                        )
                   )
@@ -297,11 +298,11 @@
                           (size 0 3 3)
                           (center source_shift 0 0)
                           ;;(amp-func (Gauss w_0))
-                          ;;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0) shift))
+                          ;;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) shift))
                           (if (equal? m_charge 0)
                               ; if vortex charge is zero use Gauss spectrum distribution (improves perfomance)
                               (amp-func (psi_spherical (f_Gauss_spherical w_0) shift))
-                              (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0) shift))
+                              (amp-func (psi_spherical (f_Laguerre_Gauss_spherical w_0 m_charge) shift))
                           )
                       )
                   )
@@ -314,6 +315,8 @@
 
 (define (output-efield2) (output-real-field-function (cond (s-pol? "e2_s") (p-pol? "e2_p") (a-pol? "e2_mixed"))
                                                      (list Ex Ey Ez) eSquared))
+
+(init-fields)
 
 (run-until runtime
       (at-beginning (lambda () (print "Calculating inital field configuration. This will take some time...\n")))
