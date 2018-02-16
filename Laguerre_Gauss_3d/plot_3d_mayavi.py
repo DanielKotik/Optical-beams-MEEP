@@ -12,37 +12,73 @@ import numpy as np
 import h5py
 import sys
 import matplotlib.pyplot as plt
-from mayavi import mlab
+from mayavi             import mlab
+from mayavi.sources.api import VTKFileReader
+from tvtk.util          import ctf
 
 filename = sys.argv[1]
 #filename = "LaguerreGauss3d-out/e2_s-000010.00.h5"
 
 cutoff = 30   # cut-off borders of data (removing PML layer and line source placment is desired)
 
-with h5py.File(filename, 'r') as hf:
-    print("Keys: %s" % hf.keys())
+dataVTK = VTKFileReader()   # VTK dataset
+dataVTK.initialize(filename)
+
+
+#with h5py.File(filename, 'r') as hf:
+#    print("Keys: %s" % hf.keys())
     #data = hf['e2_s'][:]
-    data = hf[hf.keys()[0]][:]   # use first data set
+#    data = hf[hf.keys()[0]][:]   # use first data set
 
-print(np.shape(data))
+#print(np.shape(data))
 
-print(data.max(), data.min())
+#print(data.max(), data.min())
 
-data_optimised = np.transpose(data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff]) / data.max()
+#data = np.transpose(data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff]) / data.max()
 
-mlab.figure(bgcolor=(1, 1, 1))
+VMIN = 0.1
+VMAX = 1.5
+mlab.figure(bgcolor=(0, 0, 0))
 
-#mlab.contour3d(data_optimised, contours=10, colormap="hot", transparent=True, opacity=0.5)
-mlab.pipeline.volume(mlab.pipeline.scalar_field(data_optimised), vmin=0.02, vmax=0.3) #intensity
-#mlab.pipeline.volume(mlab.pipeline.scalar_field(data_optimised)) #interface
-#mlab.pipeline.image_plane_widget(mlab.pipeline.scalar_field(data_optimised),
-#                            plane_orientation='x_axes',
-#                            slice_index=10,
-#                        )
-#mlab.pipeline.image_plane_widget(mlab.pipeline.scalar_field(data_optimised),
-#                            plane_orientation='y_axes',
-#                            slice_index=10,
-#                        )
-#mlab.outline()
+#src = mlab.pipeline.scalar_field(data)        # Mayavi source
+src = dataVTK                                 # VTK dataset
 
+vol = mlab.pipeline.volume(src, vmin=VMIN, vmax=VMAX)
+
+# ------------------- old variant ------------------------------------------------
+'''
+# Changing the ctf:
+from tvtk.util.ctf import ColorTransferFunction
+ctf = ColorTransferFunction()
+# Add points to CTF
+ctf.add_rgb_point(0.05, 0, 0, 0) # black
+ctf.add_rgb_point(1.55/2, 255, 0, 0) # red
+ctf.add_rgb_point(1.5, 255, 255, 255) #white
+# Update CTF
+vol._volume_property.set_color(ctf)
+vol._ctf = ctf
+vol.update_ctf = True
+'''
+
+# ------------------- new variant ------------------------------------------------
+# save the existing colormap
+c = ctf.save_ctfs(vol._volume_property)
+# change it with the colors of the new colormap
+values = np.linspace(VMIN, VMAX, 256)
+A = plt.cm.get_cmap('hot')(values.copy())
+i = np.argsort([2, 3, 4, 1])
+A = A[:,i]
+A[:,0] = values
+c['rgb'] = A
+# change the alpha channel as needed
+c['alpha'][1][1] = 0.04
+#load the color transfer function to the volume
+ctf.load_ctfs(c, vol._volume_property)
+#signal for update
+vol.update_ctf = True
+
+#mlab.pipeline.image_plane_widget(src, plane_orientation='x_axes', slice_index=10)
+#mlab.pipeline.image_plane_widget(src, plane_orientation='y_axes', slice_index=10)
+
+mlab.outline()
 mlab.show()
