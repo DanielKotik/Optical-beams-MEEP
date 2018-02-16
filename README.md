@@ -4,6 +4,7 @@
 
 ![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_longitudinal_resized.png)
 ![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_transverse_resized.png)
+![snap](Laguerre_Gauss_3d/img/vortex3D.png)
 # Optical-beams-MEEP
 FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces.
 *   Collection of Scheme configuration files for Gaussian beams (2d) impinging upon planar, concave and convex
