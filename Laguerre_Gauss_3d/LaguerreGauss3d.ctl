@@ -39,7 +39,8 @@
 ;;------------------------------------------------------------------------------------------------
 (define-param e_z        1)                 ; z-component of Jones vector (s-polarisation: e_z = 1, e_y = 0)
 (define-param e_y        0)                 ; y-component of Jones vector (p-polarisation: e_z = 0, e_y = 1)
-                                            ;                      (circular-polarisation: ...             )
+                                            ;                      (circular-polarisation: e_z = (/ 1+1i 2),
+                                            ;                                              e_y = (/ 1-1i 2))
 (define-param m_charge   2)                 ; vortex charge (azimuthal quantum number, integer number)
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
@@ -235,6 +236,8 @@
 ;;------------------------------------------------------------------------------------------------
 (print "\n")
 (print "Specified variables and derived values: \n")
+(print "n1:    " n1    "\n")
+(print "n2:    " n2    "\n")
 (print "chi:   " chi_deg        " [degree]\n") ; angle of incidence
 (print "incl.: " (- 90 chi_deg) " [degree]\n") ; interface inclination with respect to the x-axis
 (print "kw_0:  " kw_0  "\n")
@@ -244,8 +247,8 @@
 (print "Jones vector components: (e_z=" e_z ", e_y=" e_y ")")
 (print " ---> " (cond (s-pol? "s-") (p-pol? "p-") (a-pol? "mixed-")) "polarisation" "\n")
 
-(print "degree of linear   polarisation at pi/4: " (* 2 (imag-part (* (conj e_y) e_z))) "\n")
-(print "degree of circular polarisation: "         (* 2 (real-part (* (conj e_y) e_z))) "\n")
+(print "degree of linear   polarisation at pi/4: " (* 2 (real-part (* (conj (- 0 e_z)) e_y))) "\n")
+(print "degree of circular polarisation: "         (* 2 (imag-part (* (conj (- 0 e_z)) e_y))) "\n")
 (print "\n")
 
 ;;------------------------------------------------------------------------------------------------
