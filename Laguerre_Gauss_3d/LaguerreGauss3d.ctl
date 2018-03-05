@@ -69,9 +69,9 @@
 ;;------------------------------------------------------------------------------------------------
 (define-param sx 5)                         ; size of cell including PML in x-direction
 (define-param sy 5)                         ; size of cell including PML in y-direction
-(define-param sz 5)                         ; size of cell including PML in z-direction
+(define-param sz 4)                         ; size of cell including PML in z-direction
 (define-param pml_thickness 0.25)           ; thickness of PML layer
-(define-param freq     4)                   ; vacuum frequency of source (default 4)
+(define-param freq     5)                   ; vacuum frequency of source (default 5)
 (define-param runtime 10)                   ; runs simulation for 10 times freq periods
 (define-param pixel   10)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
