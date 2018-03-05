@@ -7,44 +7,123 @@ date:   19.01.2018
 
 invocation: ipython plot_3d_mayavi.py LaguerreGauss3d-out/e2_s-000001232.h5
 """
+from __future__         import division
+from mayavi             import mlab
+from mayavi.sources.api import VTKFileReader
+from tvtk.util          import ctf            # color transfer function
 
 import numpy as np
 import h5py
 import sys
 import matplotlib.pyplot as plt
-from mayavi             import mlab
-from mayavi.sources.api import VTKFileReader
-from tvtk.util          import ctf
-
-filename = sys.argv[1]
-#filename = "LaguerreGauss3d-out/e2_s-000010.00.h5"
-
-cutoff = 30   # cut-off borders of data (removing PML layer and line source placment is desired)
-
-dataVTK = VTKFileReader()   # VTK dataset
-dataVTK.initialize(filename)
 
 
-#with h5py.File(filename, 'r') as hf:
-#    print("Keys: %s" % hf.keys())
+def cuboid(ext_grid, rot=0, color=(1,0,0), opacity=1.0):
+    """Returns a cuboid defined on the grid 'ext_grid' with an angle of rotation 'rot' about the z-axis given in 
+       degrees.
+    """
+    xl, xr, yl, yr, zl, zr = ext_grid
+    
+    triangles = [(0,1,2), (1,2,3), (0,1,4), (1,4,5), (4,5,6), (6,7,5),
+                 (2,3,6), (3,6,7), (0,2,6), (0,6,4), (3,1,7), (1,7,5)]
+    
+    x = np.tile(np.array([xr,xr,xl,xl]), 2)   # repeat array twice
+    y = np.tile(np.array([yl,yr,yl,yr]), 2)   # repeat array twice
+    z = np.concatenate((np.array([zl,zl,zl,zl]), np.array([zr,zr,zr,zr])))
+    
+    rot = np.deg2rad(rot)
+    
+    xr = np.cos(rot)*x - np.sin(rot)*y
+    yr = np.sin(rot)*x + np.cos(rot)*y
+    
+    return mlab.triangular_mesh(xr, yr, z, triangles, color=color, opacity=opacity)
+
+#---------------------------------------------------------------------------------------------------
+# import data
+#---------------------------------------------------------------------------------------------------
+#filename = sys.argv[1]
+#filename = "img/e2_s-000001232.vtk"
+filename = "Simulationen_Jens/DK_meep-01.03.2018 11_08_44/LaguerreGauss3d_C-out/e_real2_s-000001540.h5"
+
+cutoff  = 30                   # cut-off borders of data (removing PML layer and line source placment is desired)
+n       = 1.54 / 1.0           # relative index of refraction
+chi_deg = 45.0                 # angle of incidence
+inc_deg = 90 - chi_deg         # inclination of the interface with respect to the x-axis
+
+#dataVTK = VTKFileReader()     # VTK dataset
+#dataVTK.initialize(filename)
+
+with h5py.File(filename, 'r') as hf:
+    print("Keys: %s" % hf.keys())
     #data = hf['e2_s'][:]
-#    data = hf[hf.keys()[0]][:]   # use first data set
+    data = hf[hf.keys()[0]][:]   # use first data set
+    orig_shape = np.shape(data)
 
-#print(np.shape(data))
+print "file size in MB: ", data.nbytes / 1024 / 1024
+print "data (max, min): ", (data.max(), data.min())
+print "original shape:  ", np.shape(data)
 
-#print(data.max(), data.min())
+data = data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff] / data.max()
+#data = np.swapaxes(data,1,2)
+cut_shape = np.shape(data)
 
-#data = np.transpose(data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff]) / data.max()
 
-VMIN = 0.1
-VMAX = 1.5
-mlab.figure(bgcolor=(0, 0, 0))
+#------------------------------------------------------------------------------------------------------------------
+# visualising iso contour surface
+#------------------------------------------------------------------------------------------------------------------
+fig = mlab.figure(1, bgcolor=(0, 0, 0), size=(400, 400))
+fig.scene.render_window.aa_frames = 8               # antialiasing
 
-#src = mlab.pipeline.scalar_field(data)        # Mayavi source
-src = dataVTK                                 # VTK dataset
+sx, sy, sz = np.array([5, 5, 3.5]) * np.asarray(cut_shape) / np.asarray(orig_shape)
+SX, SY, SZ = np.mgrid[-sx/2.0:sx/2.0:eval('{}j'.format(data.shape[0])),
+                      -sy/2.0:sy/2.0:eval('{}j'.format(data.shape[1])),
+                      -sz/2.0:sz/2.0:eval('{}j'.format(data.shape[2]))]
 
-vol = mlab.pipeline.volume(src, vmin=VMIN, vmax=VMAX)
+src = mlab.pipeline.scalar_field(SX, SY, SZ, data)  # Mayavi source
+del data, SX, SY, SZ                                # free memory early
+#src = dataVTK                                      # VTK dataset
 
+#iso = mlab.pipeline.iso_surface(src, colormap="hot", contours=[0.02])
+
+voi = mlab.pipeline.extract_grid(src)               # volume of interest
+voi.set(z_max=np.ceil(cut_shape[2]/2))
+iso = mlab.pipeline.iso_surface(voi, colormap="hot", contours=[0.02])
+iso.module_manager.scalar_lut_manager.use_default_range = False 
+iso.module_manager.scalar_lut_manager.data_range = [ 0.,  0.02]
+
+
+#------------------------------------------------------------------------------------------------------------------
+# visualising k-vectors of central plane waves according to classical geometric ray optics
+#------------------------------------------------------------------------------------------------------------------
+eta_rad = np.arcsin((1.0/n) * np.sin(np.deg2rad(chi_deg)))
+
+vec_length = 3.5
+
+inc = (-vec_length, 0, 0)
+ref = ( vec_length * np.sin(np.deg2rad(chi_deg - inc_deg)),  vec_length * np.cos(np.deg2rad(chi_deg - inc_deg)), 0)
+tra = ( vec_length * np.sin(eta_rad + np.deg2rad(inc_deg)), -vec_length * np.cos(eta_rad + np.deg2rad(inc_deg)), 0)
+
+components_sec = [ref, tra]                         # components of the secondary beams
+
+vec_col = (0,1,0)                                   # axes color
+
+## incident beam
+vector = mlab.quiver3d(0,0,0,*inc, color=vec_col, scale_factor=1, mode='cylinder',resolution=25)
+vector.glyph.glyph_source.glyph_source.radius = 0.008
+
+## secondary beams
+for i in range(2):
+    vectors = mlab.quiver3d(0,0,0,*components_sec[i], color=vec_col, scale_factor=1, mode='arrow',resolution=25)
+    vectors.glyph.glyph_source.glyph_source.shaft_radius = 0.008
+    vectors.glyph.glyph_source.glyph_source.tip_radius   = 0.025
+    vectors.glyph.glyph_source.glyph_source.tip_length   = 0.13
+
+
+VMIN = 0.005
+VMAX = 0.123
+#vol = mlab.pipeline.volume(src) #, vmin=VMIN, vmax=VMAX)
+
+## Changing colormap for a vtk volume render:
 # ------------------- old variant ------------------------------------------------
 '''
 # Changing the ctf:
@@ -61,7 +140,7 @@ vol.update_ctf = True
 '''
 
 # ------------------- new variant ------------------------------------------------
-# save the existing colormap
+'''# save the existing colormap
 c = ctf.save_ctfs(vol._volume_property)
 # change it with the colors of the new colormap
 values = np.linspace(VMIN, VMAX, 256)
@@ -75,10 +154,24 @@ c['alpha'][1][1] = 0.04
 #load the color transfer function to the volume
 ctf.load_ctfs(c, vol._volume_property)
 #signal for update
-vol.update_ctf = True
+vol.update_ctf = True'''
 
-#mlab.pipeline.image_plane_widget(src, plane_orientation='x_axes', slice_index=10)
-#mlab.pipeline.image_plane_widget(src, plane_orientation='y_axes', slice_index=10)
+#mlab.pipeline.image_plane_widget(src, plane_orientation='x_axes', slice_index=10, colormap='hot')
+#mlab.pipeline.image_plane_widget(src, plane_orientation='y_axes', slice_index=10, colormap='hot')
 
-mlab.outline()
+color_overlay = (0.227, 0.188, 0.188)
+cuboid(ext_grid=(-sx/2.0,sx/2.0, -sy/1.5, 0, -sz/2.0, sz/2.0), rot=inc_deg, color=color_overlay, opacity=0.5)
+
+
+#mlab.orientation_axes()
+print mlab.view()
+mlab.view(azimuth=-inc_deg, elevation=0, distance=10, focalpoint=np.array([0.6, -1.2,  0]))
+#mlab.savefig('visualize_field.png')
 mlab.show()
+
+
+## free memory
+try:
+    del src, vol, dataVTK, iso, SX, SY, SZ
+except:
+    pass
