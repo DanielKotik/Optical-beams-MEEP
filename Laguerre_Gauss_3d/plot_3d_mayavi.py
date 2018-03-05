@@ -7,7 +7,6 @@ date:   19.01.2018
 """
 from __future__ import division
 from mayavi     import mlab
-from tvtk.util  import ctf            # color transfer function
 
 import numpy as np
 import h5py
@@ -137,43 +136,7 @@ for i in [1,2]:
     vectors.glyph.glyph_source.glyph_source.tip_radius   = 0.025
     vectors.glyph.glyph_source.glyph_source.tip_length   = 0.13
 
-
-#vol = mlab.pipeline.volume(src) #, vmin=0.005, vmax=0.123)
-
-## Changing colormap for a vtk volume render:
-# ------------------- old variant ------------------------------------------------
-'''
-# Changing the ctf:
-from tvtk.util.ctf import ColorTransferFunction
-ctf = ColorTransferFunction()
-# Add points to CTF
-ctf.add_rgb_point(0.05, 0, 0, 0) # black
-ctf.add_rgb_point(1.55/2, 255, 0, 0) # red
-ctf.add_rgb_point(1.5, 255, 255, 255) #white
-# Update CTF
-vol._volume_property.set_color(ctf)
-vol._ctf = ctf
-vol.update_ctf = True
-'''
-
-# ------------------- new variant ------------------------------------------------
-'''# save the existing colormap
-c = ctf.save_ctfs(vol._volume_property)
-# change it with the colors of the new colormap
-values = np.linspace(VMIN, VMAX, 256)
-A = plt.cm.get_cmap('hot')(values.copy())
-i = np.argsort([2, 3, 4, 1])
-A = A[:,i]
-A[:,0] = values
-c['rgb'] = A
-# change the alpha channel as needed
-c['alpha'][1][1] = 0.04
-#load the color transfer function to the volume
-ctf.load_ctfs(c, vol._volume_property)
-#signal for update
-vol.update_ctf = True'''
-
-
+## visualise optically denser material
 color_overlay = (0.227, 0.188, 0.188)
 cuboid(ext_grid=(-sx/2.0,sx/2.0, -sy/1.5, 0, -sz/2.0, sz/2.0), rot=inc_deg, color=color_overlay, opacity=0.5)
 
