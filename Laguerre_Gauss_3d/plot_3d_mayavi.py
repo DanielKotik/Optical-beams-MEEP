@@ -47,19 +47,29 @@ cutoff  = 30                   # cut off borders of data (remove PML layer up to
 # import data from HDF file(s)
 #---------------------------------------------------------------------------------------------------
 path = "simulations/DK_meep-01.03.2018 11_08_44/LaguerreGauss3d_C-out/"
-filename = path + "e_real2_s-000001540.h5"
-#filename_real = path + "e_real2_s-000001540.h5"
-#filename_imag = path + "e_imag2_s-000001540.h5"
+filename_real = path + "e_real2_s-000001540.h5"
+filename_imag = path + "e_imag2_s-000001540.h5"
 
-with h5py.File(filename, 'r') as hf:
-    print("Keys: %s" % hf.keys())
-    #data = hf['e2_s'][:]
-    data = hf[hf.keys()[0]][:]   # use first data set
-    orig_shape = np.shape(data)
+with h5py.File(filename_real, 'r') as hf:
+    print("keys: %s" % hf.keys())
+    data_real = hf['e_real2_s'][:]
+
+with h5py.File(filename_imag, 'r') as hf:
+    print("keys: %s" % hf.keys())
+    data_imag = hf['e_imag2_s'][:]
+
+## choose wheather to use the electric field energy density (proportional to 'data_real') or the complex modulus of the
+## complex electric field (proportional to 'data_real + data_imag') as data basis:
+data = data_real
+#data = data_real + data_imag
+
+del data_imag                                       # free memory early
+
+orig_shape = np.shape(data)
 
 print "file size in MB: ", data.nbytes / 1024 / 1024
 print "data (max, min): ", (data.max(), data.min())
-print "original shape:  ", np.shape(data)
+print "original shape:  ", orig_shape
 
 data = data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff] / data.max()
 new_shape = np.shape(data)
