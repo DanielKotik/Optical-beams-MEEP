@@ -38,16 +38,16 @@ del data_imag                                       # free memory early
 
 orig_shape = np.shape(data)
 
-print "file size in MB: ", data.nbytes / 1024 / 1024
-print "data (max, min): ", (data.max(), data.min())
+print "file size in MB: ", np.round(data.nbytes / 1024 / 1024, 2)
+print "data (max, min): ", (np.round(data.max(), 2), np.round(data.min(), 2))
 print "original shape:  ", orig_shape
 
 data = data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff] / data.max()
 new_shape = np.shape(data)
+print "cutted shape:    ", new_shape
 
-center_index = np.int(data.shape[2]/2)
-data_poi = data[:,:,center_index]                   # slice within the plane of incidence
-print(new_shape)
+center_z = int(np.rint((data.shape[2] - 1)/2))
+data_poi = data[:,:,center_z]                   # slice within the plane of incidence
 
 
 #------------------------------------------------------------------------------------------------------------------
@@ -59,19 +59,19 @@ eta_rad = np.arcsin((1.0/n) * np.sin(np.deg2rad(chi_deg)))   # angle of refracti
 vec_length = 150
 
 ## (x,y)-components of the k-vectors (in pixel coordinates)
-center = (int((new_shape[0] - 1)/2), int((new_shape[1] - 1)/2))
-print center
+center_x_y = (int((new_shape[0] - 1)/2), int((new_shape[1] - 1)/2))
+print center_x_y
 inc = (-vec_length, 0, 0)
-ref = (center[0] + int(np.rint(vec_length * np.sin(np.deg2rad(chi_deg - inc_deg)))),  
-       center[1] + int(np.rint(vec_length * np.cos(np.deg2rad(chi_deg - inc_deg)))))
-tra = (center[0] + int(np.rint(vec_length * np.sin(eta_rad + np.deg2rad(inc_deg)))), 
-       center[1] - int(np.rint(vec_length * np.cos(eta_rad + np.deg2rad(inc_deg)))))
+ref = (center_x_y[0] + int(np.rint(vec_length * np.sin(np.deg2rad(chi_deg - inc_deg)))),  
+       center_x_y[1] + int(np.rint(vec_length * np.cos(np.deg2rad(chi_deg - inc_deg)))))
+tra = (center_x_y[0] + int(np.rint(vec_length * np.sin(eta_rad + np.deg2rad(inc_deg)))), 
+       center_x_y[1] - int(np.rint(vec_length * np.cos(eta_rad + np.deg2rad(inc_deg)))))
 print ref
 
 #-------------------------------------------
 # define the position of the line 
-x0, y0 = center      # these are in pixel coordinates
-x1, y1 = ref
+x0, y0 = center_x_y      # these are in pixel coordinates
+x1, y1 = tra
 length = int(np.hypot(x1-x0, y1-y0))
 x, y = np.linspace(x0, x1, length, dtype=np.int), np.linspace(y0, y1, length, dtype=np.int)
 
@@ -98,3 +98,9 @@ ax2.set_xlabel('x')                                 # labels are according to Me
 ax2.set_ylabel('z')
 #plt.colorbar()
 plt.show()
+
+## free memory
+try:
+    del data, data_poi, data_real
+except:
+    pass
