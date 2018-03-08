@@ -6,6 +6,7 @@ author: Daniel Kotik
 date:   18.01.2018
 """
 from __future__ import division
+from scipy.ndimage import measurements
 import matplotlib.pyplot as plt
 import numpy as np
 import h5py
@@ -69,7 +70,7 @@ components = [vec_inc, vec_ref, vec_tra]
 #------------------------------------------------------------------------------------------------------------------
 # obtaining cut-plane data position
 #------------------------------------------------------------------------------------------------------------------
-delta_deg = 20           # opening angle
+delta_deg = 23           # opening angle
 
 ## degree to radians conversion
 delta_rad = np.deg2rad(delta_deg)
@@ -108,7 +109,7 @@ for i in [0, 1, 2]:
     ax1.plot([center[0], components[i][0]],
              [center[1], components[i][1]], '--', color="white")
 
-## visualise cut line
+## visualise cut-line
 ax1.plot([x0, x1], [y0, y1], 'ro-')
 
 ## subfigure properties
@@ -123,6 +124,16 @@ ax2.imshow(np.transpose(data_cut), origin="lower", cmap=plt.cm.gist_stern_r, int
 ## visualise geometric center point (floating pixel coordinates)
 ax2.axhline(center[2], color='w', lw=0.5)
 ax2.axvline((data_cut.shape[0] - 1) / 2, color='w', lw=0.5)
+
+## calculate and visualise center of mass (floating pixel coordinates)
+labels_center = measurements.center_of_mass(data_cut)
+labels_peak   = measurements.maximum_position(data_cut)
+
+print("center labels : ", labels_center)
+print("peak   labels : ", labels_peak)
+
+plt.axvline(labels_center[0], color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
+plt.axhline(labels_center[1], color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
 
 ## subfigure properties
 ax2.set_title("cut-plane")
