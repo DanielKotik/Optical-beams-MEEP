@@ -93,7 +93,9 @@ x0, y0, x1, y1 = cut_tra
 width = int(np.hypot(x1 - x0, y1 - y0))            # width of the cut-plane (determined by vec_length and delta_deg)
 x, y  = np.linspace(x0, x1, width, dtype=np.int), np.linspace(y0, y1, width, dtype=np.int)
 
-data_cut = data[x, y, :]  # TODO: Slice outside boundary possible? Fill with NaN?
+## restrict cut-plane indices to values within the bound of the data array
+valid    = np.logical_and(x < cut_shape[0], y < cut_shape[1])
+data_cut = data[x[valid], y[valid], :]
 
 #------------------------------------------------------------------------------------------------------------------
 # visualising 
@@ -139,7 +141,6 @@ plt.axhline(labels_center[1], color='red', linestyle = "dashed", dashes=(10,5), 
 ax2.set_title("cut-plane")
 ax2.set_xlabel('x')                                 # labels are according to Bliokh&Aiello's beam coordinate system
 ax2.set_ylabel('z')
-
 
 plt.tight_layout()
 plt.show()
