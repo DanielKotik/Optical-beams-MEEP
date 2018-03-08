@@ -43,28 +43,25 @@ print "data (max, min): ", (np.round(data.max(), 2), np.round(data.min(), 2))
 print "original shape:  ", orig_shape
 
 data = data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff] / data.max()
-new_shape = np.shape(data)
-print "cutted shape:    ", new_shape
+cut_shape = np.shape(data)
+print "cutted shape:    ", cut_shape
 
-## calculate center of 3d array data in pixel coordinates
-center = (int((new_shape[0] - 1)/2), int((new_shape[1] - 1)/2), int(np.rint((data.shape[2] - 1)/2)))
+## calculate center of 3d data array in floating(!) pixel coordinates
+center = tuple((np.asarray(cut_shape) - 1) / 2)
 
 #------------------------------------------------------------------------------------------------------------------
 # calculating propagation directions of the secondary beams according to geometric optics
 #------------------------------------------------------------------------------------------------------------------
-eta_rad = np.arcsin((1.0/n) * np.sin(np.deg2rad(chi_deg)))   # angle of refraction in radians
+eta_rad = np.arcsin((1.0 / n) * np.sin(np.deg2rad(chi_deg)))   # angle of refraction in radians
 
 ## properties of the k-vectors
 vec_length = 150
 
-## (x, y)-components of the central k-vectors (in pixel coordinates)
-center_x_y = (int((new_shape[0] - 1)/2), int((new_shape[1] - 1)/2))
-
-vec_inc = (center[0] - vec_length, center[1])
-vec_ref = (center[0] + int(np.rint(vec_length * np.sin(np.deg2rad(chi_deg - inc_deg)))),
-           center[1] + int(np.rint(vec_length * np.cos(np.deg2rad(chi_deg - inc_deg)))))
-vec_tra = (center[0] + int(np.rint(vec_length * np.sin(eta_rad + np.deg2rad(inc_deg)))),
-           center[1] - int(np.rint(vec_length * np.cos(eta_rad + np.deg2rad(inc_deg)))))
+vec_inc = (int(center[0]) - vec_length, center[1])
+vec_ref = (int(center[0]) + int(round(vec_length * np.sin(np.deg2rad(chi_deg - inc_deg)))),
+           int(center[1]) + int(round(vec_length * np.cos(np.deg2rad(chi_deg - inc_deg)))))
+vec_tra = (int(center[0]) + int(round(vec_length * np.sin(eta_rad + np.deg2rad(inc_deg)))),
+           int(center[1]) - int(round(vec_length * np.cos(eta_rad + np.deg2rad(inc_deg)))))
 
 components = [vec_inc, vec_ref, vec_tra]
 
@@ -80,34 +77,34 @@ chi_rad   = np.deg2rad(chi_deg)
 inc_rad   = np.deg2rad(inc_deg)
 
 ## calculate margins of the cut-plane for the respective beams in pixel coordinates
-cut_inc = (center[0] - vec_length, center[1] - int(np.rint(vec_length * np.tan(delta_rad))),
-           center[0] - vec_length, center[1] + int(np.rint(vec_length * np.tan(delta_rad))))
-cut_ref = (center[0] + int(np.rint((vec_length / np.cos(delta_rad)) * np.sin(chi_rad - delta_rad - inc_rad))),
-           center[1] + int(np.rint((vec_length / np.cos(delta_rad)) * np.cos(chi_rad - delta_rad - inc_rad))),
-           center[0] + int(np.rint((vec_length / np.cos(delta_rad)) * np.sin(chi_rad + delta_rad - inc_rad))),
-           center[1] + int(np.rint((vec_length / np.cos(delta_rad)) * np.cos(chi_rad + delta_rad - inc_rad))))
-cut_tra = (center[0] + int(np.rint((vec_length / np.cos(delta_rad)) * np.sin(eta_rad - delta_rad + inc_rad))),
-           center[1] - int(np.rint((vec_length / np.cos(delta_rad)) * np.cos(eta_rad - delta_rad + inc_rad))),
-           center[0] + int(np.rint((vec_length / np.cos(delta_rad)) * np.sin(eta_rad + delta_rad + inc_rad))),
-           center[1] - int(np.rint((vec_length / np.cos(delta_rad)) * np.cos(eta_rad + delta_rad + inc_rad))))
+cut_inc = (int(center[0]) - vec_length, center[1] - int(round(vec_length * np.tan(delta_rad))),
+           int(center[0]) - vec_length, center[1] + int(round(vec_length * np.tan(delta_rad))))
+cut_ref = (int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad - delta_rad - inc_rad))),
+           int(center[1]) + int(round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad - delta_rad - inc_rad))),
+           int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad + delta_rad - inc_rad))),
+           int(center[1]) + int(round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad + delta_rad - inc_rad))))
+cut_tra = (int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad - delta_rad + inc_rad))),
+           int(center[1]) - int(round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad - delta_rad + inc_rad))),
+           int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad + delta_rad + inc_rad))),
+           int(center[1]) - int(round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad + delta_rad + inc_rad))))
 
 x0, y0, x1, y1 = cut_tra
-width  = int(np.hypot(x1 - x0, y1 - y0))            # width of the cut-plane (determined by vec_length and delta_deg)
-x, y   = np.linspace(x0, x1, width, dtype=np.int), np.linspace(y0, y1, width, dtype=np.int)
+width = int(np.hypot(x1 - x0, y1 - y0))            # width of the cut-plane (determined by vec_length and delta_deg)
+x, y  = np.linspace(x0, x1, width, dtype=np.int), np.linspace(y0, y1, width, dtype=np.int)
 
 data_cut = data[x, y, :]  # TODO: Slice outside boundary possible? Fill with NaN?
 
 #------------------------------------------------------------------------------------------------------------------
 # visualising 
 #------------------------------------------------------------------------------------------------------------------
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10,5))
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
 
-## visualise intensity dirstribution within the plane of incidence
-data_poi = data[:,:,center[2]]                   # slice within the plane of incidence
+## visualise intensity distribution within the plane of incidence
+data_poi = data[:, :, int(center[2])]               # slice within the plane of incidence
 ax1.imshow(np.transpose(data_poi), origin="lower", cmap=plt.cm.hot, interpolation='None')
 
 ## visualise k-vectors wihtin the plane of incidence
-for i in [0,1,2]:
+for i in [0, 1, 2]:
     ax1.plot([center[0], components[i][0]],
              [center[1], components[i][1]], '--', color="white")
 
@@ -123,9 +120,9 @@ ax1.set_ylabel('y')
 ## visualise transverse intensity distribution with respect to the axis of the central wave vector
 ax2.imshow(np.transpose(data_cut), origin="lower", cmap=plt.cm.gist_stern_r, interpolation='None')
 
-## visualise geometric center point
+## visualise geometric center point (floating pixel coordinates)
 ax2.axhline(center[2], color='w', lw=0.5)
-ax2.axvline(int(np.rint((data_cut.shape[0] - 1)/2)), color='w', lw=0.5)
+ax2.axvline((data_cut.shape[0] - 1) / 2, color='w', lw=0.5)
 
 ## subfigure properties
 ax2.set_title("cut-plane")
