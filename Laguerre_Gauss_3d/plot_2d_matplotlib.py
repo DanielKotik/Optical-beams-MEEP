@@ -62,11 +62,15 @@ eta_rad = np.arcsin((1.0 / n) * np.sin(np.deg2rad(chi_deg)))   # angle of refrac
 ## properties of the k-vectors
 vec_length = 100
 
+## degree to radians conversion
+chi_rad = np.deg2rad(chi_deg)
+inc_rad = np.deg2rad(inc_deg)
+
 vec_inc = (int(center[0]) - vec_length, center[1])
-vec_ref = (int(center[0]) + int(round(vec_length * np.sin(np.deg2rad(chi_deg - inc_deg)))),
-           int(center[1]) + int(round(vec_length * np.cos(np.deg2rad(chi_deg - inc_deg)))))
-vec_tra = (int(center[0]) + int(round(vec_length * np.sin(eta_rad + np.deg2rad(inc_deg)))),
-           int(center[1]) - int(round(vec_length * np.cos(eta_rad + np.deg2rad(inc_deg)))))
+vec_ref = (int(center[0]) + int(round(vec_length * np.sin(chi_rad - inc_rad))),
+           int(center[1]) + int(round(vec_length * np.cos(chi_rad - inc_rad))))
+vec_tra = (int(center[0]) + int(round(vec_length * np.sin(eta_rad + inc_rad))),
+           int(center[1]) - int(round(vec_length * np.cos(eta_rad + inc_rad))))
 
 components = [vec_inc, vec_ref, vec_tra]
 
@@ -74,12 +78,9 @@ components = [vec_inc, vec_ref, vec_tra]
 #------------------------------------------------------------------------------------------------------------------
 # obtaining cut-plane data position
 #------------------------------------------------------------------------------------------------------------------
-delta_deg = 40          # half opening angle (0 - 90 degrees)
+delta_deg = 40                                      # half opening angle (0 - 90 degrees)
 
-## degree to radians conversion
-delta_rad = np.deg2rad(delta_deg)
-chi_rad   = np.deg2rad(chi_deg)
-inc_rad   = np.deg2rad(inc_deg)
+delta_rad = np.deg2rad(delta_deg)                   # degree to radians conversion
 
 ## calculate margins of the cut-planes for the respective beams in pixel coordinates
 cut_inc = (int(center[0]) - vec_length, center[1] - int(round(vec_length * np.tan(delta_rad))),
