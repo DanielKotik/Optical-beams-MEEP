@@ -5,47 +5,51 @@ brief:  Python script to visualise transverse intensity profiles of vortex beams
 author: Daniel Kotik
 date:   18.01.2018
 """
-from __future__ import division
+from __future__    import division, print_function
 from scipy.ndimage import measurements
 import matplotlib.pyplot as plt
 import numpy as np
 import h5py
+import gc
 
 #---------------------------------------------------------------------------------------------------
 # set parameters
 #---------------------------------------------------------------------------------------------------
-n       = 1.54 / 1.0           # relative index of refraction
-chi_deg = 45.0                 # angle of incidence in degrees
+n       = 1.50 / 1.0           # relative index of refraction
+chi_deg = 56.309932474020215   # angle of incidence in degrees
 inc_deg = 90 - chi_deg         # inclination of the interface with respect to the x-axis
 cutoff  = 30                   # cut off borders of data (remove PML layer up to and including line source placement)
 
 #---------------------------------------------------------------------------------------------------
 # import data from HDF file(s)
 #---------------------------------------------------------------------------------------------------
-path = "simulations/DK_meep-01.03.2018 11_08_44/LaguerreGauss3d_C-out/"
-filename_real = path + "e_real2_s-000001540.h5"
-filename_imag = path + "e_imag2_s-000001540.h5"
+prefix = "/home/daniel/GITHUB/Optical-beams-MEEP/Laguerre_Gauss_3d/"
+#path = "simulations/DK_meep-01.03.2018 11_08_44/LaguerreGauss3d_C-out/"
+path  = "simulations/DK_meep-16.02.2018 9_53_32/LaguerreGauss3d_A-out/"
+
+filename_real = prefix + path + "e_real2_p-000001500.h5"
+filename_imag = prefix + path + "e_imag2_p-000001500.h5"
 
 with h5py.File(filename_real, 'r') as hf:
     #print("keys: %s" % hf.keys())
-    data_real = hf['e_real2_s'][:]
+    data_real = hf[hf.keys()[0]][:]
 
 with h5py.File(filename_imag, 'r') as hf:
     #print("keys: %s" % hf.keys())
-    data_imag = hf['e_imag2_s'][:]
+    data_imag = hf[hf.keys()[0]][:]
 
 data = data_real + data_imag
 del data_imag                                       # free memory early
 
 orig_shape = np.shape(data)
 
-print "file size in MB: ", np.round(data.nbytes / 1024 / 1024, 2)
-print "data (max, min): ", (np.round(data.max(), 2), np.round(data.min(), 2))
-print "original shape:  ", orig_shape
+print("file size in MB: ", np.round(data.nbytes / 1024 / 1024, 2))
+print("data (max, min): ", (np.round(data.max(), 2), np.round(data.min(), 2)))
+print("original  shape: ", orig_shape)
 
 data = data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff] / data.max()
 cut_shape = np.shape(data)
-print "cutted shape:    ", cut_shape
+print("cutted    shape: ", cut_shape)
 
 ## calculate center of 3d data array in floating(!) pixel coordinates
 center = tuple((np.asarray(cut_shape) - 1) / 2)
@@ -56,7 +60,7 @@ center = tuple((np.asarray(cut_shape) - 1) / 2)
 eta_rad = np.arcsin((1.0 / n) * np.sin(np.deg2rad(chi_deg)))   # angle of refraction in radians
 
 ## properties of the k-vectors
-vec_length = 150
+vec_length = 100
 
 vec_inc = (int(center[0]) - vec_length, center[1])
 vec_ref = (int(center[0]) + int(round(vec_length * np.sin(np.deg2rad(chi_deg - inc_deg)))),
@@ -70,14 +74,14 @@ components = [vec_inc, vec_ref, vec_tra]
 #------------------------------------------------------------------------------------------------------------------
 # obtaining cut-plane data position
 #------------------------------------------------------------------------------------------------------------------
-delta_deg = 23           # opening angle
+delta_deg = 40          # half opening angle (0 - 90 degrees)
 
 ## degree to radians conversion
 delta_rad = np.deg2rad(delta_deg)
 chi_rad   = np.deg2rad(chi_deg)
 inc_rad   = np.deg2rad(inc_deg)
 
-## calculate margins of the cut-plane for the respective beams in pixel coordinates
+## calculate margins of the cut-planes for the respective beams in pixel coordinates
 cut_inc = (int(center[0]) - vec_length, center[1] - int(round(vec_length * np.tan(delta_rad))),
            int(center[0]) - vec_length, center[1] + int(round(vec_length * np.tan(delta_rad))))
 cut_ref = (int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad - delta_rad - inc_rad))),
@@ -89,8 +93,17 @@ cut_tra = (int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(
            int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad + delta_rad + inc_rad))),
            int(center[1]) - int(round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad + delta_rad + inc_rad))))
 
-x0, y0, x1, y1 = cut_tra
-width = int(np.hypot(x1 - x0, y1 - y0))            # width of the cut-plane (determined by vec_length and delta_deg)
+## special cut-plane for the half of the transmitted beam placed at the origin
+## reamark: the x0 and x1 components are shifted by one pixel towards the secondary medium ensuring that only data
+##          values of the transmitted beam are taken into account
+WIDTH = 90
+cut_hal = (int(center[0]) + 1,  int(center[1]),
+           int(center[0]) + 1 - int(round(WIDTH * np.cos(eta_rad + inc_rad))),
+           int(center[1])     - int(round(WIDTH * np.sin(eta_rad + inc_rad))))
+
+x0, y0, x1, y1 = cut_hal                           # choose which cut to use
+width = int(np.hypot(x1 - x0, y1 - y0))            # width of the cut-plane (determined by vec_length together with 
+                                                   # delta_deg or just by WIDTH)
 x, y  = np.linspace(x0, x1, width, dtype=np.int), np.linspace(y0, y1, width, dtype=np.int)
 
 ## restrict cut-plane indices to values within the bound of the data array
@@ -119,7 +132,6 @@ ax1.set_title("plane of incidence")
 ax1.set_xlabel('x')                                 # labels are according to Meep
 ax1.set_ylabel('y')
 
-
 ## visualise transverse intensity distribution with respect to the axis of the central wave vector
 ax2.imshow(np.transpose(data_cut), origin="lower", cmap=plt.cm.gist_stern_r, interpolation='None')
 
@@ -131,8 +143,8 @@ ax2.axvline((data_cut.shape[0] - 1) / 2, color='w', lw=0.5)
 labels_center = measurements.center_of_mass(data_cut)
 labels_peak   = measurements.maximum_position(data_cut)
 
-print("center labels : ", labels_center)
-print("peak   labels : ", labels_peak)
+print("center   labels: ", tuple(np.round(labels_center, 2)))
+print("peak     labels: ", labels_peak  )
 
 plt.axvline(labels_center[0], color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
 plt.axhline(labels_center[1], color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
@@ -147,6 +159,8 @@ plt.show()
 
 ## free memory
 try:
-    del data, data_poi, data_real
+    del data, data_poi, data_real, data_cut
 except:
     pass
+
+gc.collect()                                        # run garbage collector
