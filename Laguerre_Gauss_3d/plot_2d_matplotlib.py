@@ -16,19 +16,21 @@ import gc
 # set parameters
 #---------------------------------------------------------------------------------------------------
 n       = 1.50 / 1.0           # relative index of refraction
-chi_deg = 56.309932474020215   # angle of incidence in degrees
+chi_deg = 60 #56.309932474020215   # angle of incidence in degrees
 inc_deg = 90 - chi_deg         # inclination of the interface with respect to the x-axis
 cutoff  = 30                   # cut off borders of data (remove PML layer up to and including line source placement)
 
 #---------------------------------------------------------------------------------------------------
 # import data from HDF file(s)
 #---------------------------------------------------------------------------------------------------
-prefix = "/home/daniel/GITHUB/Optical-beams-MEEP/Laguerre_Gauss_3d/"
-#path = "simulations/DK_meep-01.03.2018 11_08_44/LaguerreGauss3d_C-out/"
-path  = "simulations/DK_meep-16.02.2018 9_53_32/LaguerreGauss3d_A-out/"
+prefix = "/home/daniel/GITHUB/Optical-beams-MEEP/Laguerre_Gauss_3d/simulations/"
 
-filename_real = prefix + path + "e_real2_p-000001500.h5"
-filename_imag = prefix + path + "e_imag2_p-000001500.h5"
+#path  = "DK_meep-16.02.2018 9_53_32/LaguerreGauss3d_A-out/"
+path  = "DK_meep-19.02.2018 9_25_27/LaguerreGauss3d_B-out/"
+#path = "DK_meep-01.03.2018 11_08_44/LaguerreGauss3d_C-out/"
+
+filename_real = prefix + path + "e_real2_mixed-000001500.h5"
+filename_imag = prefix + path + "e_imag2_mixed-000001500.h5"
 
 with h5py.File(filename_real, 'r') as hf:
     #print("keys: %s" % hf.keys())
@@ -60,17 +62,17 @@ center = tuple((np.asarray(cut_shape) - 1) / 2)
 eta_rad = np.arcsin((1.0 / n) * np.sin(np.deg2rad(chi_deg)))   # angle of refraction in radians
 
 ## properties of the k-vectors
-vec_length = 100
+vec_length = 145
 
 ## degree to radians conversion
 chi_rad = np.deg2rad(chi_deg)
 inc_rad = np.deg2rad(inc_deg)
 
-vec_inc = (int(center[0]) - vec_length, center[1])
-vec_ref = (int(center[0]) + int(round(vec_length * np.sin(chi_rad - inc_rad))),
-           int(center[1]) + int(round(vec_length * np.cos(chi_rad - inc_rad))))
-vec_tra = (int(center[0]) + int(round(vec_length * np.sin(eta_rad + inc_rad))),
-           int(center[1]) - int(round(vec_length * np.cos(eta_rad + inc_rad))))
+vec_inc = (int(center[0] - vec_length), int(center[1]))
+vec_ref = (int(center[0] + round(vec_length * np.sin(chi_rad - inc_rad))),
+           int(center[1] + round(vec_length * np.cos(chi_rad - inc_rad))))
+vec_tra = (int(center[0] + round(vec_length * np.sin(eta_rad + inc_rad))),
+           int(center[1] - round(vec_length * np.cos(eta_rad + inc_rad))))
 
 components = [vec_inc, vec_ref, vec_tra]
 
@@ -78,7 +80,7 @@ components = [vec_inc, vec_ref, vec_tra]
 #------------------------------------------------------------------------------------------------------------------
 # obtaining cut-plane data position
 #------------------------------------------------------------------------------------------------------------------
-delta_deg = 40                                      # half opening angle (0 - 90 degrees)
+delta_deg = 30                                      # half opening angle (0 - 90 degrees)
 
 delta_rad = np.deg2rad(delta_deg)                   # degree to radians conversion
 
@@ -97,14 +99,17 @@ cut_tra = (int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(
 ## special cut-plane for the half of the transmitted beam placed at the origin
 ## reamark: the x0 and x1 components are shifted by one pixel towards the secondary medium ensuring that only data
 ##          values of the transmitted beam are taken into account
-WIDTH = 90
+WIDTH = 91                                         # an odd number is preferable
 cut_hal = (int(center[0]) + 1,  int(center[1]),
            int(center[0]) + 1 - int(round(WIDTH * np.cos(eta_rad + inc_rad))),
            int(center[1])     - int(round(WIDTH * np.sin(eta_rad + inc_rad))))
 
-x0, y0, x1, y1 = cut_hal                           # choose which cut to use
+x0, y0, x1, y1 = cut_ref                           # choose which cut to use
 width = int(np.hypot(x1 - x0, y1 - y0))            # width of the cut-plane (determined by vec_length together with 
                                                    # delta_deg or just by WIDTH)
+if not width % 2:                                  # check if width is not an odd number
+    width = width + 1
+
 x, y  = np.linspace(x0, x1, width, dtype=np.int), np.linspace(y0, y1, width, dtype=np.int)
 
 ## restrict cut-plane indices to values within the bound of the data array
