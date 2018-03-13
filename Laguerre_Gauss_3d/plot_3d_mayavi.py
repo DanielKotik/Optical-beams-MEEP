@@ -5,7 +5,7 @@ brief:  Python script to visualise (intensity) isosurfaces of scattered vortex b
 author: Daniel Kotik
 date:   19.01.2018
 """
-from __future__ import division
+from __future__ import division, print_function
 from mayavi     import mlab
 
 import numpy as np
@@ -69,9 +69,9 @@ except:
     
 orig_shape = np.shape(data)
 
-print "file size in MB: ", data.nbytes / 1024 / 1024
-print "data (max, min): ", (data.max(), data.min())
-print "original shape:  ", orig_shape
+print("file size in MB: ", data.nbytes / 1024 / 1024)
+print("data (max, min): ", (data.max(), data.min()))
+print("original shape:  ", orig_shape)
 
 data = data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff] / data.max()
 new_shape = np.shape(data)
