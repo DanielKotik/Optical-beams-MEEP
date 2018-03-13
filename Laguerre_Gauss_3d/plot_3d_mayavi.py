@@ -51,11 +51,11 @@ filename_imag = path + "e_imag2_s-000001540.h5"
 
 with h5py.File(filename_real, 'r') as hf:
     #print("keys: %s" % hf.keys())
-    data_real = hf['e_real2_s'][:]
+    data_real = hf[hf.keys()[0]][:]
 
 with h5py.File(filename_imag, 'r') as hf:
     #print("keys: %s" % hf.keys())
-    data_imag = hf['e_imag2_s'][:]
+    data_real = hf[hf.keys()[0]][:]
 
 ## choose wheather to use the electric field energy density (proportional to 'data_real') or the complex modulus of the
 ## complex electric field (proportional to 'data_real + data_imag') as data basis:
