@@ -15,10 +15,15 @@ import gc
 #---------------------------------------------------------------------------------------------------
 # set parameters
 #---------------------------------------------------------------------------------------------------
+## general parameters
 n       = 1.50 / 1.0           # relative index of refraction
 chi_deg = 60 #56.31            # angle of incidence in degrees
 inc_deg = 90 - chi_deg         # inclination of the interface with respect to the x-axis
-cutoff  = 30                   # cut off borders of data (remove PML layer up to and including line source placement)
+
+## Meep related parameters
+sx, sy, sz = (5, 5, 5)
+freq   = 5
+cutoff = 30                   # cut off borders of data (remove PML layer up to and including line source placement)
 
 #---------------------------------------------------------------------------------------------------
 # import data from HDF file(s)
@@ -50,11 +55,20 @@ print("data (max, min): ", (np.round(data.max(), 2), np.round(data.min(), 2)))
 print("original  shape: ", orig_shape)
 
 data = data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff] / data.max()
-cut_shape = np.shape(data)
-print("cutted    shape: ", cut_shape)
+new_shape = np.shape(data)
+print("cutted    shape: ", new_shape)
 
 ## calculate center of 3d data array in floating(!) pixel coordinates
-center = tuple((np.asarray(cut_shape) - 1) / 2)
+center = tuple((np.asarray(new_shape) - 1) / 2)
+
+## conversion between pixel coordinates and dimensionless (kX, ky, kZ) coordinates (wrt the incident medium)
+def dimless_coord(pixel_coord, center_pixel_coord=0):
+    """Conversion from pixel coordinates to dimensionless coordinates."""
+    return sx * 2 * np.pi * freq / (orig_shape[0] - 1) * (pixel_coord - center_pixel_coord)
+
+def pixel_coord(dimless_coord):
+    """Conversion from dimensionless coordinates to pixel coordinates."""
+    return (orig_shape[0] - 1) / (sx * 2 * np.pi * freq) * dimless_coord
 
 #------------------------------------------------------------------------------------------------------------------
 # calculating propagation directions of the secondary beams according to geometric optics
@@ -62,7 +76,10 @@ center = tuple((np.asarray(cut_shape) - 1) / 2)
 eta_rad = np.arcsin((1.0 / n) * np.sin(np.deg2rad(chi_deg)))   # angle of refraction in radians
 
 ## properties of the k-vectors
-vec_length = 160
+kw_0 = 10
+kD   = (kw_0 ** 2) / 2.0
+kZ   = kD                                        # Rayleigh length (dimensionless)
+vec_length = pixel_coord(60)                     # propagation distance given in pixel coordinates
 
 ## degree to radians conversion
 chi_rad = np.deg2rad(chi_deg)
@@ -76,25 +93,24 @@ vec_tra = (int(center[0] + round(vec_length * np.sin(eta_rad + inc_rad))),
 
 components = [vec_inc, vec_ref, vec_tra]
 
-
 #------------------------------------------------------------------------------------------------------------------
 # obtaining cut-plane data position
 #------------------------------------------------------------------------------------------------------------------
-delta_deg = 40                                      # half opening angle (0 - 90 degrees)
+delta_deg = 35                                      # half opening angle (0 - 90 degrees)
 
 delta_rad = np.deg2rad(delta_deg)                   # degree to radians conversion
 
 ## calculate margins of the cut-planes for the respective beams in pixel coordinates
-cut_inc = (int(center[0]) - vec_length, center[1] - int(round(vec_length * np.tan(delta_rad))),
-           int(center[0]) - vec_length, center[1] + int(round(vec_length * np.tan(delta_rad))))
-cut_ref = (int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad + delta_rad - inc_rad))),
-           int(center[1]) + int(round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad + delta_rad - inc_rad))),
-           int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad - delta_rad - inc_rad))),
-           int(center[1]) + int(round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad - delta_rad - inc_rad))))
-cut_tra = (int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad - delta_rad + inc_rad))),
-           int(center[1]) - int(round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad - delta_rad + inc_rad))),
-           int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad + delta_rad + inc_rad))),
-           int(center[1]) - int(round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad + delta_rad + inc_rad))))
+cut_inc = (int(center[0] - vec_length), int(center[1] - round(vec_length * np.tan(delta_rad))),
+           int(center[0] - vec_length), int(center[1] + round(vec_length * np.tan(delta_rad))))
+cut_ref = (int(center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad + delta_rad - inc_rad))),
+           int(center[1] + round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad + delta_rad - inc_rad))),
+           int(center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad - delta_rad - inc_rad))),
+           int(center[1] + round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad - delta_rad - inc_rad))))
+cut_tra = (int(center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad - delta_rad + inc_rad))),
+           int(center[1] - round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad - delta_rad + inc_rad))),
+           int(center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad + delta_rad + inc_rad))),
+           int(center[1] - round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad + delta_rad + inc_rad))))
 
 ## special cut-plane for the half of the transmitted beam placed at the origin
 ## reamark: the x0 and x1 components are shifted by one pixel towards the secondary medium ensuring that only data
@@ -104,7 +120,7 @@ cut_hal = (int(center[0]) + 1,  int(center[1]),
            int(center[0]) + 1 - int(round(WIDTH * np.cos(eta_rad + inc_rad))),
            int(center[1])     - int(round(WIDTH * np.sin(eta_rad + inc_rad))))
 
-x0, y0, x1, y1 = cut_ref                           # choose which cut to use
+x0, y0, x1, y1 = cut_inc                           # choose which cut to use
 width = int(np.hypot(x1 - x0, y1 - y0))            # width of the cut-plane (determined by vec_length together with 
                                                    # delta_deg or just by WIDTH)
 if not width % 2:                                  # check if width is not an odd number
@@ -113,10 +129,11 @@ if not width % 2:                                  # check if width is not an od
 x, y  = np.linspace(x0, x1, width, dtype=np.int), np.linspace(y0, y1, width, dtype=np.int)
 
 ## restrict cut-plane indices to values within the bound of the data array
-valid_x  = np.logical_and(0 <= x, x < cut_shape[0])
-valid_y  = np.logical_and(0 <= y, y < cut_shape[1])
-valid    = np.logical_and(valid_x, valid_y)
-data_cut = data[x[valid], y[valid], :]
+valid_x   = np.logical_and(0 <= x, x < new_shape[0])
+valid_y   = np.logical_and(0 <= y, y < new_shape[1])
+valid     = np.logical_and(valid_x, valid_y)
+data_cut  = data[x[valid], y[valid], :]
+cut_shape = np.shape(data_cut)
 
 #------------------------------------------------------------------------------------------------------------------
 # visualising 
@@ -125,15 +142,18 @@ fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
 
 ## visualise intensity distribution within the plane of incidence
 data_poi = data[:, :, int(center[2])]               # slice within the plane of incidence
-ax1.imshow(np.transpose(data_poi), origin="lower", cmap=plt.cm.hot, interpolation='None')
+extent_poi_dimless = [dimless_coord(0, center[0]), dimless_coord(new_shape[0] - 1, center[0]),
+                      dimless_coord(0, center[1]), dimless_coord(new_shape[1] - 1, center[1])]
+ax1.imshow(np.transpose(data_poi), origin="lower", cmap=plt.cm.hot, interpolation='None', extent=extent_poi_dimless)
 
-## visualise k-vectors wihtin the plane of incidence
+## visualise k-vectors within the plane of incidence
 for i in [0, 1, 2]:
-    ax1.plot([center[0], components[i][0]],
-             [center[1], components[i][1]], '--', color="white")
+    ax1.plot([dimless_coord(center[0], center[0]), dimless_coord(components[i][0], center[0])],
+             [dimless_coord(center[1], center[1]), dimless_coord(components[i][1], center[1])], '--', color="white")
 
 ## visualise cut-line
-ax1.plot([x0, x1], [y0, y1], 'ro-')
+ax1.plot([dimless_coord(x0, center[0]), dimless_coord(x1, center[0])],
+         [dimless_coord(y0, center[1]), dimless_coord(y1, center[1])], 'ro-')
 
 ## subfigure properties
 ax1.set_title("plane of incidence")
@@ -141,23 +161,34 @@ ax1.set_xlabel(r"$kZ^i$")
 ax1.set_ylabel(r"$kX^i$")
 
 ## visualise transverse intensity distribution with respect to the axis of the respective central wave vector
-ax2.imshow(data_cut, origin="lower", cmap=plt.cm.gist_stern_r, interpolation='None', 
-#extent=[0, width - 1, 0, data_cut.shape[1] - 1]
-)
+extent_cut_dimless = [dimless_coord(0, (cut_shape[1] - 1) / 2), dimless_coord(cut_shape[1] - 1, (cut_shape[1] - 1) / 2),
+                      dimless_coord(0, (cut_shape[0] - 1) / 2), dimless_coord(cut_shape[0] - 1, (cut_shape[0] - 1) / 2)]
+ax2.imshow(data_cut, origin="lower", cmap=plt.cm.gist_stern_r, interpolation='None', aspect='equal',
+                     extent=extent_cut_dimless)
 
 ## visualise geometric center point (floating pixel coordinates)
-ax2.axvline(center[2], color='w', lw=0.5)
-ax2.axhline(int((width -1) /2 - np.arange(width)[valid][0]), color='w', lw=0.5)
+#ax2.axvline(center[2], color='w', lw=0.5)
+#ax2.axhline(int((width - 1) / 2 - np.arange(width)[valid][0]), color='w', lw=0.5)
 
-## calculate and visualise center of mass (floating pixel coordinates)
+## visualise geometric center point (dimensionless coordinates)
+ax2.axvline(0, color='w', lw=0.5)
+ax2.axhline(0, color='w', lw=0.5)
+
+## calculate center of mass 
 labels_center = measurements.center_of_mass(data_cut)
-labels_peak   = measurements.maximum_position(data_cut)
 
-print("center   labels: ", tuple(np.round(labels_center, 2)))
-print("peak     labels: ", labels_peak  )
+kX_c = dimless_coord(labels_center[0], (cut_shape[0] - 1) / 2)
+ky_c = dimless_coord(labels_center[1], (cut_shape[1] - 1) / 2)
 
-ax2.axhline(labels_center[0], color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
-ax2.axvline(labels_center[1], color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
+print("center (kX, ky):  (%.3f, %.3f)" % tuple(np.round((kX_c, ky_c), 3)))
+
+## visualise center of mass (dimensionless coordinates)
+ax2.axhline(kX_c, color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
+ax2.axvline(ky_c, color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
+
+## visualise center of mass (floating pixel coordinates)
+#ax2.axhline(labels_center[0], color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
+#ax2.axvline(labels_center[1], color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
 
 ## subfigure properties
 ax2.set_title("cut-plane")
