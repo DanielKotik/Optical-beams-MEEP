@@ -104,7 +104,7 @@ cut_hal = (int(center[0]) + 1,  int(center[1]),
            int(center[0]) + 1 - int(round(WIDTH * np.cos(eta_rad + inc_rad))),
            int(center[1])     - int(round(WIDTH * np.sin(eta_rad + inc_rad))))
 
-x0, y0, x1, y1 = cut_tra                           # choose which cut to use
+x0, y0, x1, y1 = cut_ref                           # choose which cut to use
 width = int(np.hypot(x1 - x0, y1 - y0))            # width of the cut-plane (determined by vec_length together with 
                                                    # delta_deg or just by WIDTH)
 if not width % 2:                                  # check if width is not an odd number
@@ -141,13 +141,13 @@ ax1.set_xlabel(r"$kZ^i$")
 ax1.set_ylabel(r"$kX^i$")
 
 ## visualise transverse intensity distribution with respect to the axis of the respective central wave vector
-ax2.imshow(np.transpose(data_cut), origin="lower", cmap=plt.cm.gist_stern_r, interpolation='None', 
+ax2.imshow(data_cut, origin="lower", cmap=plt.cm.gist_stern_r, interpolation='None', 
 #extent=[0, width - 1, 0, data_cut.shape[1] - 1]
 )
 
 ## visualise geometric center point (floating pixel coordinates)
-ax2.axhline(center[2], color='w', lw=0.5)
-ax2.axvline(int((width -1) /2 - np.arange(width)[valid][0]), color='w', lw=0.5)
+ax2.axvline(center[2], color='w', lw=0.5)
+ax2.axhline(int((width -1) /2 - np.arange(width)[valid][0]), color='w', lw=0.5)
 
 ## calculate and visualise center of mass (floating pixel coordinates)
 labels_center = measurements.center_of_mass(data_cut)
@@ -156,13 +156,13 @@ labels_peak   = measurements.maximum_position(data_cut)
 print("center   labels: ", tuple(np.round(labels_center, 2)))
 print("peak     labels: ", labels_peak  )
 
-plt.axvline(labels_center[0], color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
-plt.axhline(labels_center[1], color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
+ax2.axhline(labels_center[0], color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
+ax2.axvline(labels_center[1], color='red', linestyle = "dashed", dashes=(10,5), lw=0.5)
 
 ## subfigure properties
 ax2.set_title("cut-plane")
-ax2.set_xlabel(r"$kX$")
-ax2.set_ylabel(r"$ky$")
+ax2.set_xlabel(r"$ky$")
+ax2.set_ylabel(r"$kX$")
 
 plt.tight_layout()
 plt.show()
