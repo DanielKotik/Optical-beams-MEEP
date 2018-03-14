@@ -16,7 +16,7 @@ import gc
 # set parameters
 #---------------------------------------------------------------------------------------------------
 n       = 1.50 / 1.0           # relative index of refraction
-chi_deg = 60 #56.309932474020215   # angle of incidence in degrees
+chi_deg = 60 #56.31            # angle of incidence in degrees
 inc_deg = 90 - chi_deg         # inclination of the interface with respect to the x-axis
 cutoff  = 30                   # cut off borders of data (remove PML layer up to and including line source placement)
 
@@ -62,7 +62,7 @@ center = tuple((np.asarray(cut_shape) - 1) / 2)
 eta_rad = np.arcsin((1.0 / n) * np.sin(np.deg2rad(chi_deg)))   # angle of refraction in radians
 
 ## properties of the k-vectors
-vec_length = 145
+vec_length = 160
 
 ## degree to radians conversion
 chi_rad = np.deg2rad(chi_deg)
@@ -80,17 +80,17 @@ components = [vec_inc, vec_ref, vec_tra]
 #------------------------------------------------------------------------------------------------------------------
 # obtaining cut-plane data position
 #------------------------------------------------------------------------------------------------------------------
-delta_deg = 30                                      # half opening angle (0 - 90 degrees)
+delta_deg = 40                                      # half opening angle (0 - 90 degrees)
 
 delta_rad = np.deg2rad(delta_deg)                   # degree to radians conversion
 
 ## calculate margins of the cut-planes for the respective beams in pixel coordinates
 cut_inc = (int(center[0]) - vec_length, center[1] - int(round(vec_length * np.tan(delta_rad))),
            int(center[0]) - vec_length, center[1] + int(round(vec_length * np.tan(delta_rad))))
-cut_ref = (int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad - delta_rad - inc_rad))),
-           int(center[1]) + int(round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad - delta_rad - inc_rad))),
-           int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad + delta_rad - inc_rad))),
-           int(center[1]) + int(round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad + delta_rad - inc_rad))))
+cut_ref = (int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad + delta_rad - inc_rad))),
+           int(center[1]) + int(round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad + delta_rad - inc_rad))),
+           int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad - delta_rad - inc_rad))),
+           int(center[1]) + int(round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad - delta_rad - inc_rad))))
 cut_tra = (int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad - delta_rad + inc_rad))),
            int(center[1]) - int(round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad - delta_rad + inc_rad))),
            int(center[0]) + int(round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad + delta_rad + inc_rad))),
@@ -104,7 +104,7 @@ cut_hal = (int(center[0]) + 1,  int(center[1]),
            int(center[0]) + 1 - int(round(WIDTH * np.cos(eta_rad + inc_rad))),
            int(center[1])     - int(round(WIDTH * np.sin(eta_rad + inc_rad))))
 
-x0, y0, x1, y1 = cut_ref                           # choose which cut to use
+x0, y0, x1, y1 = cut_tra                           # choose which cut to use
 width = int(np.hypot(x1 - x0, y1 - y0))            # width of the cut-plane (determined by vec_length together with 
                                                    # delta_deg or just by WIDTH)
 if not width % 2:                                  # check if width is not an odd number
@@ -135,15 +135,17 @@ ax1.plot([x0, x1], [y0, y1], 'ro-')
 
 ## subfigure properties
 ax1.set_title("plane of incidence")
-ax1.set_xlabel('x')                                 # labels are according to Meep
-ax1.set_ylabel('y')
+ax1.set_xlabel(r"$kZ^i$")
+ax1.set_ylabel(r"$kX^i$")
 
-## visualise transverse intensity distribution with respect to the axis of the central wave vector
-ax2.imshow(np.transpose(data_cut), origin="lower", cmap=plt.cm.gist_stern_r, interpolation='None')
+## visualise transverse intensity distribution with respect to the axis of the respective central wave vector
+ax2.imshow(np.transpose(data_cut), origin="lower", cmap=plt.cm.gist_stern_r, interpolation='None', 
+#extent=[0, width - 1, 0, data_cut.shape[1] - 1]
+)
 
 ## visualise geometric center point (floating pixel coordinates)
 ax2.axhline(center[2], color='w', lw=0.5)
-ax2.axvline((data_cut.shape[0] - 1) / 2, color='w', lw=0.5)
+ax2.axvline(int((width -1) /2 - np.arange(width)[valid][0]), color='w', lw=0.5)
 
 ## calculate and visualise center of mass (floating pixel coordinates)
 labels_center = measurements.center_of_mass(data_cut)
@@ -157,8 +159,8 @@ plt.axhline(labels_center[1], color='red', linestyle = "dashed", dashes=(10,5), 
 
 ## subfigure properties
 ax2.set_title("cut-plane")
-ax2.set_xlabel('x')                                 # labels are according to Bliokh&Aiello's beam coordinate system
-ax2.set_ylabel('z')
+ax2.set_xlabel(r"$kX$")
+ax2.set_ylabel(r"$ky$")
 
 plt.tight_layout()
 plt.show()
