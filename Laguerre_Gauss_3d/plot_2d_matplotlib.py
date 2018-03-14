@@ -113,7 +113,9 @@ if not width % 2:                                  # check if width is not an od
 x, y  = np.linspace(x0, x1, width, dtype=np.int), np.linspace(y0, y1, width, dtype=np.int)
 
 ## restrict cut-plane indices to values within the bound of the data array
-valid    = np.logical_and(x < cut_shape[0], y < cut_shape[1])
+valid_x  = np.logical_and(0 <= x, x < cut_shape[0])
+valid_y  = np.logical_and(0 <= y, y < cut_shape[1])
+valid    = np.logical_and(valid_x, valid_y)
 data_cut = data[x[valid], y[valid], :]
 
 #------------------------------------------------------------------------------------------------------------------
