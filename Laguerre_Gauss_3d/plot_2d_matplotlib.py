@@ -42,12 +42,13 @@ cutoff = 30                   # cut off borders of data (remove PML layer up to 
 #---------------------------------------------------------------------------------------------------
 prefix = "/home/daniel/GITHUB/Optical-beams-MEEP/Laguerre_Gauss_3d/simulations/"
 
-#path  = "DK_meep-16.02.2018 9_53_32/LaguerreGauss3d_A-out/"
-path  = "DK_meep-19.02.2018 9_25_27/LaguerreGauss3d_B-out/"
+#path  = "LaguerreGauss3d-out_even/"
+#path = "DK_meep-16.02.2018 9_53_32/LaguerreGauss3d_A-out/"
+path = "DK_meep-19.02.2018 9_25_27/LaguerreGauss3d_B-out/"
 #path = "DK_meep-01.03.2018 11_08_44/LaguerreGauss3d_C-out/"
 
-filename_real = prefix + path + "e_real2_mixed-000001500.h5"
-filename_imag = prefix + path + "e_imag2_mixed-000001500.h5"
+filename_real = prefix + path + "e_real2_mixed-000001500.h5" #"e_real2_s-000010.00.h5"
+filename_imag = prefix + path + "e_imag2_mixed-000001500.h5" #"e_imag2_s-000010.00.h5"
 
 with h5py.File(filename_real, 'r') as hf:
     #print("keys: %s" % hf.keys())
@@ -71,7 +72,16 @@ new_shape = np.shape(data)
 print("cutted    shape: ", new_shape)
 
 ## calculate center of 3d data array in floating(!) pixel coordinates
-center = tuple((np.asarray(new_shape) - 1) / 2)
+#center = tuple((np.asarray(new_shape) - 1) / 2)   # if all dimensions are even numbers
+#center = tuple((np.asarray(new_shape) - 0) / 2)   # if all dimensions are odd numbers
+center = []
+
+for i in [0, 1, 2]:
+    N = new_shape[i]
+    if not N % 2:                                  # check if N is even
+        center.extend([(N - 1) / 2])
+    else:
+        center.extend([N / 2])
 
 ## conversion between pixel coordinates and dimensionless (kX, ky, kZ) coordinates (wrt the incident medium)
 def dimless_coord(pixel_coord, center_pixel_coord=0):
@@ -113,16 +123,16 @@ delta_deg = 35                                      # half opening angle (0 - 90
 delta_rad = np.deg2rad(delta_deg)                   # degree to radians conversion
 
 ## calculate margins of the cut-planes for the respective beams in pixel coordinates
-cut_inc = (int(center[0] - vec_length), int(center[1] - round(vec_length * np.tan(delta_rad))),
-           int(center[0] - vec_length), int(center[1] + round(vec_length * np.tan(delta_rad))))
-cut_ref = (int(center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad + delta_rad - inc_rad))),
-           int(center[1] + round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad + delta_rad - inc_rad))),
-           int(center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad - delta_rad - inc_rad))),
-           int(center[1] + round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad - delta_rad - inc_rad))))
-cut_tra = (int(center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad - delta_rad + inc_rad))),
-           int(center[1] - round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad - delta_rad + inc_rad))),
-           int(center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad + delta_rad + inc_rad))),
-           int(center[1] - round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad + delta_rad + inc_rad))))
+cut_inc = (int(center[0] - vec_length), np.floor(center[1] - round(vec_length * np.tan(delta_rad))),
+           int(center[0] - vec_length), np.ceil( center[1] + round(vec_length * np.tan(delta_rad))))
+cut_ref = (int(     center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad + delta_rad - inc_rad))),
+           np.floor(center[1] + round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad + delta_rad - inc_rad))),
+           int(     center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad - delta_rad - inc_rad))),
+           np.ceil( center[1] + round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad - delta_rad - inc_rad))))
+cut_tra = (int(     center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad - delta_rad + inc_rad))),
+           np.floor(center[1] - round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad - delta_rad + inc_rad))),
+           int(     center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad + delta_rad + inc_rad))),
+           np.ceil( center[1] - round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad + delta_rad + inc_rad))))
 
 ## special cut-plane for the half of the transmitted beam placed at the origin
 ## reamark: the x0 and x1 components are shifted by one pixel towards the secondary medium ensuring that only data
@@ -133,18 +143,20 @@ cut_hal = (int(center[0]) + 1,  int(center[1]),
            int(center[1])     - int(round(WIDTH * np.sin(eta_rad + inc_rad))))
 
 x0, y0, x1, y1 = cut_inc                           # choose which cut to use
-width = int(np.hypot(x1 - x0, y1 - y0))            # width of the cut-plane (determined by vec_length together with 
+
+width = int(np.hypot(x1 - x0 + 1, y1 - y0 + 1))    # width of the cut-plane (determined by vec_length together with 
                                                    # delta_deg or just by WIDTH)
-if not width % 2:                                  # check if width is not an odd number
-    width = width + 1
 
 x, y  = np.linspace(x0, x1, width, dtype=np.int), np.linspace(y0, y1, width, dtype=np.int)
+z     = np.linspace(cut_inc[1], cut_inc[3], width, dtype=np.int)  # z labels are determined by the y labels of the 
+                                                                  # incident cut plane
 
 ## restrict cut-plane indices to values within the bound of the data array
 valid_x   = np.logical_and(0 <= x, x < new_shape[0])
 valid_y   = np.logical_and(0 <= y, y < new_shape[1])
 valid     = np.logical_and(valid_x, valid_y)
 data_cut  = data[x[valid], y[valid], :]
+data_cut  = data_cut[:,z]                          # make data_cut having equal dimensions
 cut_shape = np.shape(data_cut)
 
 #------------------------------------------------------------------------------------------------------------------
