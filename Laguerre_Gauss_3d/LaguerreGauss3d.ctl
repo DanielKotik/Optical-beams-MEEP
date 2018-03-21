@@ -22,11 +22,11 @@
 ;;      - slice within plane of incidence (x-y plane)
 ;;          h5topng -S2 -0 -z 0 -c  hot       [-a yarg -A eps-000000000.h5] e2_s-000001232.h5
 ;;          h5topng -S2 -0 -z 0 -Zc dkbluered [-a gray -A eps-000000000.h5]   ez-000001232.h5
-
+;;
 ;;      - slice transversal to the incident propagation axis (INDEX specifies slice index)
 ;;          h5topng -S2 -x IDNEX -c  hot       [-a yarg -A eps-000000000.h5] e2_s-000001232.h5
 ;;          h5topng -S2 -x INDEX -Zc dkbluered [-a gray -A eps-000000000.h5]   ez-000001232.h5
-
+;;
 ;;      - full 3D simulation (creating a VTK file to be opened e.g., with MayaVi)
 ;;          h5tovtk e2_s-000001232.h5 
 ;;------------------------------------------------------------------------------------------------
