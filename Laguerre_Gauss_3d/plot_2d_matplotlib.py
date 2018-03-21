@@ -10,9 +10,11 @@ date:   18.01.2018
         appropriate choice of the 'pixel' and 'freq' parameters ensuring even dimensions a pefectly centered point of
         impact within the computaional cell is quaranteed.
     
-        calculating data dimensions (N_x, N_y, N_z) from Meep parameters 'pixel' and 'freq':
+        calculating data dimensions (N_x, N_y, N_z) from Meep parameters 'n1', 'n2', 'pixel' and 'freq':
         
-            resolution = pixel * freq 
+            resolution = n1 * pixel * freq (if n1 > n2)
+            resolution = n2 * pixel * freq (if n2 > n1)
+            
             N_x = resolution * sx
             N_y = resolution * sy
             N_z = resolution * sz
@@ -35,7 +37,7 @@ inc_deg = 90 - chi_deg         # inclination of the interface with respect to th
 ## Meep related parameters
 sx, sy, sz = (5, 5, 5)
 freq   = 5
-cutoff = 30                   # cut off borders of data (remove PML layer up to and including line source placement)
+cutoff = 30                    # cut off borders of data (remove PML layer up to and including line source placement)
 
 #---------------------------------------------------------------------------------------------------
 # import data from HDF file(s)
@@ -43,9 +45,8 @@ cutoff = 30                   # cut off borders of data (remove PML layer up to 
 prefix = "/home/daniel/GITHUB/Optical-beams-MEEP/Laguerre_Gauss_3d/simulations/"
 
 #path  = "LaguerreGauss3d-out_even/"
-#path = "DK_meep-16.02.2018 9_53_32/LaguerreGauss3d_A-out/"
-path = "DK_meep-19.02.2018 9_25_27/LaguerreGauss3d_B-out/"
-#path = "DK_meep-01.03.2018 11_08_44/LaguerreGauss3d_C-out/"
+#path = "DK_meep-16.02.2018 9_53_32/LaguerreGauss3d_A-out/"    # focus on the transmitted beam
+path = "DK_meep-19.02.2018 9_25_27/LaguerreGauss3d_B-out/"    # focus on the reflected   beam
 
 filename_real = prefix + path + "e_real2_mixed-000001500.h5" #"e_real2_s-000010.00.h5"
 filename_imag = prefix + path + "e_imag2_mixed-000001500.h5" #"e_imag2_s-000010.00.h5"
@@ -65,11 +66,11 @@ orig_shape = np.shape(data)
 
 print("file size in MB: ", np.round(data.nbytes / 1024 / 1024, 2))
 print("data (max, min): ", (np.round(data.max(), 2), np.round(data.min(), 2)))
-print("original  shape: ", orig_shape)
+print(" original shape: ", orig_shape)
 
 data = data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff] / data.max()
 new_shape = np.shape(data)
-print("cutted    shape: ", new_shape)
+print("      new shape: ", new_shape)
 
 ## calculate center of 3d data array in floating(!) pixel coordinates
 #center = tuple((np.asarray(new_shape) - 1) / 2)   # if all dimensions are even numbers
@@ -137,27 +138,32 @@ cut_tra = (int(     center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(
 ## special cut-plane for the half of the transmitted beam placed at the origin
 ## reamark: the x0 and x1 components are shifted by one pixel towards the secondary medium ensuring that only data
 ##          values of the transmitted beam are taken into account
-WIDTH = 91                                         # an odd number is preferable
+WIDTH   = int(pixel_coord(40))
 cut_hal = (int(center[0]) + 1,  int(center[1]),
            int(center[0]) + 1 - int(round(WIDTH * np.cos(eta_rad + inc_rad))),
            int(center[1])     - int(round(WIDTH * np.sin(eta_rad + inc_rad))))
 
-x0, y0, x1, y1 = cut_inc                           # choose which cut to use
+SLICE = "cut_ref"                                  # choose which slice to use
+
+x0, y0, x1, y1 = eval(SLICE)
 
 width = int(np.hypot(x1 - x0 + 1, y1 - y0 + 1))    # width of the cut-plane (determined by vec_length together with 
                                                    # delta_deg or just by WIDTH)
 
 x, y  = np.linspace(x0, x1, width, dtype=np.int), np.linspace(y0, y1, width, dtype=np.int)
-z     = np.linspace(cut_inc[1], cut_inc[3], width, dtype=np.int)  # z labels are determined by the y labels of the 
-                                                                  # incident cut plane
+z     = np.linspace(np.floor(center[2] - round(vec_length * np.tan(delta_rad))),
+                    np.ceil( center[2] + round(vec_length * np.tan(delta_rad))),
+                    2 * width if SLICE == "cut_hal" else width , dtype=np.int)
 
 ## restrict cut-plane indices to values within the bound of the data array
 valid_x   = np.logical_and(0 <= x, x < new_shape[0])
 valid_y   = np.logical_and(0 <= y, y < new_shape[1])
 valid     = np.logical_and(valid_x, valid_y)
 data_cut  = data[x[valid], y[valid], :]
-data_cut  = data_cut[:,z]                          # make data_cut having equal dimensions
+data_cut  = data_cut[:, z]                         # make data_cut having equal dimensions
 cut_shape = np.shape(data_cut)
+
+print("   cutted shape: ", cut_shape)
 
 #------------------------------------------------------------------------------------------------------------------
 # visualising 
@@ -168,6 +174,7 @@ fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
 data_poi = data[:, :, int(center[2])]               # slice within the plane of incidence
 extent_poi_dimless = [dimless_coord(0, center[0]), dimless_coord(new_shape[0] - 1, center[0]),
                       dimless_coord(0, center[1]), dimless_coord(new_shape[1] - 1, center[1])]
+
 ax1.imshow(np.transpose(data_poi), origin="lower", cmap=plt.cm.hot, interpolation='None', extent=extent_poi_dimless)
 
 ## visualise k-vectors within the plane of incidence
@@ -185,10 +192,23 @@ ax1.set_xlabel(r"$kZ^i$")
 ax1.set_ylabel(r"$kX^i$")
 
 ## visualise transverse intensity distribution with respect to the axis of the respective central wave vector
-extent_cut_dimless = [dimless_coord(0, (cut_shape[1] - 1) / 2), dimless_coord(cut_shape[1] - 1, (cut_shape[1] - 1) / 2),
-                      dimless_coord(0, (cut_shape[0] - 1) / 2), dimless_coord(cut_shape[0] - 1, (cut_shape[0] - 1) / 2)]
-ax2.imshow(data_cut, origin="lower", cmap=plt.cm.gist_stern_r, interpolation='None', aspect='equal',
-                     extent=extent_cut_dimless)
+## extent_cut_dimless = [ky_min, ky_max, kX_min, kX_max]
+
+X_max_pixel_coord = cut_shape[0] - 1
+y_max_pixel_coord = cut_shape[1] - 1
+
+extent_cut_dimlessA = [dimless_coord(0, y_max_pixel_coord / 2), dimless_coord(y_max_pixel_coord, y_max_pixel_coord / 2),
+                       dimless_coord(0, X_max_pixel_coord / 2), dimless_coord(X_max_pixel_coord, X_max_pixel_coord / 2)]
+
+extent_cut_dimlessB = [dimless_coord(0, y_max_pixel_coord / 2), dimless_coord(y_max_pixel_coord, y_max_pixel_coord / 2),
+                       dimless_coord(0, X_max_pixel_coord / 1), dimless_coord(X_max_pixel_coord, X_max_pixel_coord / 1)]
+
+if SLICE == "cut_hal":
+    ax2.imshow(data_cut, origin="upper", cmap=plt.cm.gist_stern_r, interpolation='None', aspect='equal',
+                         extent=extent_cut_dimlessB)
+else:
+    ax2.imshow(data_cut, origin="lower", cmap=plt.cm.gist_stern_r, interpolation='None', aspect='equal',
+                         extent=extent_cut_dimlessA)
 
 ## visualise geometric center point (floating pixel coordinates)
 #ax2.axvline(center[2], color='w', lw=0.5)
