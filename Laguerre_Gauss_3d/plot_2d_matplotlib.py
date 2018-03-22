@@ -37,7 +37,7 @@ inc_deg = 90 - chi_deg         # inclination of the interface with respect to th
 ## Meep related parameters
 sx, sy, sz = (5, 5, 5)
 freq   = 5
-cutoff = 30                    # cut off borders of data (remove PML layer up to and including line source placement)
+cutoff = 20                    # cut off borders of data (remove PML layer up to and including line source placement)
 
 #---------------------------------------------------------------------------------------------------
 # import data from HDF file(s)
@@ -123,17 +123,24 @@ delta_deg = 35                                      # half opening angle (0 - 90
 
 delta_rad = np.deg2rad(delta_deg)                   # degree to radians conversion
 
-## calculate margins of the cut-planes for the respective beams in pixel coordinates
-cut_inc = (int(center[0] - vec_length), np.floor(center[1] - round(vec_length * np.tan(delta_rad))),
-           int(center[0] - vec_length), np.ceil( center[1] + round(vec_length * np.tan(delta_rad))))
-cut_ref = (int(     center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad + delta_rad - inc_rad))),
-           np.floor(center[1] + round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad + delta_rad - inc_rad))),
-           int(     center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(chi_rad - delta_rad - inc_rad))),
-           np.ceil( center[1] + round((vec_length / np.cos(delta_rad)) * np.cos(chi_rad - delta_rad - inc_rad))))
-cut_tra = (int(     center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad - delta_rad + inc_rad))),
-           np.floor(center[1] - round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad - delta_rad + inc_rad))),
-           int(     center[0] + round((vec_length / np.cos(delta_rad)) * np.sin(eta_rad + delta_rad + inc_rad))),
-           np.ceil( center[1] - round((vec_length / np.cos(delta_rad)) * np.cos(eta_rad + delta_rad + inc_rad))))
+## calculating start and endpoints of the cut-planes wtr to a centered coordinate system (Meep cs)
+inc_x = lambda delta: -vec_length
+inc_y = lambda delta:  vec_length * np.tan(delta)
+
+ref_x = lambda delta:  (vec_length / np.cos(delta)) * np.sin(chi_rad + delta - inc_rad)
+ref_y = lambda delta:  (vec_length / np.cos(delta)) * np.cos(chi_rad + delta - inc_rad)
+
+tra_x = lambda delta:  (vec_length / np.cos(delta)) * np.sin(eta_rad + delta + inc_rad)
+tra_y = lambda delta:  (vec_length / np.cos(delta)) * np.cos(eta_rad + delta + inc_rad)
+
+cut_inc = (int(center[0] + inc_x(0)), np.floor(center[1] + round(inc_y(-delta_rad))),
+           int(center[0] + inc_x(0)), np.ceil( center[1] + round(inc_y( delta_rad))))
+
+cut_ref = (int(center[0] + round(ref_x( delta_rad))), np.floor(center[1] + round(ref_y( delta_rad))),
+           int(center[0] + round(ref_x(-delta_rad))), np.ceil( center[1] + round(ref_y(-delta_rad))))
+
+cut_tra = (int(center[0] + round(tra_x(-delta_rad))), np.floor(center[1] - round(tra_y(-delta_rad))),
+           int(center[0] + round(tra_x( delta_rad))), np.ceil( center[1] - round(tra_y( delta_rad))))
 
 ## special cut-plane for the half of the transmitted beam placed at the origin
 ## reamark: the x0 and x1 components are shifted by one pixel towards the secondary medium ensuring that only data
