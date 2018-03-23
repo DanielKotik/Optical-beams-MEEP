@@ -158,9 +158,13 @@ width = int(np.hypot(x1 - x0 + 1, y1 - y0 + 1))    # width of the cut-plane (det
                                                    # delta_deg or just by WIDTH)
 
 x, y  = np.linspace(x0, x1, width, dtype=np.int), np.linspace(y0, y1, width, dtype=np.int)
-z     = np.linspace(np.floor(center[2] - round(vec_length * np.tan(delta_rad))),
-                    np.ceil( center[2] + round(vec_length * np.tan(delta_rad))),
-                    2 * width if SLICE == "cut_hal" else width , dtype=np.int)
+
+if SLICE == "cut_hal":
+    z = np.linspace(np.floor(center[2] - (width - 1)),
+                    np.ceil( center[2] + (width - 1)), 2 * width, dtype=np.int)
+else:
+    z = np.linspace(np.floor(center[2] - round(vec_length * np.tan(delta_rad))),
+                    np.ceil( center[2] + round(vec_length * np.tan(delta_rad))), width, dtype=np.int)
 
 ## restrict cut-plane indices to values within the bound of the data array
 valid_x   = np.logical_and(0 <= x, x < new_shape[0])
@@ -228,7 +232,11 @@ ax2.axhline(0, color='w', lw=0.5)
 ## calculate center of mass 
 labels_center = measurements.center_of_mass(data_cut)
 
-kX_c = dimless_coord(labels_center[0], (cut_shape[0] - 1) / 2)
+if SLICE == "cut_hal":
+    kX_c = 0.0
+else:
+    kX_c = dimless_coord(labels_center[0], (cut_shape[0] - 1) / 2)
+
 ky_c = dimless_coord(labels_center[1], (cut_shape[1] - 1) / 2)
 
 print("center (kX, ky):  (%.3f, %.3f)" % tuple(np.round((kX_c, ky_c), 3)))
