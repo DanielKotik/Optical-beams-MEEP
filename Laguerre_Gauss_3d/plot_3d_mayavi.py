@@ -125,11 +125,11 @@ tra = ( vec_length * np.sin(eta_rad + np.deg2rad(inc_deg)), -vec_length * np.cos
 
 components = [inc, ref, tra]
 
-## visualise incident beam
+## visualise incident central k-vector
 vector = mlab.quiver3d(0,0,0,*components[0], color=vec_color, scale_factor=1, mode='cylinder',resolution=25)
 vector.glyph.glyph_source.glyph_source.radius = vec_radius
 
-## visualise secondary beams
+## visualise secondary central k-vectors
 for i in [1,2]:
     vectors = mlab.quiver3d(0,0,0,*components[i], color=vec_color, scale_factor=1, mode='arrow',resolution=25)
     vectors.glyph.glyph_source.glyph_source.shaft_radius = vec_radius

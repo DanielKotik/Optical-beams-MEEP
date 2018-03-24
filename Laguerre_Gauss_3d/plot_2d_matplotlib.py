@@ -21,6 +21,7 @@ date:   18.01.2018
 """
 from __future__    import division, print_function
 from scipy.ndimage import measurements
+
 import matplotlib.pyplot as plt
 import numpy as np
 import h5py
@@ -100,9 +101,9 @@ eta_rad = np.arcsin((1.0 / n) * np.sin(np.deg2rad(chi_deg)))   # angle of refrac
 
 ## properties of the k-vectors
 kw_0 = 10
-kD   = (kw_0 ** 2) / 2.0
-kZ   = kD                                        # Rayleigh length (dimensionless)
-vec_length = pixel_coord(60)                     # propagation distance given in pixel coordinates
+kD   = (kw_0 ** 2) / 2.0                         # Rayleigh length
+kZ   = kD                                        # propagation distance given in dimensionless coordinates
+vec_length = pixel_coord(kZ)                     # propagation distance given in pixel coordinates
 
 ## degree to radians conversion
 chi_rad = np.deg2rad(chi_deg)
@@ -204,7 +205,6 @@ ax1.set_ylabel(r"$kX^i$")
 
 ## visualise transverse intensity distribution with respect to the axis of the respective central wave vector
 ## extent_cut_dimless = [ky_min, ky_max, kX_min, kX_max]
-
 X_max_pixel_coord = cut_shape[0] - 1
 y_max_pixel_coord = cut_shape[1] - 1
 
