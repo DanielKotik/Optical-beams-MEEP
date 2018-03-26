@@ -19,6 +19,8 @@
 ;;                                                                      v y
 ;;------------------------------------------------------------------------------------------------
 
+(print "\nstart time: "(strftime "%c" (localtime (current-time))) "\n")
+
 ;;------------------------------------------------------------------------------------------------
 ;; physical parameters characterizing light source and interface characteristics 
 ;; (must be adjusted - either here or via command line)
@@ -223,3 +225,5 @@
          (at-end output-efield-z)           ; output of E_z component (for s-polarisation)
          (at-end output-hfield-z))          ; output of H_z component (for p-polarisation)
      (at-end output-efield2))               ; output of electric field intensity
+
+(print "\nend time: "(strftime "%c" (localtime (current-time))) "\n")
