@@ -11,7 +11,7 @@
 ;;
 ;;                      b) launch the parallel version of meep using 8 cores with specified interface (concave)
 ;;
-;;                              mpirun -np 8 meep-mpi interface='"concave"' Gauss2d.ctl
+;;                              mpirun -quiet -np 8 meep-mpi interface='"concave"' Gauss2d.ctl
 ;;
 ;; coordinate system in meep (defines center of computational cell):  --|-----> x
 ;;                                                                      |
@@ -46,18 +46,20 @@
                                             ; source position coincides with beam waist)
 (define-param kr_c 150)                     ; radius of curvature (if interface is either concave of convex)
 
-(define Critical                            ; calculates the critical angle in degrees
+(define (Critical n1 n2)                    ; calculates the critical angle in degrees
     (cond
       ((> n1 n2) (* (/ (asin (/ n2 n1)) (* 2.0 pi)) 360.0))
-      ((< n1 n2) (print "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
-      ((= n1 n2) (print "\nWarning: Critical angle is not defined, since n1 = n2!\n\n"))
-    ))  
+      ((< n1 n2) (print "\nWarning: Critical angle is not defined, since n1 < n2!\n\n") (exit))
+      ((= n1 n2) (print "\nWarning: Critical angle is not defined, since n1 = n2!\n\n") (exit))
+    ))
 
-(define Brewster                            ; calculates the Brewster angle in degrees
+(define (Brewster n1 n2)                    ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
-(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
-;(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
+;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)
+;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))
+(define-param chi_deg  (* 0.99 (Critical n1 n2)))
+;(define-param chi_deg  45.0)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
@@ -188,7 +190,7 @@
 ;; display values of physical variables
 ;;------------------------------------------------------------------------------------------------
 (print "\n")
-(print "Values of specified variables:    \n")
+(print "Specified variables and derived values: \n")
 (print "chi:   " chi_deg        " [degree]\n") ; angle of incidence
 (print "incl.: " (- 90 chi_deg) " [degree]\n") ; interface inclination with respect to the x-axis
 (print "kw_0:  " kw_0  "\n")

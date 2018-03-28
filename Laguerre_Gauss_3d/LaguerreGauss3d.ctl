@@ -11,14 +11,14 @@
 ;;
 ;;                      b) launch the parallel version of meep using 8 cores
 ;;
-;;                              mpirun -np 8 meep-mpi LaguerreGauss3d.ctl
+;;                              mpirun -quiet -np 8 meep-mpi LaguerreGauss3d.ctl
 ;;
 ;; coordinate system in meep (defines center of computational cell):  --|-----> x
 ;;                                                                      |
 ;;                                                                      |
 ;;                                                                      v y
 ;;
-;; example visualisations (square brackets contain optional arguments for overlaying the dielectric function)
+;; example visualisations (square brackets contain optional arguments for overlaying the dielectric function):
 ;;      - slice within plane of incidence (x-y plane)
 ;;          h5topng -S2 -0 -z 0 -c  hot       [-a yarg -A eps-000000000.h5] e2_s-000001232.h5
 ;;          h5topng -S2 -0 -z 0 -Zc dkbluered [-a gray -A eps-000000000.h5]   ez-000001232.h5
@@ -51,18 +51,20 @@
 (define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 
-(define Critical                            ; calculates the critical angle in degrees
+(define (Critical n1 n2)                    ; calculates the critical angle in degrees
     (cond
       ((> n1 n2) (* (/ (asin (/ n2 n1)) (* 2.0 pi)) 360.0))
-      ((< n1 n2) (print "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
-      ((= n1 n2) (print "\nWarning: Critical angle is not defined, since n1 = n2!\n\n"))
+      ((< n1 n2) (print "\nWarning: Critical angle is not defined, since n1 < n2!\n\n") (exit))
+      ((= n1 n2) (print "\nWarning: Critical angle is not defined, since n1 = n2!\n\n") (exit))
     ))
 
-(define Brewster                            ; calculates the Brewster angle in degrees
+(define (Brewster n1 n2)                    ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
-;(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
-(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
+;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)
+;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))
+;(define-param chi_deg  (* 0.99 (Critical n1 n2)))
+(define-param chi_deg  45.0)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
