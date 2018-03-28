@@ -17,6 +17,12 @@
 ;;                                                                      |
 ;;                                                                      |
 ;;                                                                      v y
+;;
+;; example visualisations (square brackets contain optional arguments for overlaying the dielectric function):
+;;
+;;          h5topng -S2 -c  hot       [-a yarg -A eps-000000000.h5] e2_s-000003696.h5
+;;          h5topng -S2 -Zc dkbluered [-a gray -A eps-000000000.h5]   ez-000003696.h5
+;;
 ;;------------------------------------------------------------------------------------------------
 
 (print "\nstart time: "(strftime "%c" (localtime (current-time))) "\n")
@@ -43,7 +49,8 @@
 (define Critical                            ; calculates the critical angle in degrees
     (cond
       ((> n1 n2) (* (/ (asin (/ n2 n1)) (* 2.0 pi)) 360.0))
-      (else      (display "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
+      ((< n1 n2) (print "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
+      ((= n1 n2) (print "\nWarning: Critical angle is not defined, since n1 = n2!\n\n"))
     ))  
 
 (define Brewster                            ; calculates the Brewster angle in degrees
@@ -100,10 +107,11 @@
                         (make block         ; located at lower right edge for 45 degree tilt
                         (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
                         (size infinity (* (sqrt 2.0) sx) infinity)
-                            (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
-                            (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
-                            (e3 0 0 1)
-                        (material (make dielectric (index n2)))))))
+                        (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
+                        (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
+                        (e3 0 0 1)
+                        (material (make dielectric (index n2)))))
+                        ))
     ((string=? interface "concave")
         (set! default-material (make dielectric (index n2)))
         (set! geometry (list
@@ -113,7 +121,8 @@
                                           ; always centrally placed
                     (height infinity)
                     (radius r_c)
-                    (material (make dielectric (index n1)))))))
+                    (material (make dielectric (index n1)))))
+                    ))
     ((string=? interface "convex" )
         (set! default-material (make dielectric (index n1)))
         (set! geometry (list
@@ -123,7 +132,8 @@
                                           ; always centrally placed
                     (height infinity)
                     (radius r_c)
-                    (material (make dielectric (index n2)))))))
+                    (material (make dielectric (index n2)))))
+                    ))
 )
 
 ;;------------------------------------------------------------------------------------------------
@@ -183,8 +193,7 @@
 (print "incl.: " (- 90 chi_deg) " [degree]\n") ; interface inclination with respect to the x-axis
 (print "kw_0:  " kw_0  "\n")
 (print "kr_w:  " kr_w  "\n")
-(if (not (string=? interface "planar")) 
-(print "kr_c:  " kr_c  "\n"))
+(if (not (string=? interface "planar")) (print "kr_c:  " kr_c  "\n"))
 (print "k_vac: " k_vac "\n")
 (print "polarisation: " (if s-pol? "s" "p") "\n")
 (print "interface: " interface "\n")
@@ -203,8 +212,7 @@
 (set! sources (list
                   (make source
                       (src (make continuous-src (frequency freq) (width 0.5)))
-                      (if s-pol? (component Ez) (component Hz))
-                      (amplitude 3.0)
+                      (if s-pol? (component Ez) (component Ey))
                       (size 0 2.0 0)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
@@ -212,18 +220,21 @@
                       (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                   ))
 
+;; calculates |E|^2 with |.| denoting the complex modulus if 'force-complex-fields?' is set to true, otherwise |.|
+;; gives the Euclidean norm
 (define (eSquared r ex ey ez)
-        (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
-           (* (magnitude ez) (magnitude ez))))
+        (+ (expt (magnitude ex) 2) (expt (magnitude ey) 2) (expt (magnitude ez) 2)))
 
 (define (output-efield2) (output-real-field-function (if s-pol? "e2_s" "e2_p")
                                                      (list Ex Ey Ez) eSquared))
 
 (run-until runtime
+     (at-beginning (lambda () (print "\nCalculating inital field configuration. This will take some time...\n\n")))
      (at-beginning output-epsilon)          ; output of dielectric function
      (if s-pol?
          (at-end output-efield-z)           ; output of E_z component (for s-polarisation)
-         (at-end output-hfield-z))          ; output of H_z component (for p-polarisation)
-     (at-end output-efield2))               ; output of electric field intensity
+         (at-end output-efield-y))          ; output of E_y component (for p-polarisation)
+     (at-end output-efield2)                ; output of electric field intensity
+)
 
 (print "\nend time: "(strftime "%c" (localtime (current-time))) "\n")
