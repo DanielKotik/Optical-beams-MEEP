@@ -18,17 +18,21 @@
 ;;                                                                      |
 ;;                                                                      v y
 ;;
-;; example visualisations (square brackets contain optional arguments for overlaying the dielectric function):
-;;      - slice within plane of incidence (x-y plane)
-;;          h5topng -S2 -0 -z 0 -c  hot       [-a yarg -A eps-000000000.h5] e2_s-000001232.h5
-;;          h5topng -S2 -0 -z 0 -Zc dkbluered [-a gray -A eps-000000000.h5]   ez-000001232.h5
+;; example visualisations:
+;;      - slice within the plane of incidence (x-y plane)
+;;          h5topng -S2 -0 -z 0  -c hot [HDF5FILE]
 ;;
 ;;      - slice transversal to the incident propagation axis (INDEX specifies slice index)
-;;          h5topng -S2 -x IDNEX -c  hot       [-a yarg -A eps-000000000.h5] e2_s-000001232.h5
-;;          h5topng -S2 -x INDEX -Zc dkbluered [-a gray -A eps-000000000.h5]   ez-000001232.h5
+;;          h5topng -S2 -x IDNEX -c hot [HDF5FILE]
 ;;
-;;      - full 3D simulation (creating a VTK file to be opened e.g., with MayaVi)
-;;          h5tovtk e2_s-000001232.h5 
+;;      - full 3D simulation (creating a VTK file to be opened e.g., with MayaVi or ParaView)
+;;          h5tovtk [HDF5FILE]
+;;
+;; As input HDF5FILE choose between, for example, 'e_real2_p-000001500.h5', 'e_imag2_p-000001500.h5' (these are
+;; proportional to the electric field energy density) or the sum of both 'e2.h5' (which is proportional to the complex
+;; modulus of the complex electric field) obtained by
+;;          h5math -e "d1 + d2" e2.h5 e_real2_p-000001500.h5 e_imag2_p-000001500.h5
+;;
 ;;------------------------------------------------------------------------------------------------
 
 (print "\nstart time: "(strftime "%c" (localtime (current-time))) "\n")
@@ -103,6 +107,7 @@
        (if (and (= e_z   0 ) (= e_y   1 )) true false))
 (define a-pol?                              ; true if arbitrary (complex) polarised
        (if (and (not s-pol?) (not p-pol?)) true false))
+
 ;;------------------------------------------------------------------------------------------------
 ;; placement of the planar dielectric interface within the computational cell
 ;;------------------------------------------------------------------------------------------------
