@@ -23,7 +23,7 @@
 ;;          h5topng -S2 -0 -z 0  -c hot [HDF5FILE]
 ;;
 ;;      - slice transversal to the incident propagation axis (INDEX specifies slice index)
-;;          h5topng -S2 -x IDNEX -c hot [HDF5FILE]
+;;          h5topng -S2 -x INDEX -c hot [HDF5FILE]
 ;;
 ;;      - full 3D simulation (creating a VTK file to be opened e.g., with MayaVi or ParaView)
 ;;          h5tovtk [HDF5FILE]
