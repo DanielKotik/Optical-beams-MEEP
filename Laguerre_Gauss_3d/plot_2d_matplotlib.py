@@ -18,6 +18,8 @@ date:   18.01.2018
             N_x = resolution * sx
             N_y = resolution * sy
             N_z = resolution * sz
+        
+        Variables which determine the properties of the slice are 'vec_length', 'delta_deg' (or 'WIDTH') and 'SLICE'.
 """
 from __future__    import division, print_function
 from scipy.ndimage import measurements
