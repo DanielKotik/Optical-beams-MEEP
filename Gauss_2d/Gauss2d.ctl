@@ -80,6 +80,7 @@
 ;; derived Meep parameters (do not change)
 ;;------------------------------------------------------------------------------------------------
 (define k_vac (* 2.0 pi freq))
+(define k1    (* n1  k_vac  ))              ; wave number inside the incident medium
 (define n_ref (cond ((= ref_medium 0) 1.0)  ; index of refraction of the reference medium
                     ((= ref_medium 1)  n1)
                     ((= red_medium 2)  n2)))
@@ -161,8 +162,7 @@
 ;; spectrum amplitude distribution(s)
 ;;------------------------------------------------------------------------------------------------
 (define (f_Gauss W_y)
-        (lambda (k_y) (* (/ W_y (* 2.0 (sqrt pi)))
-                         (exp (* -1.0 (expt (* 0.5 k_y W_y) 2.0))))
+        (lambda (k_y) (exp (* -1.0 (expt (* 0.5 k_y W_y) 2.0)))
         ))
 
 ;(define (f_asymmetric W_y)
@@ -173,17 +173,17 @@
 ;; plane wave decomposition 
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
 ;;------------------------------------------------------------------------------------------------
-(define (integrand f y x k)
+(define (integrand f x y)
         (lambda (k_y) (* (f k_y)
-                        (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
+                        (exp (* 0+1i x (sqrt (- (* k1 k1) (* k_y k_y)))))
                         (exp (* 0+1i k_y y)))
         ))
 
 ;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
 ;; (one may have to adjust the 'relerr' parameter value in the integrate function)
-(define (psi f x k)
-        (lambda (r) (car (integrate (integrand f (vector3-y r) x k)
-                          (* -1.0 k) (* 1.0 k) relerr))
+(define (psi f x)
+        (lambda (r) (car (integrate (integrand f x (vector3-y r))
+                          (* -1.0 k1) (* 1.0 k1) relerr))
         ))
 
 ;;------------------------------------------------------------------------------------------------
@@ -219,7 +219,7 @@
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
                       ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
-                      (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
+                      (amp-func (psi (f_Gauss w_0) shift)))
                   ))
 
 ;; calculates |E|^2 with |.| denoting the complex modulus if 'force-complex-fields?' is set to true, otherwise |.|
