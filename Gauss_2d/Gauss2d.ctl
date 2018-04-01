@@ -200,10 +200,10 @@
 (print "polarisation: " (if s-pol? "s" "p") "\n")
 (print "interface: " interface "\n")
 (print "\n")
-;(print "The value of our Gaussian spectrum amplitude is: " ((f_Gauss w_0) 20.0) "\n")
-;(print "integrand " ((integrand 0.8 2.0 k_vac w_0) 20.0) "\n")
-;(print "Field amplitude: " ((psi 1.0 k_vac w_0) 0.5) "\n")
-
+;(print "spectrum amplitude: " ((f_Gauss w_0) 20.0)                        "\n")
+;(print "integrand:          " ((integrand (f_Gauss w_0) 0.8 2.0) 20.0)    "\n")
+;(print "field amplitude:    " ((psi (f_Gauss w_0) 0.8) (vector3 0 0.2 0)) "\n")
+;(exit)
 ;;------------------------------------------------------------------------------------------------
 ;; specify current source, output functions and run simulation
 ;;------------------------------------------------------------------------------------------------
