@@ -45,14 +45,12 @@ cutoff = 20                    # cut off borders of data (remove PML layer up to
 #---------------------------------------------------------------------------------------------------
 # import data from HDF file(s)
 #---------------------------------------------------------------------------------------------------
-prefix = "/home/daniel/GITHUB/Optical-beams-MEEP/Laguerre_Gauss_3d/simulations/"
+#path = "simulations/LaguerreGauss3d-out_even/"
+#path = "simulations/meep-A/LaguerreGauss3d_A-out/"    # focus on the transmitted beam
+path = "simulations/meep-B/LaguerreGauss3d_B-out/"    # focus on the reflected   beam
 
-#path  = "LaguerreGauss3d-out_even/"
-#path = "DK_meep-16.02.2018 9_53_32/LaguerreGauss3d_A-out/"    # focus on the transmitted beam
-path = "DK_meep-19.02.2018 9_25_27/LaguerreGauss3d_B-out/"    # focus on the reflected   beam
-
-filename_real = prefix + path + "e_real2_mixed-000001500.h5" #"e_real2_s-000010.00.h5"
-filename_imag = prefix + path + "e_imag2_mixed-000001500.h5" #"e_imag2_s-000010.00.h5"
+filename_real = path + "e_real2_mixed-000001500.h5" #"e_real2_s-000010.00.h5"
+filename_imag = path + "e_imag2_mixed-000001500.h5" #"e_imag2_s-000010.00.h5"
 
 with h5py.File(filename_real, 'r') as hf:
     #print("keys: %s" % hf.keys())
