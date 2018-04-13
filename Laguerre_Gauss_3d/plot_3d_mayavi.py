@@ -45,7 +45,8 @@ cutoff  = 30                   # cut off borders of data (remove PML layer up to
 #---------------------------------------------------------------------------------------------------
 # import data from HDF file(s)
 #---------------------------------------------------------------------------------------------------
-path = "simulations/DK_meep-01.03.2018 11_08_44/LaguerreGauss3d_C-out/"
+path = "simulations/meep-C/LaguerreGauss3d_C-out/"
+
 filename_real = path + "e_real2_s-000001540.h5"
 filename_imag = path + "e_imag2_s-000001540.h5"
 
