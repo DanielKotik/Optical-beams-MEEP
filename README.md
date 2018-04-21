@@ -6,7 +6,7 @@
 ![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_transverse_resized.png)
 ![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_3d_half_resized.png)
 # Optical-beams-MEEP
-FDTD simulation of reflection and refraction of polarised optical (vortex) beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package.  
+FDTD simulation of reflection and refraction of polarised optical (vortex) beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. The mathematical description of all of the implemented beam profiles is outlined in this [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/Airy_beam/beam_profiles.ipynb).
 
 The provided files (and features) are:
 *   Scheme configuration file for Gaussian beams (2d) impinging upon planar, concave and convex dielectric interfaces
