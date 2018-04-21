@@ -8,6 +8,8 @@
 # Optical-beams-MEEP
 FDTD simulation of reflection and refraction of polarised optical (vortex) beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. The mathematical description of all of the implemented beam profiles is outlined in this [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/Airy_beam/beam_profiles.ipynb).
 
+Originally, these scripting files have been used in studying optical beam shifts providing independet numerical simulations. With regards to their easy extensibility and the ease and widespread use of the powerful [Meep](https://github.com/stevengj/meep) tool, these files may be easily adapted to investigate other interesting physical effects and problems.
+
 The provided files (and features) are:
 *   Scheme configuration file for Gaussian beams (2d) impinging upon planar, concave and convex dielectric interfaces
 *   Scheme configuration file for Laguerre-Gaussian (vortex) beams (3d) impinging upon a planar dielectric interface
