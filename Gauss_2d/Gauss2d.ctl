@@ -11,13 +11,21 @@
 ;;
 ;;                      b) launch the parallel version of meep using 8 cores with specified interface (concave)
 ;;
-;;                              mpirun -np 8 meep-mpi interface='"concave"' Gauss2d.ctl
+;;                              mpirun -quiet -np 8 meep-mpi interface='"concave"' Gauss2d.ctl
 ;;
 ;; coordinate system in meep (defines center of computational cell):  --|-----> x
 ;;                                                                      |
 ;;                                                                      |
 ;;                                                                      v y
+;;
+;; example visualisations (square brackets contain optional arguments for overlaying the dielectric function):
+;;
+;;          h5topng -S2 -c  hot       [-a yarg -A eps-000000000.h5] e2_s-000003696.h5
+;;          h5topng -S2 -Zc dkbluered [-a gray -A eps-000000000.h5]   ez-000003696.h5
+;;
 ;;------------------------------------------------------------------------------------------------
+
+(print "\nstart time: "(strftime "%c" (localtime (current-time))) "\n")
 
 ;;------------------------------------------------------------------------------------------------
 ;; physical parameters characterizing light source and interface characteristics 
@@ -38,17 +46,20 @@
                                             ; source position coincides with beam waist)
 (define-param kr_c 150)                     ; radius of curvature (if interface is either concave of convex)
 
-(define Critical                            ; calculates the critical angle in degrees
+(define (Critical n1 n2)                    ; calculates the critical angle in degrees
     (cond
       ((> n1 n2) (* (/ (asin (/ n2 n1)) (* 2.0 pi)) 360.0))
-      (else      (display "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
-    ))  
+      ((< n1 n2) (print "\nWarning: Critical angle is not defined, since n1 < n2!\n\n") (exit))
+      ((= n1 n2) (print "\nWarning: Critical angle is not defined, since n1 = n2!\n\n") (exit))
+    ))
 
-(define Brewster                            ; calculates the Brewster angle in degrees
+(define (Brewster n1 n2)                    ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
-(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
-;(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
+;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)
+;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))
+(define-param chi_deg  (* 0.99 (Critical n1 n2)))
+;(define-param chi_deg  45.0)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
@@ -69,6 +80,7 @@
 ;; derived Meep parameters (do not change)
 ;;------------------------------------------------------------------------------------------------
 (define k_vac (* 2.0 pi freq))
+(define k1    (* n1  k_vac  ))              ; wave number inside the incident medium
 (define n_ref (cond ((= ref_medium 0) 1.0)  ; index of refraction of the reference medium
                     ((= ref_medium 1)  n1)
                     ((= red_medium 2)  n2)))
@@ -98,10 +110,11 @@
                         (make block         ; located at lower right edge for 45 degree tilt
                         (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
                         (size infinity (* (sqrt 2.0) sx) infinity)
-                            (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
-                            (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
-                            (e3 0 0 1)
-                        (material (make dielectric (index n2)))))))
+                        (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
+                        (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
+                        (e3 0 0 1)
+                        (material (make dielectric (index n2)))))
+                        ))
     ((string=? interface "concave")
         (set! default-material (make dielectric (index n2)))
         (set! geometry (list
@@ -111,7 +124,8 @@
                                           ; always centrally placed
                     (height infinity)
                     (radius r_c)
-                    (material (make dielectric (index n1)))))))
+                    (material (make dielectric (index n1)))))
+                    ))
     ((string=? interface "convex" )
         (set! default-material (make dielectric (index n1)))
         (set! geometry (list
@@ -121,7 +135,8 @@
                                           ; always centrally placed
                     (height infinity)
                     (radius r_c)
-                    (material (make dielectric (index n2)))))))
+                    (material (make dielectric (index n2)))))
+                    ))
 )
 
 ;;------------------------------------------------------------------------------------------------
@@ -147,8 +162,7 @@
 ;; spectrum amplitude distribution(s)
 ;;------------------------------------------------------------------------------------------------
 (define (f_Gauss W_y)
-        (lambda (k_y) (* (/ W_y (* 2.0 (sqrt pi)))
-                         (exp (* -1.0 (expt (* 0.5 k_y W_y) 2.0))))
+        (lambda (k_y) (exp (* -1.0 (expt (* 0.5 k_y W_y) 2.0)))
         ))
 
 ;(define (f_asymmetric W_y)
@@ -159,38 +173,37 @@
 ;; plane wave decomposition 
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
 ;;------------------------------------------------------------------------------------------------
-(define (integrand f y x k)
+(define (integrand f x y)
         (lambda (k_y) (* (f k_y)
-                        (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
+                        (exp (* 0+1i x (sqrt (- (* k1 k1) (* k_y k_y)))))
                         (exp (* 0+1i k_y y)))
         ))
 
 ;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
 ;; (one may have to adjust the 'relerr' parameter value in the integrate function)
-(define (psi f x k)
-        (lambda (r) (car (integrate (integrand f (vector3-y r) x k)
-                          (* -1.0 k) (* 1.0 k) relerr))
+(define (psi f x)
+        (lambda (r) (car (integrate (integrand f x (vector3-y r))
+                          (* -1.0 k1) (* 1.0 k1) relerr))
         ))
 
 ;;------------------------------------------------------------------------------------------------
 ;; display values of physical variables
 ;;------------------------------------------------------------------------------------------------
 (print "\n")
-(print "Values of specified variables:    \n")
+(print "Specified variables and derived values: \n")
 (print "chi:   " chi_deg        " [degree]\n") ; angle of incidence
 (print "incl.: " (- 90 chi_deg) " [degree]\n") ; interface inclination with respect to the x-axis
 (print "kw_0:  " kw_0  "\n")
 (print "kr_w:  " kr_w  "\n")
-(if (not (string=? interface "planar")) 
-(print "kr_c:  " kr_c  "\n"))
+(if (not (string=? interface "planar")) (print "kr_c:  " kr_c  "\n"))
 (print "k_vac: " k_vac "\n")
 (print "polarisation: " (if s-pol? "s" "p") "\n")
 (print "interface: " interface "\n")
 (print "\n")
-;(print "The value of our Gaussian spectrum amplitude is: " ((f_Gauss w_0) 20.0) "\n")
-;(print "integrand " ((integrand 0.8 2.0 k_vac w_0) 20.0) "\n")
-;(print "Field amplitude: " ((psi 1.0 k_vac w_0) 0.5) "\n")
-
+;(print "spectrum amplitude: " ((f_Gauss w_0) 20.0)                        "\n")
+;(print "integrand:          " ((integrand (f_Gauss w_0) 0.8 2.0) 20.0)    "\n")
+;(print "field amplitude:    " ((psi (f_Gauss w_0) 0.8) (vector3 0 0.2 0)) "\n")
+;(exit)
 ;;------------------------------------------------------------------------------------------------
 ;; specify current source, output functions and run simulation
 ;;------------------------------------------------------------------------------------------------
@@ -201,25 +214,29 @@
 (set! sources (list
                   (make source
                       (src (make continuous-src (frequency freq) (width 0.5)))
-                      (if s-pol? (component Ez) (component Hz))
-                      (amplitude 3.0)
+                      (if s-pol? (component Ez) (component Ey))
                       (size 0 2.0 0)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
                       ;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))
-                      (amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
+                      (amp-func (psi (f_Gauss w_0) shift)))
                   ))
 
+;; calculates |E|^2 with |.| denoting the complex modulus if 'force-complex-fields?' is set to true, otherwise |.|
+;; gives the Euclidean norm
 (define (eSquared r ex ey ez)
-        (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
-           (* (magnitude ez) (magnitude ez))))
+        (+ (expt (magnitude ex) 2) (expt (magnitude ey) 2) (expt (magnitude ez) 2)))
 
 (define (output-efield2) (output-real-field-function (if s-pol? "e2_s" "e2_p")
                                                      (list Ex Ey Ez) eSquared))
 
 (run-until runtime
+     (at-beginning (lambda () (print "\nCalculating inital field configuration. This will take some time...\n\n")))
      (at-beginning output-epsilon)          ; output of dielectric function
      (if s-pol?
          (at-end output-efield-z)           ; output of E_z component (for s-polarisation)
-         (at-end output-hfield-z))          ; output of H_z component (for p-polarisation)
-     (at-end output-efield2))               ; output of electric field intensity
+         (at-end output-efield-y))          ; output of E_y component (for p-polarisation)
+     (at-end output-efield2)                ; output of electric field intensity
+)
+
+(print "\nend time: "(strftime "%c" (localtime (current-time))) "\n")

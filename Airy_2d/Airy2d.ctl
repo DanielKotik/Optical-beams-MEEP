@@ -11,13 +11,15 @@
 ;;
 ;;                      b) launch the parallel version of meep using 8 cores
 ;;
-;;                              mpirun -np 8 meep-mpi Airy2d.ctl
+;;                              mpirun -quiet -np 8 meep-mpi Airy2d.ctl
 ;;
 ;; coordinate system in meep (defines center of computational cell):  --|-----> x
 ;;                                                                      |
 ;;                                                                      |
 ;;                                                                      v y
 ;;------------------------------------------------------------------------------------------------
+
+(print "\nstart time: "(strftime "%c" (localtime (current-time))) "\n")
 
 ;;------------------------------------------------------------------------------------------------
 ;; physical parameters characterizing light source and interface characteristics 
@@ -33,17 +35,20 @@
 (define-param kr_w  60)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 
-(define Critical                            ; calculates the critical angle in degrees
+(define (Critical n1 n2)                    ; calculates the critical angle in degrees
     (cond
       ((> n1 n2) (* (/ (asin (/ n2 n1)) (* 2.0 pi)) 360.0))
-      (else      (display "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
-    ))  
+      ((< n1 n2) (print "\nWarning: Critical angle is not defined, since n1 < n2!\n\n") (exit))
+      ((= n1 n2) (print "\nWarning: Critical angle is not defined, since n1 = n2!\n\n") (exit))
+    ))
 
-(define Brewster                            ; calculates the Brewster angle in degrees
+(define (Brewster n1 n2)                    ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
-(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
-;(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
+;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)
+;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))
+(define-param chi_deg  (* 0.99 (Critical n1 n2)))
+;(define-param chi_deg  45.0)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
@@ -65,6 +70,7 @@
 ;; derived Meep parameters (do not change)
 ;;------------------------------------------------------------------------------------------------
 (define k_vac (* 2.0 pi freq))
+(define k1    (* n1  k_vac  ))              ; wave number inside the incident medium
 (define n_ref (cond ((= ref_medium 0) 1.0)  ; index of refraction of the reference medium
                     ((= ref_medium 1)  n1)
                     ((= red_medium 2)  n2)))
@@ -142,6 +148,9 @@
                          (exp (* -1.0 (expt (* 0.5 k_y W_y) 2.0))))
         ))
 
+;(define (f_Airy W_y)
+;        (lambda (k_y) ...
+;        ))
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
@@ -163,7 +172,7 @@
 ;; display values of physical variables
 ;;------------------------------------------------------------------------------------------------
 (print "\n")
-(print "Values of specified variables:    \n")
+(print "Specified variables and derived values: \n")
 (print "chi:   " chi_deg        " [degree]\n") ; angle of incidence
 (print "incl.: " (- 90 chi_deg) " [degree]\n") ; interface inclination with respect to the x-axis
 (print "kw_0:  " kw_0  "\n")
@@ -176,13 +185,13 @@
 ;; specify current source, output functions and run simulation
 ;;------------------------------------------------------------------------------------------------
 (use-output-directory)                      ; put output files in a separate folder
-(set! force-complex-fields? false)          ; default: false
+(set! force-complex-fields? true)          ; default: false
 (set! eps-averaging? true)                  ; default: true
 
 (set! sources (list
                   (make source
                       (src (make continuous-src (frequency freq) (width 0.5)))
-                      (if s-pol? (component Ez) (component Hz))
+                      (if s-pol? (component Ez) (component Ey))
                       (amplitude 1.0)
                       (size 0 45 0)
                       (center source_shift 0 0)
@@ -191,16 +200,20 @@
                       ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                   ))
 
+;; calculates |E|^2 with |.| denoting the complex modulus if 'force-complex-fields?' is set to true, otherwise |.|
+;; gives the Euclidean norm
 (define (eSquared r ex ey ez)
-        (+ (* (magnitude ex) (magnitude ex)) (* (magnitude ey) (magnitude ey))
-           (* (magnitude ez) (magnitude ez))))
+        (+ (expt (magnitude ex) 2) (expt (magnitude ey) 2) (expt (magnitude ez) 2)))
 
-(define (output-efield2) (output-field-function (if s-pol? "e2_s" "e2_p")
-                                                (list Ex Ey Ez) eSquared))
+(define (output-efield2) (output-real-field-function (if s-pol? "e2_s" "e2_p")
+                                                     (list Ex Ey Ez) eSquared))
 
 (run-until runtime
+     (at-beginning (lambda () (print "\nCalculating inital field configuration. This will take some time...\n\n")))
      (at-beginning output-epsilon)          ; output of dielectric function
      (if s-pol?
          (at-end output-efield-z)           ; output of E_z component (for s-polarisation)
-         (at-end output-hfield-z))          ; output of H_z component (for p-polarisation)
+         (at-end output-efield-y))          ; output of E_y component (for p-polarisation)
      (at-end output-efield2))               ; output of electric field intensity
+
+(print "\nend time: "(strftime "%c" (localtime (current-time))) "\n")

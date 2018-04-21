@@ -11,24 +11,28 @@
 ;;
 ;;                      b) launch the parallel version of meep using 8 cores
 ;;
-;;                              mpirun -np 8 meep-mpi LaguerreGauss3d.ctl
+;;                              mpirun -quiet -np 8 meep-mpi LaguerreGauss3d.ctl
 ;;
 ;; coordinate system in meep (defines center of computational cell):  --|-----> x
 ;;                                                                      |
 ;;                                                                      |
 ;;                                                                      v y
 ;;
-;; example visualisations (square brackets contain optional arguments for overlaying the dielectric function)
-;;      - slice within plane of incidence (x-y plane)
-;;          h5topng -S2 -0 -z 0 -c  hot       [-a yarg -A eps-000000000.h5] e2_s-000001232.h5
-;;          h5topng -S2 -0 -z 0 -Zc dkbluered [-a gray -A eps-000000000.h5]   ez-000001232.h5
+;; example visualisations:
+;;      - slice within the plane of incidence (x-y plane)
+;;          h5topng -S2 -0 -z 0  -c hot [HDF5FILE]
 ;;
 ;;      - slice transversal to the incident propagation axis (INDEX specifies slice index)
-;;          h5topng -S2 -x IDNEX -c  hot       [-a yarg -A eps-000000000.h5] e2_s-000001232.h5
-;;          h5topng -S2 -x INDEX -Zc dkbluered [-a gray -A eps-000000000.h5]   ez-000001232.h5
+;;          h5topng -S2 -x INDEX -c hot [HDF5FILE]
 ;;
-;;      - full 3D simulation (creating a VTK file to be opened e.g., with MayaVi)
-;;          h5tovtk e2_s-000001232.h5 
+;;      - full 3D simulation (creating a VTK file to be opened e.g., with MayaVi or ParaView)
+;;          h5tovtk [HDF5FILE]
+;;
+;; As input HDF5FILE choose between, for example, 'e_real2_p-000001500.h5', 'e_imag2_p-000001500.h5' (these are
+;; proportional to the electric field energy density) or the sum of both 'e2.h5' (which is proportional to the complex
+;; modulus of the complex electric field) obtained by
+;;          h5math -e "d1 + d2" e2.h5 e_real2_p-000001500.h5 e_imag2_p-000001500.h5
+;;
 ;;------------------------------------------------------------------------------------------------
 
 (print "\nstart time: "(strftime "%c" (localtime (current-time))) "\n")
@@ -51,18 +55,20 @@
 (define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 
-(define Critical                            ; calculates the critical angle in degrees
+(define (Critical n1 n2)                    ; calculates the critical angle in degrees
     (cond
       ((> n1 n2) (* (/ (asin (/ n2 n1)) (* 2.0 pi)) 360.0))
-      ((< n1 n2) (print "\nWarning: Critical angle is not defined, since n1 < n2!\n\n"))
-      ((= n1 n2) (print "\nWarning: Critical angle is not defined, since n1 = n2!\n\n"))
+      ((< n1 n2) (print "\nWarning: Critical angle is not defined, since n1 < n2!\n\n") (exit))
+      ((= n1 n2) (print "\nWarning: Critical angle is not defined, since n1 = n2!\n\n") (exit))
     ))
 
-(define Brewster                            ; calculates the Brewster angle in degrees
+(define (Brewster n1 n2)                    ; calculates the Brewster angle in degrees
         (* (/ (atan (/ n2 n1)) (* 2.0 pi)) 360.0))
 
-;(define-param chi_deg  (* 0.99 Critical))   ; define incidence angle relative to the Brewster or critical angle,
-(define-param chi_deg  45.0)               ; or set it explicitly (in degrees)
+;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)
+;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))
+;(define-param chi_deg  (* 0.99 (Critical n1 n2)))
+(define-param chi_deg  45.0)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
@@ -101,6 +107,7 @@
        (if (and (= e_z   0 ) (= e_y   1 )) true false))
 (define a-pol?                              ; true if arbitrary (complex) polarised
        (if (and (not s-pol?) (not p-pol?)) true false))
+
 ;;------------------------------------------------------------------------------------------------
 ;; placement of the planar dielectric interface within the computational cell
 ;;------------------------------------------------------------------------------------------------
