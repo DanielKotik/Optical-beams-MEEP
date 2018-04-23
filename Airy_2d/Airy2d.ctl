@@ -29,9 +29,9 @@
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
-(define-param n1  1.01)                     ; index of refraction of the incident medium
+(define-param n1  1.00)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
-(define-param kw_0 100)                     ; beam width (>5 is good)
+(define-param kw_0  30)                     ; beam width (>5 is good)
 (define-param kr_w  60)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 
@@ -47,23 +47,23 @@
 
 ;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)
 ;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))
-(define-param chi_deg  (* 0.99 (Critical n1 n2)))
-;(define-param chi_deg  45.0)
+;(define-param chi_deg  (* 0.99 (Critical n1 n2)))
+(define-param chi_deg  45.0)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
-(define-param sx 50)                        ; size of cell including PML in x-direction
-(define-param sy 50)                        ; size of cell including PML in y-direction
+(define-param sx 100)                       ; size of cell including PML in x-direction
+(define-param sy  30)                       ; size of cell including PML in y-direction
 (define-param pml_thickness 1)              ; thickness of PML layer
-(define-param freq    5)                   ; vacuum frequency of source (5 to 12 is good)
-(define-param runtime 35)                   ; runs simulation for 10 times freq periods
-(define-param pixel   8)                   ; number of pixels per wavelength in the denser
+(define-param freq     5)                   ; vacuum frequency of source (5 to 12 is good)
+(define-param runtime 80)                   ; runs simulation for X times freq periods
+(define-param pixel    8)                   ; number of pixels per wavelength in the denser
                                             ; medium (at least >10; 20 to 30 is a good choice)
 ;(define-param source_shift -2.15)          ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 rw))    ; units (-2.15 good); if equal -rw, then source position coincides with
                                             ; waist position
-(define-param source_shift -10.0)
+(define-param source_shift -45.0)
 (define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
 
 ;;------------------------------------------------------------------------------------------------
@@ -117,28 +117,18 @@
         (lambda (r) (exp (* -1.0 (expt (/ (vector3-y r) W_y) 2.0)))
         ))
 
-(define (airy_integrand xi Y)
-        (* (/ 1 (* 2 pi)) (exp (* 0+1i (+ (* (/ 1 3) (expt xi 3)) (* xi Y))))
-        ))
-
-;; incomplete Airy function (Eq. (3) in OL by Ring, Howls and Dennis)
-(define (Ai_inc1 M W)
-        (lambda (r) (car (integrate (lambda (xi) (airy_integrand xi (vector3-y r))) (- M W) (+ M W) relerr))
-        ))
-
-;; combined version
-(define (Ai_inc2 M W)
+;; incomplete Airy function
+(define (Ai_inc M W W_y)
         (lambda (r) (car
         (integrate (lambda (xi) (* (/ 1 (* 2 pi))
-                                   (exp (* 0+1i (+ (* (/ 1 3) (expt xi 3)) (* xi (vector3-y r)))))))
+                                   (exp (* 0+1i (+ (* (/ 1 3) (expt xi 3)) (* xi (/ (vector3-y r) W_y)))))))
                    (- M W) (+ M W) relerr))
         ))
 
 ;; simple test outputs
-(print "Airy integrand: " (airy_integrand 0.1 0.2) "\n")
-(print "Integral 1: " ((Ai_inc1 0.2 4) (vector3 1 -0.3 1)) "\n")
-(print "Integral 2: " ((Ai_inc2 0.2 4) (vector3 1 -0.3 1)) "\n")
-
+(print "w_0: " w_0 "\n")
+(print "Airy function: " ((Ai_inc 0.2 4 w_0) (vector3 1 -0.3 1)) "\n")
+;(exit)
 
 ;;------------------------------------------------------------------------------------------------
 ;; spectrum amplitude distribution
@@ -192,11 +182,10 @@
                   (make source
                       (src (make continuous-src (frequency freq) (width 0.5)))
                       (if s-pol? (component Ez) (component Ey))
-                      (amplitude 1.0)
-                      (size 0 45 0)
+                      (size 0 25 0)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
-                      (amp-func (Ai_inc2 0 4)))
+                      (amp-func (Ai_inc 0 4 w_0)))
                       ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
                   ))
 
