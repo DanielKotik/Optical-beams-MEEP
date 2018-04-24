@@ -1,7 +1,7 @@
 ;;-------------------------------------------------------------------------------------------------
 ;; file:   Airy2d.ctl
 ;; brief:  Scheme configuration input file for the FDTD solver Meep simulating the scattering of an 
-;;         Airy beam at a planar dielectric interface
+;;         incomplete Airy beam at a planar dielectric interface
 ;; author: Daniel Kotik
 ;; date:   14.01.2018
 ;;
@@ -34,6 +34,8 @@
 (define-param kw_0  13)                     ; beam width (>5 is good)
 (define-param kr_w  60)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
+(define-param M  0)                         ; center of integration window
+(define-param W  4)                         ; width of integration window
 
 (define (Critical n1 n2)                    ; calculates the critical angle in degrees
     (cond
@@ -149,17 +151,17 @@
 ;; plane wave decomposition 
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
 ;;------------------------------------------------------------------------------------------------
-(define (integrand f y x k)
+(define (integrand f x y)
         (lambda (k_y) (* (f k_y)
-                         (exp (* 0+1i x (sqrt (- (* k k) (* k_y k_y)))))
-                         (exp (* 0+1i k_y y)))
+                        (exp (* 0+1i x (sqrt (- (* k1 k1) (* k_y k_y)))))
+                        (exp (* 0+1i k_y y)))
         ))
 
 ;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
 ;; (one may have to adjust the 'relerr' parameter value in the integrate function)
-(define (psi f x k)
-        (lambda (r) (car (integrate (integrand f (vector3-y r) x k)
-                         (* -1.0 k) (* 1.0 k) relerr))
+(define (psi f x)
+        (lambda (r) (car (integrate (integrand f x (vector3-y r))
+                          (* -1.0 k1) (* 1.0 k1) relerr))
         ))
 
 ;;------------------------------------------------------------------------------------------------
@@ -190,7 +192,7 @@
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
                       (amp-func (Ai_inc 0 4 w_0)))
-                      ;(amp-func (psi (f_Gauss w_0) shift (* n1 k_vac))))
+                      ;(amp-func (psi (f_Gauss w_0) shift)))
                   ))
 
 ;; calculates |E|^2 with |.| denoting the complex modulus if 'force-complex-fields?' is set to true, otherwise |.|
