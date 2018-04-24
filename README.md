@@ -47,4 +47,4 @@ For a more detailed explanation of our configuration files and the physical back
 -   [x] Gaussian beams (2d), concave, s- and p-polarisation
 -   [x] Gaussian beams (2d), convex, s- and p-polarisation
 -   [x] Laguerre-Gaussian (vortex) beams (3d), planar, arbitrary complex polarisation
--   [ ] Airy beams (2d) (free space propagation)
+-   [x] Airy beams (2d) (free space propagation)
