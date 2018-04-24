@@ -6,15 +6,15 @@
 ![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_transverse_resized.png)
 ![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_3d_half_resized.png)
 # Optical-beams-MEEP
-FDTD simulation of reflection and refraction of polarised optical (vortex) beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. The mathematical description of all of the implemented beam profiles is outlined in this [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/Airy_beam/beam_profiles.ipynb).
+FDTD simulation of reflection and refraction of polarised optical (vortex) beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. The mathematical description of the currently implemented beam profiles is outlined in a [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/Airy_beam/beam_profiles.ipynb).
 
-Originally, these scripting files have been used in studying optical beam shifts providing independet numerical simulations. With regards to their easy extensibility and the ease and widespread use of the powerful [Meep](https://github.com/stevengj/meep) tool, these files may be easily adapted to investigate other interesting physical effects and problems.
+Originally, these scripting files have been used in studying optical beam shifts providing independet numerical simulations. With regards to their easy extensibility, the ease and widespread use of the powerful [Meep](https://github.com/stevengj/meep) tool, these files could be easily adapted to other and possibly more complicated beam/interface setups.
 
 The provided files (and features) are:
 *   Scheme configuration file for Gaussian beams (2d) impinging upon planar, concave and convex dielectric interfaces
 *   Scheme configuration file for Laguerre-Gaussian (vortex) beams (3d) impinging upon a planar dielectric interface
 *   Python scripts for enhanced visualisation and analysis of the generated HDF5 output files
-*   The focus of the beams can be placed anywhere along the propagation direction - independently of the location of the source current distribution
+*   The waist/focus of the beams can be placed anywhere along the propagation direction - independently of the location of the source current distribution
 
 ## Invocation
 A Scheme configuration file (extension ``.ctl``) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, e.g. by executing the commands:
