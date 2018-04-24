@@ -53,13 +53,13 @@
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
-(define-param sx 60)                       ; size of cell including PML in x-direction
-(define-param sy 30)                       ; size of cell including PML in y-direction
+(define-param sx 60)                        ; size of cell including PML in x-direction
+(define-param sy 30)                        ; size of cell including PML in y-direction
 (define-param pml_thickness 1)              ; thickness of PML layer
-(define-param freq      5)                   ; vacuum frequency of source (5 to 12 is good)
-(define-param runtime 100)                   ; runs simulation for X times freq periods
-(define-param pixel     8)                   ; number of pixels per wavelength in the denser
-                                            ; medium (at least >10; 20 to 30 is a good choice)
+(define-param freq      5)                  ; vacuum frequency of source (5 to 12 is good)
+(define-param runtime 100)                  ; runs simulation for X times freq periods
+(define-param pixel     8)                  ; number of pixels per wavelength in the denser medium
+                                            ; (at least >10; 20 to 30 is a good choice)
 ;(define-param source_shift -2.15)          ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 rw))    ; units (-2.15 good); if equal -rw, then source position coincides with
                                             ; waist position
@@ -93,14 +93,15 @@
 (set! geometry-lattice (make lattice (size sx sy no-size)))
 
 (set! default-material (make dielectric (index n1)))
-;(set! geometry (list
-;                (make block         ; located at lower right edge for 45 degree tilt
-;                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
-;                (size infinity (* (sqrt 2.0) sx) infinity)
-;                    (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
-;                    (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
-;                    (e3 0 0 1)
-;                (material (make dielectric (index n2))))))
+(set! geometry (list
+                (make block                 ; located at lower right edge for 45 degree tilt
+                (center (+ (/ sx 2.0) (Delta_x (alpha chi_deg))) (/ sy -2.0))
+                (size infinity (* (sqrt 2.0) sx) infinity)
+                (e1 (/ 1.0 (tan (alpha chi_deg)))  1 0)
+                (e2 -1 (/ 1.0 (tan (alpha chi_deg))) 0)
+                (e3 0 0 1)
+                (material (make dielectric (index n2))))
+                ))
 
 ;;------------------------------------------------------------------------------------------------
 ;; add absorbing boundary conditions and discretize structure
@@ -120,27 +121,30 @@
 ;; incomplete Airy function
 (define (Ai_inc M W W_y)
         (lambda (r) (car
-        (integrate (lambda (xi) (* (/ 1 (* 2 pi))
-                                   (exp (* 0+1i (+ (* (/ 1 3) (expt xi 3)) (* xi (/ (vector3-y r) W_y)))))))
+        (integrate (lambda (xi) (exp (* 0+1i (+ (* (/ 1 3) (expt xi 3)) (* xi (/ (vector3-y r) W_y))))))
                    (- M W) (+ M W) relerr))
         ))
 
 ;; simple test outputs
-(print "w_0: " w_0 "\n")
-(print "Airy function: " ((Ai_inc 0.2 4 w_0) (vector3 1 -0.3 1)) "\n")
+;(print "w_0: " w_0 "\n")
+;(print "Airy function: " ((Ai_inc 0.2 4 w_0) (vector3 1 -0.3 1)) "\n")
 ;(exit)
 
 ;;------------------------------------------------------------------------------------------------
 ;; spectrum amplitude distribution
 ;;------------------------------------------------------------------------------------------------
 (define (f_Gauss W_y)
-        (lambda (k_y) (* (/ W_y (* 2.0 (sqrt pi)))
-                         (exp (* -1.0 (expt (* 0.5 k_y W_y) 2.0))))
+        (lambda (k_y) (exp (* -1.0 (expt (* 0.5 k_y W_y) 2)))
         ))
 
-;(define (f_Airy W_y)
-;        (lambda (k_y) ...
-;        ))
+(define (f_Airy W_y)
+        (lambda (k_y) (exp (* 0+1i (/ (expt (* k_y W_y) 3) 3)))
+        ))
+
+;; simple test outputs
+;(print "Airy spectrum: " ((f_Airy w_0) 0.2) "\n")
+;(exit)
+
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
