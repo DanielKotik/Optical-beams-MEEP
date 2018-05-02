@@ -29,7 +29,7 @@ defined in expressions beginning with ``(define-param ...`` in the respective co
 ## Visualisation
 The generated HDF5 files can be processed by different visualisation tools. To get a quick impression of the data 
 [Meep](https://github.com/stevengj/meep) comes bundled with the [h5utils](https://github.com/stevengj/h5utils) 
-programs. Utilising these tools, visualisation is fairly easy performed by issuing for example the following commands  :
+programs. Utilising these tools, visualisation is fairly easy performed by issuing for example the following commands:
 
 _for 2d simulations_  
 ``h5topng -S2 -Zc dkbluered -a gray -A eps-000000000.h5 ez-000003696.h5`` (real part of the field pattern, optical 
@@ -42,7 +42,7 @@ The [Meep Scheme tutorial](https://meep.readthedocs.io/en/latest/Scheme_Tutorial
 information and assistance.
 For a more detailed explanation of our configuration files and the physical background, please see my dissertation thesis. Coming soon.
 
-## Supported _beam - interface - polarisation_ configurations
+## Supported beams, interfaces and polarisation configurations
 -   [x] Gaussian beams (2d), planar, s- and p-polarisation
 -   [x] Gaussian beams (2d), concave, s- and p-polarisation
 -   [x] Gaussian beams (2d), convex, s- and p-polarisation
