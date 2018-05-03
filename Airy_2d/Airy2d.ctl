@@ -135,16 +135,21 @@
 ;;------------------------------------------------------------------------------------------------
 ;; spectrum amplitude distribution
 ;;------------------------------------------------------------------------------------------------
+(define Heaviside
+        (lambda (x) (cond ((<  x 0) 0) ((>= x 0) 1))
+        ))
+
 (define (f_Gauss W_y)
         (lambda (k_y) (exp (* -1.0 (expt (* 0.5 k_y W_y) 2)))
         ))
 
-(define (f_Airy W_y)
-        (lambda (k_y) (exp (* 0+1i (/ (expt (* k_y W_y) 3) 3)))
+(define (f_Airy W_y M W)
+        (lambda (k_y) (* (exp (* 0+1i (* (/ 1 3) (expt (* k_y W_y) 3))))
+                         (Heaviside (- (* W_y k_y) (- M W))) (Heaviside (- (+ M W) (* W_y k_y))))
         ))
 
 ;; simple test outputs
-;(print "Airy spectrum: " ((f_Airy w_0) 0.2) "\n")
+;(print "Airy spectrum: " ((f_Airy w_0 0 4) 0.2) "\n")
 ;(exit)
 
 ;;------------------------------------------------------------------------------------------------
