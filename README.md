@@ -1,12 +1,15 @@
 ![concave](Gauss_2d/img/concave_intensity_cropped_rotated_resized.png) 
 ![planar](Gauss_2d/img/planar_intensity_cropped_rotated_resized.png)
 ![convex](Gauss_2d/img/convex_intensity_cropped_rotated_resized.png)
+![Airy](Airy_2d/img/Airy_beam_M_0_W_4_free_space.png)
 
 ![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_longitudinal_resized.png)
 ![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_transverse_resized.png)
 ![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_3d_half_resized.png)
+![Airy](Airy_2d/img/Airy_beam_M_0_W_4_free_space.png)
+
 # Optical-beams-MEEP
-FDTD simulation of reflection and refraction of polarised optical (vortex) beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. The mathematical description of the currently implemented beam profiles is outlined in a [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/Airy_beam/beam_profiles.ipynb).
+FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. The mathematical description of the currently implemented beam profiles is outlined in a [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/Airy_beam/beam_profiles.ipynb).
 
 Originally, these scripting files have been used in studying optical beam shifts providing independet numerical simulations. With regards to their easy extensibility, the ease and widespread use of the powerful [Meep](https://github.com/stevengj/meep) tool, these files can easily be adapted to other and possibly more complicated beam/interface setups.
 
