@@ -31,8 +31,8 @@
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
 (define-param n1  1.00)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
-(define-param kw_0  13)                     ; beam width (>5 is good)
-(define-param kr_w  60)                     ; beam waist distance to interface (30 to 50 is good if
+(define-param kw_0  10)                     ; beam width (>5 is good)
+(define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 (define-param M  0)                         ; center of integration window
 (define-param W  4)                         ; width of integration window
@@ -55,18 +55,18 @@
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
-(define-param sx 60)                        ; size of cell including PML in x-direction
-(define-param sy 30)                        ; size of cell including PML in y-direction
+(define-param sx 50)                        ; size of cell including PML in x-direction
+(define-param sy 20)                        ; size of cell including PML in y-direction
 (define-param pml_thickness 1)              ; thickness of PML layer
-(define-param freq      5)                  ; vacuum frequency of source (5 to 12 is good)
-(define-param runtime 100)                  ; runs simulation for X times freq periods
-(define-param pixel     8)                  ; number of pixels per wavelength in the denser medium
+(define-param freq     5)                   ; vacuum frequency of source (5 to 12 is good)
+(define-param runtime 90)                   ; runs simulation for X times freq periods
+(define-param pixel   10)                   ; number of pixels per wavelength in the denser medium
                                             ; (at least >10; 20 to 30 is a good choice)
-;(define-param source_shift -2.15)          ; source position with respect to the center (point of impact) in Meep
+(define-param source_shift 0)          ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 rw))    ; units (-2.15 good); if equal -rw, then source position coincides with
                                             ; waist position
-(define-param source_shift (* -0.49 (- sx (* 2 pml_thickness))))
-(define-param relerr 0.0001)                ; relative error for integration routine (0.0001 or smaller)
+;(define-param source_shift (* -0.49 (- sx (* 2 pml_thickness))))
+(define-param relerr 1.0e-5)                ; relative error for integration routine (1.0e-4 or smaller)
 
 ;;------------------------------------------------------------------------------------------------
 ;; derived Meep parameters (do not change)
@@ -121,7 +121,7 @@
         ))
 
 ;; incomplete Airy function
-(define (Ai_inc M W W_y)
+(define (Ai_inc W_y M W)
         (lambda (r) (car
         (integrate (lambda (xi) (exp (* 0+1i (+ (* (/ 1 3) (expt xi 3)) (* xi (/ (vector3-y r) W_y))))))
                    (- M W) (+ M W) relerr))
@@ -129,7 +129,7 @@
 
 ;; simple test outputs
 ;(print "w_0: " w_0 "\n")
-;(print "Airy function: " ((Ai_inc 0.2 4 w_0) (vector3 1 -0.3 1)) "\n")
+;(print "Airy function 1: " ((Ai_inc w_0 0 4) (vector3 1 -0.3 1)) "\n")
 ;(exit)
 
 ;;------------------------------------------------------------------------------------------------
@@ -144,7 +144,7 @@
         ))
 
 (define (f_Airy W_y M W)
-        (lambda (k_y) (* (exp (* 0+1i (* (/ 1 3) (expt (* k_y W_y) 3))))
+        (lambda (k_y) (* W_y (exp (* 0+1i (* (/ 1 3) (expt (* k_y W_y) 3))))
                          (Heaviside (- (* W_y k_y) (- M W))) (Heaviside (- (+ M W) (* W_y k_y))))
         ))
 
@@ -168,6 +168,9 @@
         (lambda (r) (car (integrate (integrand f x (vector3-y r))
                           (* -1.0 k1) (* 1.0 k1) relerr))
         ))
+
+;(print "Airy function 2: " ((psi (f_Airy w_0 0 4) 0) (vector3 1 -0.3 1)) "\n")
+;(exit)
 
 ;;------------------------------------------------------------------------------------------------
 ;; display values of physical variables
@@ -193,11 +196,11 @@
                   (make source
                       (src (make continuous-src (frequency freq) (width 0.5)))
                       (if s-pol? (component Ez) (component Ey))
-                      (size 0 25 0)
+                      (size 0 15 0)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
-                      (amp-func (Ai_inc 0 4 w_0)))
-                      ;(amp-func (psi (f_Gauss w_0) shift)))
+                      (amp-func (Ai_inc w_0 M W)))
+                      ;(amp-func (psi (f_Airy w_0 M W) shift)))
                   ))
 
 ;; calculates |E|^2 with |.| denoting the complex modulus if 'force-complex-fields?' is set to true, otherwise |.|
