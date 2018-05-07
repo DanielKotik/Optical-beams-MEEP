@@ -17,6 +17,12 @@
 ;;                                                                      |
 ;;                                                                      |
 ;;                                                                      v y
+;;
+;; example visualisation (square brackets contain optional arguments for overlaying the dielectric function):
+;;
+;;          h5topng -S2 -X scalex -c hot [-a yarg -A eps-000000000.h5] e2_s-000003696.h5 
+;;
+;;          (if necessary, scale the x dimension of the image by scalex)
 ;;------------------------------------------------------------------------------------------------
 
 (print "\nstart time: "(strftime "%c" (localtime (current-time))) "\n")
@@ -29,9 +35,9 @@
 (define-param ref_medium 0)                 ; reference medium whose wavenumber is used as inverse scaling length
                                             ; (0 - free space, 1 - incident medium, 2 - refracted medium)
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
-(define-param n1  1.00)                     ; index of refraction of the incident medium
+(define-param n1  1.54)                     ; index of refraction of the incident medium
 (define-param n2  1.00)                     ; index of refraction of the refracted medium
-(define-param kw_0  10)                     ; beam width (>5 is good)
+(define-param kw_0   7)                     ; beam width (>5 is good)
 (define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 (define-param M  0)                         ; center of integration window
@@ -49,23 +55,23 @@
 
 ;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)
 ;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))
-;(define-param chi_deg  (* 0.99 (Critical n1 n2)))
-(define-param chi_deg  45.0)
+(define-param chi_deg  (* 0.99 (Critical n1 n2)))
+;(define-param chi_deg  45.0)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
-(define-param sx 50)                        ; size of cell including PML in x-direction
-(define-param sy 20)                        ; size of cell including PML in y-direction
-(define-param pml_thickness 1)              ; thickness of PML layer
-(define-param freq     5)                   ; vacuum frequency of source (5 to 12 is good)
+(define-param sx 10)                        ; size of cell including PML in x-direction
+(define-param sy 10)                        ; size of cell including PML in y-direction
+(define-param pml_thickness 0.5)            ; thickness of PML layer
+(define-param freq    10)                   ; vacuum frequency of source (4 to 12 is good)
 (define-param runtime 90)                   ; runs simulation for X times freq periods
-(define-param pixel   10)                   ; number of pixels per wavelength in the denser medium
+(define-param pixel   12)                   ; number of pixels per wavelength in the denser medium
                                             ; (at least >10; 20 to 30 is a good choice)
-(define-param source_shift 0)          ; source position with respect to the center (point of impact) in Meep
+;(define-param source_shift 0)              ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 rw))    ; units (-2.15 good); if equal -rw, then source position coincides with
                                             ; waist position
-;(define-param source_shift (* -0.49 (- sx (* 2 pml_thickness))))
+(define-param source_shift (* -0.43 (- sx (* 2 pml_thickness))))
 (define-param relerr 1.0e-5)                ; relative error for integration routine (1.0e-4 or smaller)
 
 ;;------------------------------------------------------------------------------------------------
@@ -123,7 +129,7 @@
 ;; incomplete Airy function
 (define (Ai_inc W_y M W)
         (lambda (r) (car
-        (integrate (lambda (xi) (exp (* 0+1i (+ (* (/ 1 3) (expt xi 3)) (* xi (/ (vector3-y r) W_y))))))
+        (integrate (lambda (xi) (exp (* 0+1i (+ (* (/ -1 3) (expt xi 3)) (* xi (/ (vector3-y r) W_y))))))
                    (- M W) (+ M W) relerr))
         ))
 
@@ -144,8 +150,8 @@
         ))
 
 (define (f_Airy W_y M W)
-        (lambda (k_y) (* W_y (exp (* 0+1i (* (/ 1 3) (expt (* k_y W_y) 3))))
-                         (Heaviside (- (* W_y k_y) (- M W))) (Heaviside (- (+ M W) (* W_y k_y))))
+        (lambda (k_y) (* W_y (exp (* 0+1i (* (/ -1 3) (expt (* k_y W_y) 3))))
+                             (Heaviside (- (* W_y k_y) (- M W))) (Heaviside (- (+ M W) (* W_y k_y))))
         ))
 
 ;; simple test outputs
@@ -196,11 +202,11 @@
                   (make source
                       (src (make continuous-src (frequency freq) (width 0.5)))
                       (if s-pol? (component Ez) (component Ey))
-                      (size 0 15 0)
+                      (size 0 8 0)
                       (center source_shift 0 0)
                       ;(amp-func (Gauss w_0)))
-                      (amp-func (Ai_inc w_0 M W)))
-                      ;(amp-func (psi (f_Airy w_0 M W) shift)))
+                      ;(amp-func (Ai_inc w_0 M W)))
+                      (amp-func (psi (f_Airy w_0 M W) shift)))
                   ))
 
 ;; calculates |E|^2 with |.| denoting the complex modulus if 'force-complex-fields?' is set to true, otherwise |.|
