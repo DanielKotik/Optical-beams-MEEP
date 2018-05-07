@@ -9,15 +9,15 @@
 ![Airy](Airy_2d/img/Airy_beam_M_0_W_4_free_space.png)
 
 # Optical-beams-MEEP
-FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. The mathematical description of the currently implemented beam profiles is outlined in a [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/Airy_beam/beam_profiles.ipynb).
-
-Originally, these scripting files have been used in studying optical beam shifts providing independet numerical simulations. With regards to their easy extensibility, the ease and widespread use of the powerful [Meep](https://github.com/stevengj/meep) tool, these files can easily be adapted to other and possibly more complicated beam/interface setups.
+FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. A mathematical description of the currently implemented beam profiles is outlined in this [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/Airy_beam/beam_profiles.ipynb).
 
 The provided files (and features) are:
 *   Scheme configuration file for Gaussian beams (2d) impinging upon planar, concave and convex dielectric interfaces
 *   Scheme configuration file for Laguerre-Gaussian (vortex) beams (3d) impinging upon a planar dielectric interface
 *   Python scripts for enhanced visualisation and analysis of the generated HDF5 output files
 *   The waist/focus of the beams can be placed anywhere along the propagation direction - independently of the location of the source current distribution
+
+Originally, these files have been used in studying optical beam shifts providing independent numerical simulations. With regards to their scriptability, together with the ease and widespread use of the powerful [Meep](https://github.com/stevengj/meep) tool, these scripts can easily be adapted to other and possibly more complicated beam/interface setups.
 
 ## Invocation
 A Scheme configuration file (extension ``.ctl``) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, e.g. by executing the commands:
@@ -50,4 +50,4 @@ For a more detailed explanation of our configuration files and the physical back
 -   [x] Gaussian beams (2d), concave, s- and p-polarisation
 -   [x] Gaussian beams (2d), convex, s- and p-polarisation
 -   [x] Laguerre-Gaussian (vortex) beams (3d), planar, arbitrary complex polarisation
--   [x] Airy beams (2d) (free space propagation)
+-   [x] Airy beams (2d), planar, s- and p-polarisation
