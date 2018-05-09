@@ -1,7 +1,7 @@
 ![concave](Gauss_2d/img/concave_intensity_cropped_rotated_resized.png) 
 ![planar](Gauss_2d/img/planar_intensity_cropped_rotated_resized.png)
 ![convex](Gauss_2d/img/convex_intensity_cropped_rotated_resized.png)
-![Airy](Airy_2d/img/Airy_beam_M_0_W_4_free_space.png)
+![Airy](Airy_2d/img/Airy_beam_M_0_W_4_scattering.png)
 
 ![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_longitudinal_resized.png)
 ![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_transverse_resized.png)
