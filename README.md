@@ -1,4 +1,4 @@
-![concave](Gauss_2d/img/concave_intensity_cropped_rotated_resized.png) 
+![concave](Gauss_2d/img/concave_intensity_cropped_rotated_resized.png)
 ![planar](Gauss_2d/img/planar_intensity_cropped_rotated_resized.png)
 ![convex](Gauss_2d/img/convex_intensity_cropped_rotated_resized.png)
 ![Airy](Airy_2d/img/Airy_beam_M_0_W_4_scattering.png)
@@ -26,22 +26,29 @@ A Scheme configuration file (extension ``.ctl``) may be launched with the serial
 or  
 ``mpirun -quiet -np X meep-mpi e_z=0 e_y=1 freq=5 LaguerreGauss3d.ctl``
 
-with ``X`` indicating the number of cores. All possible Meep parameters that can be set from the command line are 
+with ``X`` indicating the number of cores. All possible Meep parameters that can be set from the command line are
 defined in expressions beginning with ``(define-param ...`` in the respective configuration files.
 
 ## Visualisation
-The generated HDF5 files can be processed by different visualisation tools. To get a quick impression of the data 
-[Meep](https://github.com/stevengj/meep) comes bundled with the [h5utils](https://github.com/stevengj/h5utils) 
+The generated HDF5 files can be processed by different visualisation tools. To get a quick impression of the data
+[Meep](https://github.com/stevengj/meep) comes bundled with the [h5utils](https://github.com/stevengj/h5utils)
 programs. Utilising these tools, visualisation is fairly easy performed by issuing for example the following commands:
 
 _for 2d simulations_  
-``h5topng -S2 -Zc dkbluered -a gray -A eps-000000000.h5 ez-000003696.h5`` (real part of the field pattern, optical 
+``h5topng -S2 -Zc dkbluered -a gray -A eps-000000000.h5 ez-000003696.h5`` (real part of the field pattern, optical
 denser material is shaded in grey)
 
-``h5topng -S2 -c hot -a yarg -A eps-000000000.h5 e2_s-000003696.h5`` (intensity distribution, optical 
+``h5topng -S2 -c hot -a yarg -A eps-000000000.h5 e2_s-000003696.h5`` (intensity distribution, optical
 denser material is shaded in grey)
 
-The [Meep Scheme tutorial](https://meep.readthedocs.io/en/latest/Scheme_Tutorials/Basics/) provides further useful 
+_for 3d simulations_  
+``h5topng -S2 -0 -z 0  -c hot e_real2_p-000001500.h5`` (slice within the plane of incidence)
+
+``h5topng -S2 -x INDEX -c hot e_real2_p-000001500.h5`` (slice transversal to the incident propagation axis with INDEX specifying the slice index)
+
+``h5tovtk e_real2_p-000001500.h5`` (creates a VTK file to be opened by e.g. the [MayaVi](https://github.com/enthought/mayavi) or [ParaView](https://github.com/Kitware/ParaView) visualisation application)
+
+The [Meep Scheme tutorial](https://meep.readthedocs.io/en/latest/Scheme_Tutorials/Basics/) provides further useful
 information and assistance.
 For a more detailed explanation of our configuration files and the physical background, please see my dissertation thesis. Coming soon.
 
