@@ -145,7 +145,9 @@
 (set! pml-layers 
     (list (make pml (thickness pml_thickness))))
 (set! resolution                            ; set resolution in pixels per Meep distance unit
-      (* pixel (* (if (> n1 n2) n1 n2) freq))) 
+      (* pixel (* (if (> n1 n2) n1 n2) freq)))
+(set! Courant                               ; set Courant factor (mandatory if either n1 or n2 is smaller than 1)
+      (/ (if (< n1 n2) n1 n2) 2))
 
 ;;------------------------------------------------------------------------------------------------
 ;; beam profile distribution(s) (field amplitude) at the waist of the beam
