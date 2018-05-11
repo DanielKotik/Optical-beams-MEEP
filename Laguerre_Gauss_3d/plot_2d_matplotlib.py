@@ -45,7 +45,7 @@ cutoff = 20                    # cut off borders of data (remove PML layer up to
 #---------------------------------------------------------------------------------------------------
 # import data from HDF file(s)
 #---------------------------------------------------------------------------------------------------
-#path  = "simulations/LaguerreGauss3d-out_even/"
+#path = "simulations/LaguerreGauss3d-out_even/"
 #path = "simulations/meep-A/LaguerreGauss3d_A-out/"    # focus on the transmitted beam
 path = "simulations/meep-B/LaguerreGauss3d_B-out/"    # focus on the reflected   beam
 
