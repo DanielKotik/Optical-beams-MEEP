@@ -9,7 +9,7 @@
 ![Airy](Airy_2d/img/Airy_beam_M_0_W_4_free_space.png)
 
 # Optical-beams-MEEP
-FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. A mathematical description of the currently implemented beam profiles is outlined in this [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/Airy_beam/beam_profiles.ipynb).
+FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. A mathematical description of the currently implemented beam profiles is outlined in this [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/master/beam_profiles.ipynb).
 
 The provided files (and features) are:
 *   Scheme configuration file for Gaussian beams (2d) impinging upon planar, concave and convex dielectric interfaces
