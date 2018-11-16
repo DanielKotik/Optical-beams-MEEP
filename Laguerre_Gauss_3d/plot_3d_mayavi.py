@@ -13,23 +13,23 @@ import h5py
 
 
 def cuboid(ext_grid, rot=0, color=(1,0,0), opacity=1.0):
-    """Returns a cuboid defined on the grid 'ext_grid' with an angle of rotation 'rot' about the z-axis given in 
+    """Returns a cuboid defined on the grid 'ext_grid' with an angle of rotation 'rot' about the z-axis given in
        degrees. This cuboid is ment to represent the optically denser material.
     """
     xl, xr, yl, yr, zl, zr = ext_grid
-    
+
     triangles = [(0,1,2), (1,2,3), (0,1,4), (1,4,5), (4,5,6), (6,7,5),
                  (2,3,6), (3,6,7), (0,2,6), (0,6,4), (3,1,7), (1,7,5)]
-    
+
     x = np.tile(np.array([xr,xr,xl,xl]), 2)   # repeat array twice
     y = np.tile(np.array([yl,yr,yl,yr]), 2)   # repeat array twice
     z = np.concatenate((np.array([zl,zl,zl,zl]), np.array([zr,zr,zr,zr])))
-    
+
     rot = np.deg2rad(rot)
-    
+
     xr = np.cos(rot)*x - np.sin(rot)*y
     yr = np.sin(rot)*x + np.cos(rot)*y
-    
+
     return mlab.triangular_mesh(xr, yr, z, triangles, color=color, opacity=opacity)
 
 
@@ -52,11 +52,11 @@ filename_imag = path + "e_imag2_s-000001540.h5"
 
 with h5py.File(filename_real, 'r') as hf:
     #print("keys: %s" % hf.keys())
-    data_real = hf[hf.keys()[0]][:]
+    data_real = hf[list(hf.keys())[0]][:]
 
 with h5py.File(filename_imag, 'r') as hf:
     #print("keys: %s" % hf.keys())
-    data_real = hf[hf.keys()[0]][:]
+    data_real = hf[list(hf.keys())[0]][:]
 
 ## choose wheather to use the electric field energy density (proportional to 'data_real') or the complex modulus of the
 ## complex electric field (proportional to 'data_real + data_imag') as data basis:
@@ -67,7 +67,7 @@ try:
     del data_imag                                       # free memory early
 except:
     pass
-    
+
 orig_shape = np.shape(data)
 
 print("file size in MB: ", data.nbytes / 1024 / 1024)
@@ -99,13 +99,13 @@ voi.set(z_max=np.ceil(new_shape[2]/2))              # halving volume at plane of
 
 VMAX = 0.02
 iso = mlab.pipeline.iso_surface(voi, colormap="hot", contours=[VMAX])
-iso.module_manager.scalar_lut_manager.use_default_range = False 
+iso.module_manager.scalar_lut_manager.use_default_range = False
 iso.module_manager.scalar_lut_manager.data_range = [0.0, VMAX]
 
 ## add two cut planes to show the transverse intensity distributions
-pipe_inc = mlab.pipeline.image_plane_widget(src, plane_orientation='x_axes', slice_index=0, colormap='hot', 
+pipe_inc = mlab.pipeline.image_plane_widget(src, plane_orientation='x_axes', slice_index=0, colormap='hot',
                                                  vmin=0.0, vmax=VMAX)
-pipe_ref = mlab.pipeline.image_plane_widget(src, plane_orientation='y_axes', slice_index=new_shape[1], colormap='hot', 
+pipe_ref = mlab.pipeline.image_plane_widget(src, plane_orientation='y_axes', slice_index=new_shape[1], colormap='hot',
                                                  vmin=0.0, vmax=VMAX)
 
 
