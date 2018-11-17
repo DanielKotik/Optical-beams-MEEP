@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 file:   plot_3d_mayavi.py
 brief:  Python script to visualise (intensity) isosurfaces of scattered vortex beams.
@@ -5,63 +7,74 @@ brief:  Python script to visualise (intensity) isosurfaces of scattered vortex b
 author: Daniel Kotik
 date:   19.01.2018
 """
-from __future__ import division, print_function
-from mayavi     import mlab
+from mayavi import mlab
 
 import numpy as np
 import h5py
 
 
-def cuboid(ext_grid, rot=0, color=(1,0,0), opacity=1.0):
-    """Returns a cuboid defined on the grid 'ext_grid' with an angle of rotation 'rot' about the z-axis given in
-       degrees. This cuboid is ment to represent the optically denser material.
+def cuboid(ext_grid, rot=0, color=(1, 0, 0), opacity=1.0):
+    """Return a cuboid.
+
+    The cuboid is defined on grid 'ext_grid' with an angle of rotation 'rot'
+    about the z-axis given indegrees. This cuboid is ment to represent the
+    optically denser material.
     """
     xl, xr, yl, yr, zl, zr = ext_grid
 
-    triangles = [(0,1,2), (1,2,3), (0,1,4), (1,4,5), (4,5,6), (6,7,5),
-                 (2,3,6), (3,6,7), (0,2,6), (0,6,4), (3,1,7), (1,7,5)]
+    triangles = [(0, 1, 2), (1, 2, 3), (0, 1, 4), (1, 4, 5), (4, 5, 6),
+                 (6, 7, 5), (2, 3, 6), (3, 6, 7), (0, 2, 6), (0, 6, 4),
+                 (3, 1, 7), (1, 7, 5)]
 
-    x = np.tile(np.array([xr,xr,xl,xl]), 2)   # repeat array twice
-    y = np.tile(np.array([yl,yr,yl,yr]), 2)   # repeat array twice
-    z = np.concatenate((np.array([zl,zl,zl,zl]), np.array([zr,zr,zr,zr])))
+    x = np.tile(np.array([xr, xr, xl, xl]), 2)   # repeat array twice
+    y = np.tile(np.array([yl, yr, yl, yr]), 2)   # repeat array twice
+    z = np.concatenate((np.array([zl, zl, zl, zl]),
+                        np.array([zr, zr, zr, zr])))
 
     rot = np.deg2rad(rot)
 
     xr = np.cos(rot)*x - np.sin(rot)*y
     yr = np.sin(rot)*x + np.cos(rot)*y
 
-    return mlab.triangular_mesh(xr, yr, z, triangles, color=color, opacity=opacity)
+    return mlab.triangular_mesh(xr, yr, z, triangles, color=color,
+                                opacity=opacity)
 
 
-#---------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # set parameters
-#---------------------------------------------------------------------------------------------------
-n       = 1.54 / 1.0           # relative index of refraction
-chi_deg = 45.0                 # angle of incidence in degrees
-inc_deg = 90 - chi_deg         # inclination of the interface with respect to the x-axis
-cutoff  = 30                   # cut off borders of data (remove PML layer up to and including line source placement)
+# ------------------------------------------------------------------------------
+# relative index of refraction
+n = 1.54 / 1.0
+# angle of incidence in degrees
+chi_deg = 45.0
+# inclination of the interface with respect to the x-axis
+inc_deg = 90 - chi_deg
+# cut off borders of data (remove PML layer up to and including line source
+# placement)
+cutoff = 30
 
 
-#---------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # import data from HDF file(s)
-#---------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 path = "simulations/meep-C/LaguerreGauss3d_C-out/"
 
 filename_real = path + "e_real2_s-000001540.h5"
 filename_imag = path + "e_imag2_s-000001540.h5"
 
 with h5py.File(filename_real, 'r') as hf:
-    #print("keys: %s" % hf.keys())
+    # print("keys: %s" % hf.keys())
     data_real = hf[list(hf.keys())[0]][:]
 
 with h5py.File(filename_imag, 'r') as hf:
-    #print("keys: %s" % hf.keys())
+    # print("keys: %s" % hf.keys())
     data_real = hf[list(hf.keys())[0]][:]
 
-## choose wheather to use the electric field energy density (proportional to 'data_real') or the complex modulus of the
-## complex electric field (proportional to 'data_real + data_imag') as data basis:
+# choose wheather to use the electric field energy density (proportional to
+# 'data_real') or the complex modulus of the complex electric field
+# (proportional to 'data_real + data_imag') as data basis:
 data = data_real
-#data = data_real + data_imag
+# data = data_real + data_imag
 
 try:
     del data_imag                                       # free memory early
@@ -78,13 +91,14 @@ data = data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff] / data.max()
 new_shape = np.shape(data)
 
 
-#------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # visualising an iso-contour surface of the vortex beam
-#------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 fig = mlab.figure(1, bgcolor=(0, 0, 0), size=(400, 400))
 fig.scene.render_window.aa_frames = 8               # antialiasing
 
-sx, sy, sz = np.array([5, 5, 3.5]) * np.asarray(new_shape) / np.asarray(orig_shape)
+sx, sy, sz = np.array([5, 5, 3.5]) * (np.asarray(new_shape)
+                                      / np.asarray(orig_shape))
 SX, SY, SZ = np.mgrid[-sx/2.0:sx/2.0:eval('{}j'.format(data.shape[0])),
                       -sy/2.0:sy/2.0:eval('{}j'.format(data.shape[1])),
                       -sz/2.0:sz/2.0:eval('{}j'.format(data.shape[2]))]
@@ -93,64 +107,74 @@ src = mlab.pipeline.scalar_field(SX, SY, SZ, data)  # Mayavi source
 del data, SX, SY, SZ                                # free memory early
 
 
-voi = mlab.pipeline.extract_grid(src)               # volume of interest
-voi.set(z_max=np.ceil(new_shape[2]/2))              # halving volume at plane of incidence (comment out to visualise
-                                                    # entire beam)
+# volume of interest
+voi = mlab.pipeline.extract_grid(src)
+# halving volume at plane of incidence (comment out to visualise entire beam)
+voi.set(z_max=np.ceil(new_shape[2]/2))
 
 VMAX = 0.02
 iso = mlab.pipeline.iso_surface(voi, colormap="hot", contours=[VMAX])
 iso.module_manager.scalar_lut_manager.use_default_range = False
 iso.module_manager.scalar_lut_manager.data_range = [0.0, VMAX]
 
-## add two cut planes to show the transverse intensity distributions
-pipe_inc = mlab.pipeline.image_plane_widget(src, plane_orientation='x_axes', slice_index=0, colormap='hot',
-                                                 vmin=0.0, vmax=VMAX)
-pipe_ref = mlab.pipeline.image_plane_widget(src, plane_orientation='y_axes', slice_index=new_shape[1], colormap='hot',
-                                                 vmin=0.0, vmax=VMAX)
+# add two cut planes to show the transverse intensity distributions
+pipe_inc = mlab.pipeline.image_plane_widget(src, plane_orientation='x_axes',
+                                            slice_index=0, colormap='hot',
+                                            vmin=0.0, vmax=VMAX)
+pipe_ref = mlab.pipeline.image_plane_widget(src, plane_orientation='y_axes',
+                                            slice_index=new_shape[1],
+                                            colormap='hot',
+                                            vmin=0.0, vmax=VMAX)
 
 
-#------------------------------------------------------------------------------------------------------------------
-# visualising k-vectors of central plane waves according to classical geometric optics
-#------------------------------------------------------------------------------------------------------------------
-eta_rad = np.arcsin((1.0/n) * np.sin(np.deg2rad(chi_deg)))   # angle of refraction in radians
+# ------------------------------------------------------------------------------
+# visualising k-vectors of central plane waves accor. to classical geom. optics
+# ------------------------------------------------------------------------------
+# angle of refraction in radians
+eta_rad = np.arcsin((1.0/n) * np.sin(np.deg2rad(chi_deg)))
 
-## properties of the k-vectors
+# properties of the k-vectors
 vec_length = 3.5
 vec_radius = 0.008
-vec_color  = (1,0,0)
+vec_color = (1, 0, 0)
 
-## components of the k-vectors
+# components of the k-vectors
 inc = (-vec_length, 0, 0)
-ref = ( vec_length * np.sin(np.deg2rad(chi_deg - inc_deg)),  vec_length * np.cos(np.deg2rad(chi_deg - inc_deg)), 0)
-tra = ( vec_length * np.sin(eta_rad + np.deg2rad(inc_deg)), -vec_length * np.cos(eta_rad + np.deg2rad(inc_deg)), 0)
+ref = (vec_length * np.sin(np.deg2rad(chi_deg - inc_deg)),
+       vec_length * np.cos(np.deg2rad(chi_deg - inc_deg)), 0)
+tra = (vec_length * np.sin(eta_rad + np.deg2rad(inc_deg)),
+       -vec_length * np.cos(eta_rad + np.deg2rad(inc_deg)), 0)
 
 components = [inc, ref, tra]
 
-## visualise incident central k-vector
-vector = mlab.quiver3d(0,0,0,*components[0], color=vec_color, scale_factor=1, mode='cylinder',resolution=25)
+# visualise incident central k-vector
+vector = mlab.quiver3d(0, 0, 0, *components[0], color=vec_color,
+                       scale_factor=1, mode='cylinder', resolution=25)
 vector.glyph.glyph_source.glyph_source.radius = vec_radius
 
-## visualise secondary central k-vectors
-for i in [1,2]:
-    vectors = mlab.quiver3d(0,0,0,*components[i], color=vec_color, scale_factor=1, mode='arrow',resolution=25)
+# visualise secondary central k-vectors
+for i in [1, 2]:
+    vectors = mlab.quiver3d(0, 0, 0, *components[i], color=vec_color,
+                            scale_factor=1, mode='arrow', resolution=25)
     vectors.glyph.glyph_source.glyph_source.shaft_radius = vec_radius
-    vectors.glyph.glyph_source.glyph_source.tip_radius   = 0.025
-    vectors.glyph.glyph_source.glyph_source.tip_length   = 0.13
+    vectors.glyph.glyph_source.glyph_source.tip_radius = 0.025
+    vectors.glyph.glyph_source.glyph_source.tip_length = 0.13
 
-## visualise optically denser material
+# visualise optically denser material
 color_overlay = (0.227, 0.188, 0.188)
-cuboid(ext_grid=(-sx/2.0,sx/2.0, -sy/1.5, 0, -sz/2.0, sz/2.0), rot=inc_deg, color=color_overlay, opacity=0.5)
+cuboid(ext_grid=(-sx/2.0, sx/2.0, -sy/1.5, 0, -sz/2.0, sz/2.0), rot=inc_deg,
+       color=color_overlay, opacity=0.5)
 
 
-#mlab.orientation_axes()
+# mlab.orientation_axes()
 mlab.view(azimuth=-inc_deg, elevation=0, distance=12, focalpoint='auto')
 fig.scene.camera.azimuth(20)
 fig.scene.camera.elevation(30)
 
-#mlab.savefig('visualize_field.png')
+# mlab.savefig('visualize_field.png')
 mlab.show()
 
-## free memory
+# free memory
 try:
     del src, vol, voi, pipe_inc, pipe_ref, iso, SX, SY, SZ
 except:
