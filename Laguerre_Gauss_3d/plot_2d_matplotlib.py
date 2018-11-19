@@ -34,31 +34,36 @@ import gc
 # set parameters
 # ------------------------------------------------------------------------------
 # general parameters
-n       = 1.50 / 1.0           # relative index of refraction
-chi_deg = 60 #56.31            # angle of incidence in degrees
-inc_deg = 90 - chi_deg         # inclination of the interface with respect to the x-axis
+# relative index of refraction
+n = 1.50 / 1.0
+# angle of incidence in degrees
+chi_deg = 60  # 56.31
+# inclination of the interface with respect to the x-axis
+inc_deg = 90 - chi_deg
 
-## Meep related parameters
+# Meep related parameters
 sx, sy, sz = (5, 5, 5)
-freq   = 5
-cutoff = 20                    # cut off borders of data (remove PML layer up to and including line source placement)
+freq = 5
+# cut off borders of data (remove PML layer up to and including line source
+# placement)
+cutoff = 20
 
-#---------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # import data from HDF file(s)
-#---------------------------------------------------------------------------------------------------
-#path = "simulations/LaguerreGauss3d-out_even/"
-#path = "simulations/meep-A/LaguerreGauss3d_A-out/"    # focus on the transmitted beam
-path = "simulations/meep-B/LaguerreGauss3d_B-out/"    # focus on the reflected   beam
+# -----------------------------------------------------------------------------
+# path = "simulations/LaguerreGauss3d-out_even/"
+# path = "simulations/meep-A/LaguerreGauss3d_A-out/"  # focus on the transmitted beam
+path = "simulations/meep-B/LaguerreGauss3d_B-out/"    # focus on the reflected beam
 
 filename_real = path + "e_real2_mixed-000001500.h5" #"e_real2_s-000010.00.h5"
 filename_imag = path + "e_imag2_mixed-000001500.h5" #"e_imag2_s-000010.00.h5"
 
 with h5py.File(filename_real, 'r') as hf:
-    #print("keys: %s" % hf.keys())
+    # print("keys: %s" % hf.keys())
     data_real = hf[hf.keys()[0]][:]
 
 with h5py.File(filename_imag, 'r') as hf:
-    #print("keys: %s" % hf.keys())
+    # print("keys: %s" % hf.keys())
     data_imag = hf[hf.keys()[0]][:]
 
 data = data_real + data_imag
@@ -74,9 +79,11 @@ data = data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff] / data.max()
 new_shape = np.shape(data)
 print("      new shape: ", new_shape)
 
-## calculate center of 3d data array in floating(!) pixel coordinates
-#center = tuple((np.asarray(new_shape) - 1) / 2)   # if all dimensions are even numbers
-#center = tuple((np.asarray(new_shape) - 0) / 2)   # if all dimensions are odd numbers
+# calculate center of 3d data array in floating(!) pixel coordinates
+# if all dimensions are even numbers:
+#center = tuple((np.asarray(new_shape) - 1) / 2)
+# if all dimensions are odd numbers:
+#center = tuple((np.asarray(new_shape) - 0) / 2)
 center = []
 
 for i in [0, 1, 2]:
@@ -86,27 +93,36 @@ for i in [0, 1, 2]:
     else:
         center.extend([N / 2])
 
-## conversion between pixel coordinates and dimensionless (kX, ky, kZ) coordinates (wrt the incident medium)
+
+# conversion between pixel coordinates and dimensionless (kX, ky, kZ)
+# coordinates (wrt the incident medium)
 def dimless_coord(pixel_coord, center_pixel_coord=0):
     """Conversion from pixel coordinates to dimensionless coordinates."""
-    return sx * 2 * np.pi * freq / (orig_shape[0] - 1) * (pixel_coord - center_pixel_coord)
+    return sx * 2 * np.pi * freq / (orig_shape[0] - 1) * (pixel_coord
+                                                          - center_pixel_coord)
+
 
 def pixel_coord(dimless_coord):
     """Conversion from dimensionless coordinates to pixel coordinates."""
     return (orig_shape[0] - 1) / (sx * 2 * np.pi * freq) * dimless_coord
 
-#------------------------------------------------------------------------------------------------------------------
-# calculating propagation directions of the secondary beams according to geometric optics
-#------------------------------------------------------------------------------------------------------------------
-eta_rad = np.arcsin((1.0 / n) * np.sin(np.deg2rad(chi_deg)))   # angle of refraction in radians
 
-## properties of the k-vectors
+# ------------------------------------------------------------------------------
+# calculating propagation directions of the sec. beams accor. to geom. optics
+# ------------------------------------------------------------------------------
+# angle of refraction in radians
+eta_rad = np.arcsin((1.0 / n) * np.sin(np.deg2rad(chi_deg)))
+
+# properties of the k-vectors
 kw_0 = 10
-kD   = (kw_0 ** 2) / 2.0                         # Rayleigh length
-kZ   = kD                                        # propagation distance given in dimensionless coordinates
-vec_length = pixel_coord(kZ)                     # propagation distance given in pixel coordinates
+# Rayleigh length
+kD = (kw_0 ** 2) / 2.0
+# propagation distance given in dimensionless coordinates
+kZ = kD
+# propagation distance given in pixel coordinates
+vec_length = pixel_coord(kZ)
 
-## degree to radians conversion
+# degree to radians conversion
 chi_rad = np.deg2rad(chi_deg)
 inc_rad = np.deg2rad(inc_deg)
 
@@ -118,39 +134,51 @@ vec_tra = (int(center[0] + round(vec_length * np.sin(eta_rad + inc_rad))),
 
 components = [vec_inc, vec_ref, vec_tra]
 
-#------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # obtaining cut-plane data position
-#------------------------------------------------------------------------------------------------------------------
-delta_deg = 35                                      # half opening angle (0 - 90 degrees)
+# ------------------------------------------------------------------------------
+# half opening angle (0 - 90 degrees)
+delta_deg = 35
 
-delta_rad = np.deg2rad(delta_deg)                   # degree to radians conversion
+# degree to radians conversion
+delta_rad = np.deg2rad(delta_deg)
 
-## calculating start and endpoints of the cut-planes wtr to a centered coordinate system (Meep cs)
+# calculating start and endpoints of the cut-planes wtr to a centered
+# coordinate system (Meep cs)
 inc_x = lambda delta: -vec_length
 inc_y = lambda delta:  vec_length * np.tan(delta)
 
-ref_x = lambda delta:  (vec_length / np.cos(delta)) * np.sin(chi_rad + delta - inc_rad)
-ref_y = lambda delta:  (vec_length / np.cos(delta)) * np.cos(chi_rad + delta - inc_rad)
+ref_x = lambda delta:  (vec_length / np.cos(delta)) * np.sin(chi_rad
+                                                             + delta - inc_rad)
+ref_y = lambda delta:  (vec_length / np.cos(delta)) * np.cos(chi_rad
+                                                             + delta - inc_rad)
 
-tra_x = lambda delta:  (vec_length / np.cos(delta)) * np.sin(eta_rad + delta + inc_rad)
-tra_y = lambda delta:  (vec_length / np.cos(delta)) * np.cos(eta_rad + delta + inc_rad)
+tra_x = lambda delta:  (vec_length / np.cos(delta)) * np.sin(eta_rad
+                                                             + delta + inc_rad)
+tra_y = lambda delta:  (vec_length / np.cos(delta)) * np.cos(eta_rad
+                                                             + delta + inc_rad)
 
-cut_inc = (int(center[0] + inc_x(0)), np.floor(center[1] + round(inc_y(-delta_rad))),
-           int(center[0] + inc_x(0)), np.ceil( center[1] + round(inc_y( delta_rad))))
+cut_inc = (int(center[0] + inc_x(0)), np.floor(center[1]
+                                               + round(inc_y(-delta_rad))),
+           int(center[0] + inc_x(0)), np.ceil(center[1]
+                                              + round(inc_y(delta_rad))))
 
-cut_ref = (int(center[0] + round(ref_x( delta_rad))), np.floor(center[1] + round(ref_y( delta_rad))),
-           int(center[0] + round(ref_x(-delta_rad))), np.ceil( center[1] + round(ref_y(-delta_rad))))
+cut_ref = (int(center[0] + round(ref_x( delta_rad))), np.floor(center[1]
+                                                               + round(ref_y( delta_rad))),
+           int(center[0] + round(ref_x(-delta_rad))), np.ceil(center[1]
+                                                              + round(ref_y(-delta_rad))))
 
 cut_tra = (int(center[0] + round(tra_x(-delta_rad))), np.floor(center[1] - round(tra_y(-delta_rad))),
            int(center[0] + round(tra_x( delta_rad))), np.ceil( center[1] - round(tra_y( delta_rad))))
 
-## special cut-plane for the half of the transmitted beam placed at the origin
-## reamark: the x0 and x1 components are shifted by one pixel towards the secondary medium ensuring that only data
-##          values of the transmitted beam are taken into account
-WIDTH   = int(pixel_coord(40))
+# special cut-plane for the half of the transmitted beam placed at the origin
+# reamark: the x0 and x1 components are shifted by one pixel towards the
+#          secondary medium ensuring that only data values of the transmitted
+#          beam are taken into account
+WIDTH = int(pixel_coord(40))
 cut_hal = (int(center[0]) + 1,  int(center[1]),
            int(center[0]) + 1 - int(round(WIDTH * np.cos(eta_rad + inc_rad))),
-           int(center[1])     - int(round(WIDTH * np.sin(eta_rad + inc_rad))))
+           int(center[1]) - int(round(WIDTH * np.sin(eta_rad + inc_rad))))
 
 SLICE = "cut_ref"                                  # choose which slice to use
 
@@ -168,19 +196,20 @@ else:
     z = np.linspace(np.floor(center[2] - round(vec_length * np.tan(delta_rad))),
                     np.ceil( center[2] + round(vec_length * np.tan(delta_rad))), width, dtype=np.int)
 
-## restrict cut-plane indices to values within the bound of the data array
-valid_x   = np.logical_and(0 <= x, x < new_shape[0])
-valid_y   = np.logical_and(0 <= y, y < new_shape[1])
-valid     = np.logical_and(valid_x, valid_y)
-data_cut  = data[x[valid], y[valid], :]
-data_cut  = data_cut[:, z]                         # make data_cut having equal dimensions
+# restrict cut-plane indices to values within the bound of the data array
+valid_x = np.logical_and(0 <= x, x < new_shape[0])
+valid_y = np.logical_and(0 <= y, y < new_shape[1])
+valid = np.logical_and(valid_x, valid_y)
+data_cut = data[x[valid], y[valid], :]
+# make data_cut having equal dimensions
+data_cut = data_cut[:, z]
 cut_shape = np.shape(data_cut)
 
 print("   cutted shape: ", cut_shape)
 
-#------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # visualising
-#------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
 
 ## visualise intensity distribution within the plane of incidence
