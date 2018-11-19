@@ -16,9 +16,9 @@ import h5py
 def cuboid(ext_grid, rot=0, color=(1, 0, 0), opacity=1.0):
     """Return a cuboid.
 
-    The cuboid is defined on grid 'ext_grid' with an angle of rotation 'rot'
-    about the z-axis given indegrees. This cuboid is ment to represent the
-    optically denser material.
+    The cuboid is defined on the grid 'ext_grid' with an angle of rotation
+    'rot' about the z-axis given in degrees. This cuboid is ment to represent
+    the optically denser material.
     """
     xl, xr, yl, yr, zl, zr = ext_grid
 
@@ -84,7 +84,7 @@ with h5py.File(filename_imag, 'r') as hf:
     # print("keys: %s" % hf.keys())
     data_imag = hf[list(hf.keys())[0]][:]
 
-# choose wheather to use the electric field energy density (proportional to
+# choose whether to use the electric field energy density (proportional to
 # 'data_real') or the complex modulus of the complex electric field
 # (proportional to 'data_real + data_imag') as data basis:
 #data = data_real
@@ -107,7 +107,7 @@ new_shape = np.shape(data)
 # visualising an iso-contour surface of the vortex beam
 # ------------------------------------------------------------------------------
 fig = mlab.figure(1, bgcolor=(0, 0, 0), size=(400, 400))
-# TODO: fix the following line (eroro in Python3)
+# TODO: fix the following line
 #fig.scene.render_window.aa_frames = 8               # antialiasing
 
 sx, sy, sz = np.array([5, 5, 3.5]) * (np.asarray(new_shape)
@@ -123,6 +123,7 @@ free_memory("data", "SX", "SY", "SZ")
 
 # volume of interest
 voi = mlab.pipeline.extract_grid(src)
+
 # halving volume at plane of incidence (comment out to visualise entire beam)
 voi.set(z_max=np.ceil(new_shape[2]/2))
 
