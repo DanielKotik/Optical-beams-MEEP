@@ -40,6 +40,20 @@ def cuboid(ext_grid, rot=0, color=(1, 0, 0), opacity=1.0):
                                 opacity=opacity)
 
 
+def free_memory(*objects):
+    """Delete objects.
+
+    Delete and free memory if object exists and no other references than the
+    given variable name point to it.
+
+    objects: comma separated variables nams given as strings
+    Example: free_memory("x", "y", "z")
+    """
+    for obj in objects:
+        if obj in globals():
+            del globals()[obj]
+
+
 # ------------------------------------------------------------------------------
 # set parameters
 # ------------------------------------------------------------------------------
@@ -68,18 +82,16 @@ with h5py.File(filename_real, 'r') as hf:
 
 with h5py.File(filename_imag, 'r') as hf:
     # print("keys: %s" % hf.keys())
-    data_real = hf[list(hf.keys())[0]][:]
+    data_imag = hf[list(hf.keys())[0]][:]
 
 # choose wheather to use the electric field energy density (proportional to
 # 'data_real') or the complex modulus of the complex electric field
 # (proportional to 'data_real + data_imag') as data basis:
-data = data_real
-# data = data_real + data_imag
+#data = data_real
+data = data_real + data_imag
 
-try:
-    del data_imag                                       # free memory early
-except:
-    pass
+# free memory early
+free_memory("data_real", "data_imag")
 
 orig_shape = np.shape(data)
 
@@ -95,7 +107,8 @@ new_shape = np.shape(data)
 # visualising an iso-contour surface of the vortex beam
 # ------------------------------------------------------------------------------
 fig = mlab.figure(1, bgcolor=(0, 0, 0), size=(400, 400))
-fig.scene.render_window.aa_frames = 8               # antialiasing
+# TODO: fix the following line (eroro in Python3)
+#fig.scene.render_window.aa_frames = 8               # antialiasing
 
 sx, sy, sz = np.array([5, 5, 3.5]) * (np.asarray(new_shape)
                                       / np.asarray(orig_shape))
@@ -104,8 +117,9 @@ SX, SY, SZ = np.mgrid[-sx/2.0:sx/2.0:eval('{}j'.format(data.shape[0])),
                       -sz/2.0:sz/2.0:eval('{}j'.format(data.shape[2]))]
 
 src = mlab.pipeline.scalar_field(SX, SY, SZ, data)  # Mayavi source
-del data, SX, SY, SZ                                # free memory early
 
+# free memory early
+free_memory("data", "SX", "SY", "SZ")
 
 # volume of interest
 voi = mlab.pipeline.extract_grid(src)
@@ -174,8 +188,5 @@ fig.scene.camera.elevation(30)
 # mlab.savefig('visualize_field.png')
 mlab.show()
 
-# free memory
-try:
-    del src, vol, voi, pipe_inc, pipe_ref, iso, SX, SY, SZ
-except:
-    pass
+free_memory("src", "vol", "voi", "pipe_inc", "pipe_ref", "iso", "SX", "SY",
+            "SZ")
