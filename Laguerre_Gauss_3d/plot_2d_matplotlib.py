@@ -80,14 +80,14 @@ filename_imag = path + "e_imag2_mixed-000001500.h5"  # "e_imag2_s-000010.00.h5"
 
 with h5py.File(filename_real, 'r') as hf:
     # print("keys: %s" % hf.keys())
-    data_real = hf[hf.keys()[0]][:]
+    data_real = hf[list(hf.keys())[0]][:]
 
 with h5py.File(filename_imag, 'r') as hf:
     # print("keys: %s" % hf.keys())
-    data_imag = hf[hf.keys()[0]][:]
+    data_imag = hf[list(hf.keys())[0]][:]
 
 data = data_real + data_imag
-del data_imag                                       # free memory early
+free_memory("data_real", "data_imag")
 
 orig_shape = np.shape(data)
 
@@ -226,6 +226,7 @@ valid_x = np.logical_and(0 <= x, x < new_shape[0])
 valid_y = np.logical_and(0 <= y, y < new_shape[1])
 valid = np.logical_and(valid_x, valid_y)
 data_cut = data[x[valid], y[valid], :]
+
 # make data_cut having equal dimensions
 data_cut = data_cut[:, z]
 cut_shape = np.shape(data_cut)
