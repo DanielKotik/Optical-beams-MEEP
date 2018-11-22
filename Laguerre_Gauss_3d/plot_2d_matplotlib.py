@@ -53,17 +53,20 @@ def free_memory(*objects):
 # ------------------------------------------------------------------------------
 # set parameters
 # ------------------------------------------------------------------------------
-# general parameters
+# ----general parameters---
 # relative index of refraction
 n = 1.50 / 1.0
+
 # angle of incidence in degrees
 chi_deg = 60  # 56.31
+
 # inclination of the interface with respect to the x-axis
 inc_deg = 90 - chi_deg
 
-# Meep related parameters
+# ---Meep related parameters---
 sx, sy, sz = (5, 5, 5)
 freq = 5
+
 # cut off borders of data (remove PML layer up to and including line source
 # placement)
 cutoff = 20
@@ -91,11 +94,14 @@ free_memory("data_real", "data_imag")
 
 orig_shape = np.shape(data)
 
+print("---- original file ----")
 print("file size in MB: ", np.round(data.nbytes / 1024 / 1024, 2))
 print("data (max, min): ", (np.round(data.max(), 2), np.round(data.min(), 2)))
 print(" original shape: ", orig_shape)
 
 data = data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff] / data.max()
+print("---- cutted file ----")
+print("file size in MB: ", np.round(data.nbytes / 1024 / 1024, 2))
 new_shape = np.shape(data)
 print("      new shape: ", new_shape)
 
