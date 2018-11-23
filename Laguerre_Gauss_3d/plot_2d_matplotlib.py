@@ -100,7 +100,7 @@ print("data (max, min): ", (np.round(data.max(), 2), np.round(data.min(), 2)))
 print(" original shape: ", orig_shape)
 
 data = data[cutoff:-cutoff, cutoff:-cutoff, cutoff:-cutoff] / data.max()
-print("---- cutted file ----")
+print("---- PML cutted file ----")
 print("file size in MB: ", np.round(data.nbytes / 1024 / 1024, 2))
 new_shape = np.shape(data)
 print("      new shape: ", new_shape)
@@ -169,7 +169,7 @@ delta_deg = 35
 # degree to radians conversion
 delta_rad = np.deg2rad(delta_deg)
 
-# calculating start and endpoints of the cut-planes wtr to a centered
+# calculating start and endpoints of the cut-planes wrt to a centered
 # coordinate system (Meep cs)
 inc_x = lambda delta: -vec_length
 inc_y = lambda delta:  vec_length * np.tan(delta)
@@ -184,10 +184,10 @@ tra_x = lambda delta:  (vec_length / np.cos(delta)) * np.sin(eta_rad
 tra_y = lambda delta:  (vec_length / np.cos(delta)) * np.cos(eta_rad
                                                              + delta + inc_rad)
 
-cut_inc = (int(center[0] + inc_x(0)), np.floor(center[1]
-                                               + round(inc_y(-delta_rad))),
-           int(center[0] + inc_x(0)), np.ceil(center[1]
-                                              + round(inc_y(delta_rad))))
+cut_inc = (int(center[0] + inc_x(0)),
+           np.floor(center[1] + round(inc_y(-delta_rad))),
+           int(center[0] + inc_x(0)),
+           np.ceil(center[1] + round(inc_y(delta_rad))))
 
 cut_ref = (int(center[0] + round(ref_x(delta_rad))),
            np.floor(center[1] + round(ref_y(delta_rad))),
