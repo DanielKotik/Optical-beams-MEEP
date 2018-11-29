@@ -34,6 +34,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import h5py
 import gc
+import sys
 
 
 def free_memory(*objects):
@@ -81,13 +82,21 @@ path = "simulations/meep-B/LaguerreGauss3d_B-out/"    # focus on the refl. beam
 filename_real = path + "e_real2_mixed-000001500.h5"  # "e_real2_s-000010.00.h5"
 filename_imag = path + "e_imag2_mixed-000001500.h5"  # "e_imag2_s-000010.00.h5"
 
-with h5py.File(filename_real, 'r') as hf:
-    # print("keys: %s" % hf.keys())
-    data_real = hf[list(hf.keys())[0]][:]
+try:
+    with h5py.File(filename_real, 'r') as hf:
+        # print("keys: %s" % hf.keys())
+        data_real = hf[list(hf.keys())[0]][:]
+except EnvironmentError as e:
+    print(e)
+    sys.exit()
 
-with h5py.File(filename_imag, 'r') as hf:
-    # print("keys: %s" % hf.keys())
-    data_imag = hf[list(hf.keys())[0]][:]
+try:
+    with h5py.File(filename_imag, 'r') as hf:
+        # print("keys: %s" % hf.keys())
+        data_imag = hf[list(hf.keys())[0]][:]
+except EnvironmentError as e:
+    print(e)
+    sys.exit()
 
 data = data_real + data_imag
 free_memory("data_real", "data_imag")
