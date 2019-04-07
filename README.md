@@ -9,6 +9,8 @@
 ![Airy](Airy_2d/img/Airy_beam_M_0_W_4_free_space.png)
 
 # Optical-beams-MEEP
+[![DOI](https://zenodo.org/badge/91711821.svg)](https://zenodo.org/badge/latestdoi/91711821)
+
 FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. A mathematical description of the currently implemented beam profiles is outlined in this [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/master/beam_profiles.ipynb).
 
 The provided files (and features) are:
@@ -22,8 +24,8 @@ Originally, these files have been used in studying optical beam shifts providing
 ## Invocation
 A Scheme configuration file (extension ``.ctl``) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, e.g. by executing the commands:
 
-``mpirun -quiet -np X meep-mpi interface='"concave"' Gauss2d.ctl`` (notice the combined single and double quotes)  
-or  
+``mpirun -quiet -np X meep-mpi interface='"concave"' Gauss2d.ctl`` (notice the combined single and double quotes)
+or
 ``mpirun -quiet -np X meep-mpi e_z=0 e_y=1 freq=5 LaguerreGauss3d.ctl``
 
 with ``X`` indicating the number of cores. All possible Meep parameters that can be set from the command line are
@@ -34,14 +36,14 @@ The generated HDF5 files can be processed by different visualisation tools. To g
 [Meep](https://github.com/stevengj/meep) comes bundled with the [h5utils](https://github.com/stevengj/h5utils)
 programs. Utilising these tools, visualisation is fairly easy performed by issuing for example the following commands:
 
-_for 2d simulations_  
+_for 2d simulations_
 ``h5topng -S2 -Zc dkbluered -a gray -A eps-000000000.h5 ez-000003696.h5`` (real part of the field pattern, optical
 denser material is shaded in grey)
 
 ``h5topng -S2 -c hot -a yarg -A eps-000000000.h5 e2_s-000003696.h5`` (intensity distribution, optical
 denser material is shaded in grey)
 
-_for 3d simulations_  
+_for 3d simulations_
 ``h5topng -S2 -0 -z 0  -c hot e_real2_p-000001500.h5`` (slice within the plane of incidence)
 
 ``h5topng -S2 -x INDEX -c hot e_real2_p-000001500.h5`` (slice transversal to the incident propagation axis with INDEX specifying the slice index)
@@ -58,3 +60,8 @@ For a more detailed explanation of our configuration files and the physical back
 -   [x] Gaussian beams (2d), convex, s- and p-polarisation
 -   [x] Laguerre-Gaussian (vortex) beams (3d), planar, arbitrary complex polarisation
 -   [x] Airy beams (2d), planar, s- and p-polarisation
+
+## Citing
+If you use code from this repository in a published work, please cite the DOI
+corresponding to the specific version of **Optical-beams-MEEP** that you used
+(DOIs are listed at [Zenodo.org](https://zenodo.org/)).
