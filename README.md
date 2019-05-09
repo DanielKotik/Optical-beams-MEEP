@@ -10,6 +10,7 @@
 
 # Optical-beams-MEEP
 [![DOI](https://zenodo.org/badge/91711821.svg)](https://zenodo.org/badge/latestdoi/91711821)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/DanielKotik/Optical-beams-MEEP/master?filepath=beam_profiles.ipynb)
 
 FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. A mathematical description of the currently implemented beam profiles is outlined in this [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/master/beam_profiles.ipynb).
 
