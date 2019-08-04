@@ -24,7 +24,7 @@ The provided files (and features) are:
 Originally, these files have been used in studying optical beam shifts providing independent numerical simulations. With regards to their scriptability, together with the ease and widespread use of the powerful [Meep](https://github.com/stevengj/meep) tool, these scripts can easily be adapted to other and possibly more complicated beam/interface setups.
 
 ## Invocation
-A Scheme configuration file (extension ``.ctl``) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, for example by executing the commands like (notice the single quotes to specify strings and Scheme expressions):
+A Scheme configuration file (extension ``.ctl``) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, for example by executing commands like (notice the single quotes to specify strings and Scheme expressions):
 
 ``mpirun -quiet -np X meep-mpi interface='"concave"' Gauss2d.ctl``
 
