@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Purposes: - check Meep's integration routine
           - check implementation of Laguerre-Gauss beam fields
@@ -26,16 +28,16 @@ def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
 
 
 ## test paramters (free space propagation, i.e. n1=n2=n_ref=1)
-kw_0     = 8.0
+kw_0     = 8
 m_charge = 2
-n1       = 1.0
+n1       = 1
 
 ## meep specific
-freq    = 4.0
+freq    = 4
 x_shift = -2.15
 
 ## derived values
-k_vac = 2.0 * np.pi * freq
+k_vac = 2 * np.pi * freq
 k1    = n1 * k_vac
 w_0   = kw_0 / k_vac
 
@@ -43,12 +45,12 @@ w_0   = kw_0 / k_vac
 def f_Gauss_cartesian(W_y, k_y, k_z): 
     """
     """
-    return sp.exp(-(W_y ** 2.0) * (k_y ** 2.0 + k_z ** 2.0) / 4.0)
+    return sp.exp(-(W_y ** 2) * (k_y ** 2 + k_z ** 2) / 4)
 
 def f_Gauss_spherical(W_y, theta):
     """
     """
-    return sp.exp(-((k1 * W_y) * theta / 2.0) ** 2.0)
+    return sp.exp(-((k1 * W_y) * theta / 2) ** 2)
 
 def f_Laguerre_Gauss_cartesian(W_y, m, k_y, k_z):
     """
@@ -58,12 +60,12 @@ def f_Laguerre_Gauss_cartesian(W_y, m, k_y, k_z):
     phi   = np.arctan2(k_y / k1, -k_z / k1)
     theta = np.arccos(k_x / k1)
     
-    return f_Gauss_cartesian(W_y, k_y, k_z) * (theta ** np.abs(m)) * sp.exp(1.0j * m * phi)
+    return f_Gauss_cartesian(W_y, k_y, k_z) * (theta ** np.abs(m)) * sp.exp(1j * m * phi)
 
 def f_Laguerre_Gauss_spherical(W_y, m, theta, phi):
     """
     """
-    return f_Gauss_spherical(W_y, theta) * (theta ** np.abs(m)) * sp.exp(1.0j * m * phi)
+    return f_Gauss_spherical(W_y, theta) * (theta ** np.abs(m)) * sp.exp(1j * m * phi)
 
 def integrand_cartesian(x, y, z, k_y, k_z):
     """
@@ -80,13 +82,13 @@ def integrand_cartesian(x, y, z, k_y, k_z):
     
     ## Laguerre-Gauss
     k_x = sp.sqrt(k1**2 - k_y**2 - k_z**2)
-    return f_Laguerre_Gauss_cartesian(w_0, m_charge, k_y, k_z) * sp.exp(1.0j * (x * k_x + y * k_y + z * k_z))
+    return f_Laguerre_Gauss_cartesian(w_0, m_charge, k_y, k_z) * sp.exp(1j * (x * k_x + y * k_y + z * k_z))
 
 def integrand_spherical(x, y, z, theta, phi):
     """
     """
     return (k1 ** 2) * np.sin(theta) * np.cos(theta) * f_Laguerre_Gauss_spherical(w_0, m_charge, theta, phi) * \
-           sp.exp(1.0j * k1 * (np.sin(theta) * (y * np.sin(phi) - z * np.cos(phi)) + np.cos(theta) * x))
+           sp.exp(1j * k1 * (np.sin(theta) * (y * np.sin(phi) - z * np.cos(phi)) + np.cos(theta) * x))
 
 def psi_cartesian(x, y, z):
     """
@@ -104,22 +106,22 @@ def psi_spherical(x, y, z):
     """
     integrand_ =  lambda phi, theta: integrand_spherical(x, y, z, theta, phi)
     
-    return complex_dblquad(integrand_, 0.0, np.pi/2.0, lambda x: 0.0, lambda x: 2.0*np.pi)[0]
+    return complex_dblquad(integrand_, 0.0, np.pi/2, lambda x: 0.0, lambda x: 2*np.pi)[0]
     
 vec_psi_cartesian = np.vectorize(psi_cartesian)
 vec_psi_spherical = np.vectorize(psi_spherical)
 
-print "Gauss spectrum (cartesian): ", f_Gauss_cartesian(w_0, 1.0, 5.2)
-print "Gauss spectrum (spherical): ", f_Gauss_spherical(w_0, np.pi/3)
-print "\n",
-print "L-G spectrum   (cartesian): ", f_Laguerre_Gauss_cartesian(w_0, m_charge, 1.0, 5.2)
-print "L-G spectrum   (spherical): ", f_Laguerre_Gauss_spherical(w_0, m_charge, np.pi/3, np.pi/4)
-print "\n",
-print "integrand      (cartesian): ", integrand_cartesian(x_shift, 0.3, 0.5, 4.0, 0.0)
-print "integrand      (spherical): ", integrand_spherical(x_shift, 0.3, 0.5, np.pi/3, np.pi/4)
-print "\n",
-print "psi            (cartesian): ", psi_cartesian(x_shift, 0.3, 0.5)
-print "psi            (spherical): ", psi_spherical(x_shift, 0.3, 0.5)
+print("Gauss spectrum (cartesian): ", f_Gauss_cartesian(w_0, 1.0, 5.2))
+print("Gauss spectrum (spherical): ", f_Gauss_spherical(w_0, np.pi/3))
+print("\n")
+print("L-G spectrum   (cartesian): ", f_Laguerre_Gauss_cartesian(w_0, m_charge, 1.0, 5.2))
+print("L-G spectrum   (spherical): ", f_Laguerre_Gauss_spherical(w_0, m_charge, np.pi/3, np.pi/4))
+print("\n")
+print("integrand      (cartesian): ", integrand_cartesian(x_shift, 0.3, 0.5, 4.0, 0.0))
+print("integrand      (spherical): ", integrand_spherical(x_shift, 0.3, 0.5, np.pi/3, np.pi/4))
+print("\n")
+print("psi            (cartesian): ", psi_cartesian(x_shift, 0.3, 0.5))
+print("psi            (spherical): ", psi_spherical(x_shift, 0.3, 0.5))
 
 
 #-----------------------------------
@@ -131,11 +133,11 @@ print "psi            (spherical): ", psi_spherical(x_shift, 0.3, 0.5)
 
 #-----------------------------------
 Z = np.linspace(-2, 2, 50)
-#PSI = vec_psi_spherical(-2.0, 0.0, Z)   # at origin
+PSI = vec_psi_spherical(-2.0, 0.0, Z)   # at origin
 #np.save('PSIz_spherical_m_2_x_-2.npy', PSI)
 #PSI = np.load('PSI_cartesian.npy')
-PSI = np.load('PSIy_spherical_m_2.npy')
 #np.save('PSIy_spherical_m_2.npy', PSI)
+#PSI = np.load('PSIy_spherical_m_2.npy')
 #print PSI 
 
 plt.plot(Z, PSI.real,    label='real', marker='x')
