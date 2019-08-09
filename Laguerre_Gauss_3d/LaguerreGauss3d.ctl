@@ -248,8 +248,10 @@
 ;(exit)
 
 ;;------------------------------------------------------------------------------------------------
-;; display values of physical variables
+;; display values of various variables
 ;;------------------------------------------------------------------------------------------------
+(print "\n")
+(print "Expected output file size: " (round (* 8 (/ (* sx sy sz (expt resolution 3)) (expt 1024 2)))) " MiB\n")
 (print "\n")
 (print "Specified variables and derived values: \n")
 (print "n1:    " n1    "\n")
