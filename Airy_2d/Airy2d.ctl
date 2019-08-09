@@ -1,9 +1,10 @@
 ;;-------------------------------------------------------------------------------------------------
-;; file:   Airy2d.ctl
-;; brief:  Scheme configuration input file for the FDTD solver Meep simulating the scattering of an 
-;;         incomplete Airy beam at a planar dielectric interface
-;; author: Daniel Kotik
-;; date:   14.01.2018
+;; file:    Airy2d.ctl
+;; brief:   Scheme configuration input file for the FDTD solver Meep simulating the scattering of an 
+;;          incomplete Airy beam at a planar dielectric interface
+;; author:  Daniel Kotik
+;; version: 1.2.0-beta
+;; date:    XX.XX.2019
 ;;
 ;; example invocations: a) launch the serial version of meep with specified polarisation (p)
 ;;

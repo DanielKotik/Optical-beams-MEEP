@@ -1,9 +1,10 @@
 ;;-------------------------------------------------------------------------------------------------
-;; file:   Gauss2d.ctl
-;; brief:  Scheme configuration input file for the FDTD solver Meep simulating the scattering of a 
-;;         Gaussian beam at planar and curved dielectric interfaces
-;; author: Daniel Kotik
-;; date:   2013-2018
+;; file:    Gauss2d.ctl
+;; brief:   Scheme configuration input file for the FDTD solver Meep simulating the scattering of a 
+;;          Gaussian beam at planar and curved dielectric interfaces
+;; author:  Daniel Kotik
+;; version: 1.2.0-beta
+;; date:    XX.XX.2019
 ;;
 ;; example invocations: a) launch the serial version of meep with specified polarisation (p)
 ;;
