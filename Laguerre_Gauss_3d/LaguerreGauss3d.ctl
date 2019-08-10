@@ -180,23 +180,26 @@
 
 ;; spherical coordinates --------------------------------------------
 (define (f_Gauss_spherical W_y)
-        (lambda (theta . phi)               ; phi is an optional argument that can be passed (but is not used here)
-                (exp (* -1 (expt (/ (* k1 W_y theta) 2) 2)))
+        (lambda (sin_theta . opt)           ; opt is a list that catches unused/optional arguments (here: theta, phi)
+                (exp (* -1 (expt (/ (* k1 W_y sin_theta) 2) 2)))
         ))
 
 (define (f_Laguerre_Gauss_spherical W_y m)
-        (lambda (theta phi) (* ((f_Gauss_spherical W_y) theta) (expt theta (abs m)) (exp (* 0+1i m phi)))
+        (lambda (sin_theta theta phi) (* ((f_Gauss_spherical W_y) sin_theta) (expt theta (abs m)) (exp (* 0+1i m phi)))
         ))
 
 ;;------------------------------------------------------------------------------------------------
 ;; some test outputs (uncomment if needed)
 ;;------------------------------------------------------------------------------------------------
-;(print "\nGauss spectrum (cartesian): " ((f_Gauss_cartesian w_0) 1.0 5.2)  "\n")
-;(print   "Gauss spectrum (spherical): " ((f_Gauss_spherical w_0) (/ pi 3)) "\n")
-
-;(print "\nL-G spectrum   (cartesian): " ((f_Laguerre_Gauss_cartesian w_0 m_charge) 1.0 5.2) "\n")
-;(print   "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0 m_charge) (/ pi 3) (/ pi 4)) "\n\n")
-
+;(let ((k_y 1.0) (k_z 5.2))                  ; set local test values
+;    (print "\nGauss spectrum (cartesian): " ((f_Gauss_cartesian w_0) k_y k_z)  "\n")
+;    (print   "Gauss spectrum (spherical): " ((f_Gauss_spherical w_0) (sin ((theta k1) k_y k_z))) "\n")
+;
+;    (print "\nL-G spectrum   (cartesian): " ((f_Laguerre_Gauss_cartesian w_0 m_charge) k_y k_z) "\n")
+;    (print   "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0 m_charge) (sin ((theta k1) k_y k_z)) 
+;                                                                                       ((theta k1) k_y k_z) 
+;                                                                                       ((phi k1) k_y k_z)) "\n\n")
+;)
 ;;------------------------------------------------------------------------------------------------
 ;; plane wave decomposition 
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
@@ -211,12 +214,13 @@
         ))
 
 (define (integrand_spherical f x y z)
-        (lambda (theta phi) (* k1 k1 (sin theta) (cos theta) (f theta phi)
+        (lambda (theta phi) (let ((sin_theta (sin theta)) (cos_theta (cos theta))) 
+                            (* sin_theta cos_theta (f sin_theta theta phi)
                                ;(exp (* 0-1i k1 z (sin theta) (cos phi)))
                                ;(exp (* 0+1i k1 y (sin theta) (sin phi)))
                                ;(exp (* 0+1i k1 x (cos theta))))
-                               (exp (* 0+1i k1 (+ (* (sin theta) (- (* y (sin phi)) (* z (cos phi)))) 
-                                                  (* (cos theta) x)))))
+                               (exp (* 0+1i k1 (+ (* sin_theta (- (* y (sin phi)) (* z (cos phi)))) 
+                                                  (* cos_theta x))))))
         ))
 
 ;; complex field amplitude at position (x, y) with spectrum amplitude distribution f
@@ -227,25 +231,27 @@
         ))
 
 (define (psi_spherical f x)
-        (lambda (r) (car (integrate (integrand_spherical f x (vector3-y r) (vector3-z r))
-                         (list 0 0) (list (/ pi 2) (* 2 pi)) relerr 0 maxeval))
+        (lambda (r) (* k1 k1 (car (integrate (integrand_spherical f x (vector3-y r) (vector3-z r))
+                         (list 0 0) (list (/ pi 2) (* 2 pi)) relerr 0 maxeval)))
         ))
 
 ;;------------------------------------------------------------------------------------------------
 ;; some test outputs (uncomment if needed)
 ;;------------------------------------------------------------------------------------------------
-;(print "integrand      (cartesian): " ((integrand_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge)
-;                                                            -2.15 0.3 0.5)    4.0      0.0  )   "\n")
-;(print "integrand      (spherical): " ((integrand_spherical (f_Laguerre_Gauss_spherical w_0 m_charge)
-;                                                            -2.15 0.3 0.5) (/ pi 3) (/ pi 4)) "\n\n")
-
-;(print "psi            (cartesian): " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) -2.15)
-;                                       (vector3 0 0.3 0.5)) "\n")
-
-;(print "psi            (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 m_charge) -2.15) 
-;                                       (vector3 0 0.3 0.5)) "\n")
-
-;(print "psi       (origin, simple): " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
+;(let ((k_y 1.0) (k_z 5.2) (x -2.15) (y 0.3) (z 0.5))  ; set local test values
+;    (print "integrand      (cartesian): " ((integrand_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) x y z)
+;                                                                k_y k_z) "\n")
+;    (print "integrand      (spherical): " ((integrand_spherical (f_Laguerre_Gauss_spherical w_0 m_charge)
+;                                                                 x y z) ((theta k1) k_y k_z) ((phi k1) k_y k_z)) "\n\n")
+;
+;    (print "psi            (cartesian): " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) x)
+;                                           (vector3 0 y z)) "\n")
+;
+;    (print "psi            (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 m_charge) x) 
+;                                           (vector3 0 y z)) "\n")
+;
+;    (print "psi       (origin, simple): " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
+;)
 ;(exit)
 
 ;;------------------------------------------------------------------------------------------------
