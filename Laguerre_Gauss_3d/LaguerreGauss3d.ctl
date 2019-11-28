@@ -39,7 +39,7 @@
 (print "\nstart time: "(strftime "%c" (localtime (current-time))) "\n")
 
 ;;------------------------------------------------------------------------------------------------
-;; physical parameters characterizing light source and interface characteristics 
+;; physical parameters characterizing light source and interface characteristics
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
 (define-param e_z        1)                 ; z-component of Jones vector (s-polarisation: e_z = 1, e_y = 0)
@@ -71,7 +71,7 @@
 ;(define-param chi_deg  (* 0.99 (Critical n1 n2)))
 (define-param chi_deg  45.0)
 
-;;------------------------------------------------------------------------------------------------ 
+;;------------------------------------------------------------------------------------------------
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
 (define-param sx 5)                         ; size of cell including PML in x-direction
@@ -97,7 +97,7 @@
 (define n_ref (cond ((= ref_medium 0) 1.0)  ; index of refraction of the reference medium
                     ((= ref_medium 1)  n1)
                     ((= red_medium 2)  n2)))
-                    
+
 (define r_w (/ kr_w (* n_ref k_vac)))
 (define w_0 (/ kw_0 (* n_ref k_vac)))
 (define shift (+ source_shift r_w))         ; distance from source position to beam waist (along y-axis)
@@ -134,7 +134,7 @@
 ;;------------------------------------------------------------------------------------------------
 ;; add absorbing boundary conditions and discretize structure
 ;;------------------------------------------------------------------------------------------------
-(set! pml-layers 
+(set! pml-layers
     (list (make pml (thickness pml_thickness))))
 (set! resolution                            ; set resolution in pixels per Meep distance unit
       (* pixel (* (if (> n1 n2) n1 n2) freq)))
@@ -145,7 +145,7 @@
 ;; 2d-beam profile distribution (field amplitude) at the waist of the beam
 ;;------------------------------------------------------------------------------------------------
 (define (Gauss W_y)
-        (lambda (r) (exp (* -1.0 (/ (+ (* (vector3-y r) (vector3-y r)) (* (vector3-z r) (vector3-z r))) 
+        (lambda (r) (exp (* -1.0 (/ (+ (* (vector3-y r) (vector3-y r)) (* (vector3-z r) (vector3-z r)))
                                     (* W_y W_y))))
         ))
 
@@ -159,12 +159,18 @@
 ;; spectrum amplitude distribution(s)
 ;;------------------------------------------------------------------------------------------------
 
-;;cartesian coordinates (not recommended) ---------------------------------------------
+;;cartesian coordinates (not recommended) ---------------------------
 (define (f_Gauss_cartesian W_y)
         (lambda (k_y k_z) (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4))))
         ))
 
-;; spherical coordinate transformation in k-space
+(define (f_Laguerre_Gauss_cartesian W_y m)
+        (lambda (k_y k_z) (* ((f_Gauss_cartesian W_y) k_y k_z) (exp (* 0+1i m ((phi k1) k_y k_z)))
+                             (expt ((theta k1) k_y k_z) (abs m)))
+        ))
+
+;; spherical coordinates --------------------------------------------
+;; coordinate transformation: from k-space to (theta, phi)-space
 (define (phi k)
         (lambda (k_y k_z) (atan (/ k_y k) (/ (* -1 k_z) k))
         ))
@@ -173,14 +179,8 @@
         (lambda (k_y k_z) (acos (/ (real-part (sqrt (- (* k k) (* k_y k_y) (* k_z k_z)))) k))
         ))
 
-(define (f_Laguerre_Gauss_cartesian W_y m)
-        (lambda (k_y k_z) (* ((f_Gauss_cartesian W_y) k_y k_z) (exp (* 0+1i m ((phi k1) k_y k_z))) 
-                             (expt ((theta k1) k_y k_z) (abs m)))
-        ))
-
-;; spherical coordinates --------------------------------------------
 (define (f_Gauss_spherical W_y)
-        (lambda (sin_theta . opt)           ; opt is a list that catches unused/optional arguments (here: theta, phi)
+        (lambda (sin_theta . opt)           ; opt is an optional list of (unused) arguments (here:  theta, phi)
                 (exp (* -1 (expt (/ (* k1 W_y sin_theta) 2) 2)))
         ))
 
@@ -196,12 +196,12 @@
 ;    (print   "Gauss spectrum (spherical): " ((f_Gauss_spherical w_0) (sin ((theta k1) k_y k_z))) "\n")
 ;
 ;    (print "\nL-G spectrum   (cartesian): " ((f_Laguerre_Gauss_cartesian w_0 m_charge) k_y k_z) "\n")
-;    (print   "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0 m_charge) (sin ((theta k1) k_y k_z)) 
-;                                                                                       ((theta k1) k_y k_z) 
+;    (print   "L-G spectrum   (spherical): " ((f_Laguerre_Gauss_spherical w_0 m_charge) (sin ((theta k1) k_y k_z))
+;                                                                                       ((theta k1) k_y k_z)
 ;                                                                                       ((phi k1) k_y k_z)) "\n\n")
 ;)
 ;;------------------------------------------------------------------------------------------------
-;; plane wave decomposition 
+;; plane wave decomposition
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
 ;;------------------------------------------------------------------------------------------------
 (define (integrand_cartesian f x y z)
@@ -209,17 +209,17 @@
                              ;(exp (* 0+1i x (real-part (sqrt (- (* k1 k1) (* k_y k_y) (* k_z k_z))))))
                              ;(exp (* 0+1i y k_y))
                              ;(exp (* 0+1i z k_z)))
-                             (exp (* 0+1i (+ (* x (real-part (sqrt (- (* k1 k1) (* k_y k_y) (* k_z k_z))))) 
+                             (exp (* 0+1i (+ (* x (real-part (sqrt (- (* k1 k1) (* k_y k_y) (* k_z k_z)))))
                                              (* y k_y) (* z k_z)))))
         ))
 
 (define (integrand_spherical f x y z)
-        (lambda (theta phi) (let ((sin_theta (sin theta)) (cos_theta (cos theta))) 
+        (lambda (theta phi) (let ((sin_theta (sin theta)) (cos_theta (cos theta)))
                             (* sin_theta cos_theta (f sin_theta theta phi)
                                ;(exp (* 0-1i k1 z (sin theta) (cos phi)))
                                ;(exp (* 0+1i k1 y (sin theta) (sin phi)))
                                ;(exp (* 0+1i k1 x (cos theta))))
-                               (exp (* 0+1i k1 (+ (* sin_theta (- (* y (sin phi)) (* z (cos phi)))) 
+                               (exp (* 0+1i k1 (+ (* sin_theta (- (* y (sin phi)) (* z (cos phi))))
                                                   (* cos_theta x))))))
         ))
 
@@ -247,7 +247,7 @@
 ;    (print "psi            (cartesian): " ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) x)
 ;                                           (vector3 0 y z)) "\n")
 ;
-;    (print "psi            (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 m_charge) x) 
+;    (print "psi            (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 m_charge) x)
 ;                                           (vector3 0 y z)) "\n")
 ;
 ;    (print "psi       (origin, simple): " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
@@ -345,11 +345,11 @@
         (+ (expt (imag-part ex) 2) (expt (imag-part ey) 2) (expt (imag-part ez) 2)))
 
 
-(define (output-efield-real-squared) (output-real-field-function (cond (s-pol? "e_real2_s") (p-pol? "e_real2_p") 
+(define (output-efield-real-squared) (output-real-field-function (cond (s-pol? "e_real2_s") (p-pol? "e_real2_p")
                                                                        (a-pol? "e_real2_mixed"))
                                                                  (list Ex Ey Ez) efield-real-squared))
 
-(define (output-efield-imag-squared) (output-real-field-function (cond (s-pol? "e_imag2_s") (p-pol? "e_imag2_p") 
+(define (output-efield-imag-squared) (output-real-field-function (cond (s-pol? "e_imag2_s") (p-pol? "e_imag2_p")
                                                                        (a-pol? "e_imag2_mixed"))
                                                                  (list Ex Ey Ez) efield-imag-squared))
 
@@ -357,8 +357,8 @@
 (run-until runtime
       (at-beginning (lambda () (print "\nCalculating inital field configuration. This will take some time...\n\n")))
 ;     (at-beginning output-epsilon)          ; output of dielectric function
-;     (at-end output-efield-x)               ; output of E_x component 
-;     (at-end output-efield-y)               ; output of E_y component 
+;     (at-end output-efield-x)               ; output of E_x component
+;     (at-end output-efield-y)               ; output of E_y component
 ;     (at-end output-efield-z)               ; output of E_z component
       (at-end output-efield-real-squared)    ; output of electric field intensity
       (at-end (when-true (lambda () force-complex-fields?) output-efield-imag-squared))
