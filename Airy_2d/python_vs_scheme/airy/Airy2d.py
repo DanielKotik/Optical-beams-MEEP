@@ -8,14 +8,39 @@ version: X.X.X
 date:    30.11.2019
 """
 import meep as mp
+import math
+
 from datetime import datetime
 
+
+def ciritial_deg(n1, n2):
+    """Calculates the critical angle in degrees."""
+    raise NotImplementedError
+    
+def brewster_deg(n1, n2):
+    """calculates the Brewster angle in degrees."""
+    raise NotImplementedError
+
+    
 print("\nstart time:", datetime.now())
 
 #------------------------------------------------------------------------------
 # physical parameters characterizing light source and interface characteristics 
 # (must be adjusted - either here or via command line)
 #------------------------------------------------------------------------------
+polarisation = "s"
+ref_medium = 0
+
+n1 = 1.0
+n2 = 0.65
+kw_0 = 12
+kr_w = 0
+
+M = 0
+W = 4
+
+
+
 
 #------------------------------------------------------------------------------
 # specific Meep paramters (may need to be adjusted - either here or via command line)
