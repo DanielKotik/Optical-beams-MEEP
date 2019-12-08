@@ -28,7 +28,7 @@ print("\nstart time:", datetime.now())
 # physical parameters characterizing light source and interface characteristics 
 # (must be adjusted - either here or via command line)
 #------------------------------------------------------------------------------
-polarisation = "s"
+s_pol = True
 ref_medium = 0
 
 n1 = 1.0
@@ -36,9 +36,11 @@ n2 = 0.65
 kw_0 = 12
 kr_w = 0
 
+# Airy beam parameters
 M = 0
 W = 4
 
+# angle of incidence
 chi_deg = 45
 #chi_deg = 0.95*Critical(n1, n2)
 #chi_deg = 0.95*Brewster(n1, n2)
@@ -103,6 +105,15 @@ def Gauss(r, W_y=w_0):
 #------------------------------------------------------------------------------
 # display values of physical variables
 #------------------------------------------------------------------------------
+print("\n")
+print("Specified variables and derived values:")
+print("chi:  ", chi_deg, " [degree]") 
+print("incl.:", 90 - chi_deg, " [degree]")
+print("kw_0: ", kw_0)
+print("kr_w: ", kr_w)
+print("k_vac:", k_vac)
+print("polarisation:", "s" if s_pol else "p")
+print("\n")
 
 #------------------------------------------------------------------------------
 # specify current source, output functions and run simulation
