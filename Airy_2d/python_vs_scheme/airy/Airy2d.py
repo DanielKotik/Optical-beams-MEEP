@@ -15,8 +15,8 @@ from datetime import datetime
 
 def Critical(n1, n2):
     """Calculate critical angle in degrees."""
-    raise NotImplementedError
-
+    assert n1 > n2, "Warning: Critical angle is not defined, since n1 <= n2!"
+    return math.degrees(math.asin(n2/n1))	
 
 def Brewster(n1, n2):
     """Calculate Brewster angle in degrees."""
@@ -32,7 +32,7 @@ print("\nstart time:", datetime.now())
 s_pol = True
 ref_medium = 0
 
-n1 = 1.0
+n1 = 0.65
 n2 = 0.65
 kw_0 = 12
 kr_w = 0
@@ -42,8 +42,8 @@ M = 0
 W = 4
 
 # angle of incidence
-chi_deg = 45
-#chi_deg = 0.95*Critical(n1, n2)
+#chi_deg = 45
+chi_deg = 1.0*Critical(n1, n2)
 #chi_deg = 0.95*Brewster(n1, n2)
 
 
