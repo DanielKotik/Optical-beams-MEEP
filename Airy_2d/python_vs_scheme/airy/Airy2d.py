@@ -20,7 +20,7 @@ def Critical(n1, n2):
 
 def Brewster(n1, n2):
     """Calculate Brewster angle in degrees."""
-    raise NotImplementedError
+    return math.degrees(math.atan(n2/n1))
 
 
 print("\nstart time:", datetime.now())
