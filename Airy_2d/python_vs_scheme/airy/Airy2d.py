@@ -10,12 +10,13 @@ date:    30.11.2019
 import math
 import meep as mp
 import numpy as np
+import sys
 from datetime import datetime
 
 
 def Critical(n1, n2):
     """Calculate critical angle in degrees."""
-    assert n1 > n2, "Warning: Critical angle is not defined, since n1 <= n2!"
+    assert n1 > n2, "\nWarning: Critical angle is not defined, since n1 <= n2!"
     return math.degrees(math.asin(n2/n1))
 
 
@@ -43,9 +44,13 @@ M = 0
 W = 4
 
 # angle of incidence
-#chi_deg = 45
-chi_deg = 1.0*Critical(n1, n2)
-#chi_deg = 0.95*Brewster(n1, n2)
+try:
+    chi_deg = 45
+    #chi_deg = 1.0*Critical(n1, n2)
+    #chi_deg = 0.95*Brewster(n1, n2)
+except Exception as e:
+    print(e)
+    sys.exit(1)
 
 
 # -----------------------------------------------------------------------------
