@@ -9,7 +9,6 @@ date:    30.11.2019
 """
 import math
 import meep as mp
-import numpy as np
 import sys
 from datetime import datetime
 
@@ -136,20 +135,9 @@ sim = mp.Simulation(cell_size=cell,
                     sources=sources,
                     resolution=resolution)
 
-sim.run(until=runtime)
-
-eps_data = sim.get_array(center=mp.Vector3(), size=cell,
-                         component=mp.Dielectric)
-np.save("eps_data", eps_data)
-
-if s_pol:
-    # output of E_z component (for s-polarisation)
-    ez_data = sim.get_array(center=mp.Vector3(), size=cell, component=mp.Ez)
-    np.save("ez_data", ez_data)
-else:
-    # output of E_y component (for p-polarisation)
-    ey_data = sim.get_array(center=mp.Vector3(), size=cell, component=mp.Ey)
-    np.save("ez_data", ez_data)
+sim.run(mp.at_beginning(mp.output_epsilon),
+        mp.at_end(mp.output_efield_z) if s_pol else mp.at_end(mp.output_efield_y),
+        until=runtime)
 
 
 print("\nend time:", datetime.now())
