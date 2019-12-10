@@ -118,8 +118,8 @@ print("\n")
 # -----------------------------------------------------------------------------
 # specify current source, output functions and run simulation
 # -----------------------------------------------------------------------------
-sources = [mp.Source(src=mp.ContinuousSource(frequency=0.15),
-                     component=mp.Ez,
+sources = [mp.Source(src=mp.ContinuousSource(frequency=freq),
+                     component=mp.Ez if s_pol else mp.Ey,
                      center=mp.Vector3(-7, 0))]
 
 sim = mp.Simulation(cell_size=cell,
