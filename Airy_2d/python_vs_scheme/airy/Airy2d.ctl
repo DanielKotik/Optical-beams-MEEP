@@ -1,6 +1,6 @@
 ;;-------------------------------------------------------------------------------------------------
 ;; file:    Airy2d.ctl
-;; brief:   Scheme configuration input file for the FDTD solver Meep simulating the scattering of an 
+;; brief:   Scheme configuration input file for the FDTD solver Meep simulating the scattering of an
 ;;          incomplete Airy beam at a planar dielectric interface
 ;; author:  Daniel Kotik
 ;; version: 1.2.0
@@ -21,7 +21,7 @@
 ;;
 ;; example visualisation (square brackets contain optional arguments for overlaying the dielectric function):
 ;;
-;;          h5topng -S2 -X scalex -c hot [-a yarg -A eps-000000000.h5] e2_s-000003696.h5 
+;;          h5topng -S2 -X scalex -c hot [-a yarg -A eps-000000000.h5] e2_s-000003696.h5
 ;;
 ;;          (if necessary, scale the x dimension of the image by scalex)
 ;;------------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@
 (print "\nstart time: "(strftime "%c" (localtime (current-time))) "\n")
 
 ;;------------------------------------------------------------------------------------------------
-;; physical parameters characterizing light source and interface characteristics 
+;; physical parameters characterizing light source and interface characteristics
 ;; (must be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
 (define-param s-pol? true )                 ; true for s-spol, false for p-pol
@@ -56,10 +56,10 @@
 
 ;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)
 ;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))
-(define-param chi_deg  (* 1.0 (Critical n1 n2)))
-;(define-param chi_deg  45.0)
+;(define-param chi_deg  (* 1.0 (Critical n1 n2)))
+(define-param chi_deg  45.0)
 
-;;------------------------------------------------------------------------------------------------ 
+;;------------------------------------------------------------------------------------------------
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
 ;;------------------------------------------------------------------------------------------------
 (define-param sx 10)                        ; size of cell including PML in x-direction
@@ -83,7 +83,7 @@
 (define n_ref (cond ((= ref_medium 0) 1.0)  ; index of refraction of the reference medium
                     ((= ref_medium 1)  n1)
                     ((= red_medium 2)  n2)))
-                    
+
 (define rw  (/ kr_w (* n_ref k_vac)))
 (define w_0 (/ kw_0 (* n_ref k_vac)))
 (define shift (+ source_shift rw))          ; distance from source position to beam waist (along y-axis)
@@ -115,7 +115,7 @@
 ;;------------------------------------------------------------------------------------------------
 ;; add absorbing boundary conditions and discretize structure
 ;;------------------------------------------------------------------------------------------------
-(set! pml-layers 
+(set! pml-layers
     (list (make pml (thickness pml_thickness))))
 (set! resolution                            ; set resolution in pixels per Meep distance unit
       (* pixel (* (if (> n1 n2) n1 n2) freq)))
@@ -162,7 +162,7 @@
 ;(exit)
 
 ;;------------------------------------------------------------------------------------------------
-;; plane wave decomposition 
+;; plane wave decomposition
 ;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
 ;;------------------------------------------------------------------------------------------------
 (define (integrand f x y)
