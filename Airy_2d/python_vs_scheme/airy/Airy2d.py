@@ -28,13 +28,13 @@ print("\nstart time:", datetime.now())
 
 # -----------------------------------------------------------------------------
 # physical parameters characterizing light source and interface characteristics
-# (must be adjusted - either here or via command line)
+# (must be adjusted - either here or via command line interface (CLI))
 # -----------------------------------------------------------------------------
 s_pol = True
 ref_medium = 0
 
-n1 = 0.65
-n2 = 0.65
+n1 = 1.0
+n2 = 1.1
 kw_0 = 12
 kr_w = 0
 
@@ -53,7 +53,7 @@ except Exception as e:
 
 
 # -----------------------------------------------------------------------------
-# specific Meep parameters (may need to be adjusted - either here or via command line)
+# specific Meep parameters (may need to be adjusted - either here or via CLI)
 # -----------------------------------------------------------------------------
 sx = 10
 sy = 10
@@ -77,9 +77,10 @@ shift = source_shift + rw
 # placement of the dielectric interface within the computational cell
 # -----------------------------------------------------------------------------
 cell = mp.Vector3(sx, sy, 0)  # geometry-lattice
+default_material = mp.Medium(index=n1)
 geometry = [mp.Block(mp.Vector3(mp.inf, 1, mp.inf),
                      center=mp.Vector3(),
-                     material=mp.Medium(epsilon=12))]
+                     material=mp.Medium(index=n2))]
 
 
 # -----------------------------------------------------------------------------
@@ -87,7 +88,7 @@ geometry = [mp.Block(mp.Vector3(mp.inf, 1, mp.inf),
 # -----------------------------------------------------------------------------
 pml_layers = [mp.PML(pml_thickness)]
 resolution = pixel * n1 * freq
-Courant = None
+Courant = 0.5
 
 # -----------------------------------------------------------------------------
 # beam profile distribution (field amplitude) at the waist of the beam
@@ -103,7 +104,8 @@ def Gauss(r, W_y=w_0):
 
 # -----------------------------------------------------------------------------
 # plane wave decomposition
-# (purpose: calculate field amplitude at light source position if not coinciding with beam waist)
+# (purpose: calculate field amplitude at light source position if not 
+#           coinciding with beam waist)
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
@@ -131,12 +133,14 @@ sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
 
 sim = mp.Simulation(cell_size=cell,
                     boundary_layers=pml_layers,
+                    default_material=default_material,
+                    Courant=Courant,
                     geometry=geometry,
                     sources=sources,
                     resolution=resolution)
 
 sim.run(mp.at_beginning(mp.output_epsilon),
-        mp.at_end(mp.output_efield_z) if s_pol else mp.at_end(mp.output_efield_y),
+        mp.at_end(mp.output_efield_z if s_pol else mp.output_efield_y),
         until=runtime)
 
 
