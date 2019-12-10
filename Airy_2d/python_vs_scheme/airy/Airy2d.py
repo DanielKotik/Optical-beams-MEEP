@@ -53,7 +53,7 @@ except Exception as e:
 
 
 # -----------------------------------------------------------------------------
-# specific Meep paramters (may need to be adjusted - either here or via command line)
+# specific Meep parameters (may need to be adjusted - either here or via command line)
 # -----------------------------------------------------------------------------
 sx = 10
 sy = 10
