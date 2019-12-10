@@ -16,7 +16,8 @@ from datetime import datetime
 def Critical(n1, n2):
     """Calculate critical angle in degrees."""
     assert n1 > n2, "Warning: Critical angle is not defined, since n1 <= n2!"
-    return math.degrees(math.asin(n2/n1))	
+    return math.degrees(math.asin(n2/n1))
+
 
 def Brewster(n1, n2):
     """Calculate Brewster angle in degrees."""
@@ -88,9 +89,8 @@ Courant = None
 # beam profile distribution (field amplitude) at the waist of the beam
 # -----------------------------------------------------------------------------
 def Gauss(r, W_y=w_0):
-    """Gauss ..."""
-    return NotImplementedError
-
+    """Gauss profile."""
+    return math.exp(-(r.y / W_y)**2)
 
 
 # -----------------------------------------------------------------------------
@@ -118,9 +118,12 @@ print("\n")
 # -----------------------------------------------------------------------------
 # specify current source, output functions and run simulation
 # -----------------------------------------------------------------------------
-sources = [mp.Source(src=mp.ContinuousSource(frequency=freq),
+sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                      component=mp.Ez if s_pol else mp.Ey,
-                     center=mp.Vector3(-7, 0))]
+                     size=mp.Vector3(0, 9, 0),
+                     center=mp.Vector3(source_shift, 0, 0),
+                     amp_func=lambda r: Gauss(r, w_0))
+           ]
 
 sim = mp.Simulation(cell_size=cell,
                     boundary_layers=pml_layers,
@@ -130,9 +133,18 @@ sim = mp.Simulation(cell_size=cell,
 
 sim.run(until=runtime)
 
-eps_data = sim.get_array(center=mp.Vector3(), size=cell, component=mp.Dielectric)
-ez_data = sim.get_array(center=mp.Vector3(), size=cell, component=mp.Ez)
+eps_data = sim.get_array(center=mp.Vector3(), size=cell,
+                         component=mp.Dielectric)
 np.save("eps_data", eps_data)
-np.save("ez_data", ez_data)
+
+if s_pol:
+    # output of E_z component (for s-polarisation)
+    ez_data = sim.get_array(center=mp.Vector3(), size=cell, component=mp.Ez)
+    np.save("ez_data", ez_data)
+else:
+    # output of E_y component (for p-polarisation)
+    ey_data = sim.get_array(center=mp.Vector3(), size=cell, component=mp.Ey)
+    np.save("ez_data", ez_data)
+
 
 print("\nend time:", datetime.now())
