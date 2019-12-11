@@ -12,6 +12,7 @@ import meep as mp
 import sys
 from datetime import datetime
 
+# TODO: parse arguments with argparse
 
 def Critical(n1, n2):
     """Calculate critical angle in degrees."""
@@ -76,6 +77,11 @@ shift = source_shift + rw
 # -----------------------------------------------------------------------------
 # placement of the dielectric interface within the computational cell
 # -----------------------------------------------------------------------------
+# helper functions
+def alpha(chi_deg):
+    """Angle of inclined plane with y-axis in radians."""
+    return math.pi/2 - math.radians(chi_deg)
+
 cell = mp.Vector3(sx, sy, 0)  # geometry-lattice
 default_material = mp.Medium(index=n1)
 geometry = [mp.Block(mp.Vector3(mp.inf, 1, mp.inf),
