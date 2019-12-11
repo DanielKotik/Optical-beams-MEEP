@@ -34,7 +34,7 @@ s_pol = True
 ref_medium = 0
 
 n1 = 1.0
-n2 = 1.1
+n2 = 0.65
 kw_0 = 12
 kr_w = 0
 
@@ -88,7 +88,9 @@ geometry = [mp.Block(mp.Vector3(mp.inf, 1, mp.inf),
 # -----------------------------------------------------------------------------
 pml_layers = [mp.PML(pml_thickness)]
 resolution = pixel * n1 * freq
-Courant = 0.5
+# set Courant factor (mandatory if either n1 or n2 is smaller than 1)
+Courant = (n1 if n1 < n2 else n2) / 2
+
 
 # -----------------------------------------------------------------------------
 # beam profile distribution (field amplitude) at the waist of the beam
