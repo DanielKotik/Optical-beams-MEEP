@@ -82,17 +82,21 @@ def alpha(chi_deg):
     """Angle of inclined plane with y-axis in radians."""
     return math.pi/2 - math.radians(chi_deg)
 
+
 def Delta_x(alpha):
     """Inclined plane offset to the center of the cell."""
     sin_alpha = math.sin(alpha)
     cos_alpha = math.cos(alpha)
     return (sx/2) * (((math.sqrt(2) - cos_alpha) - sin_alpha) / sin_alpha)
-    
+
 
 cell = mp.Vector3(sx, sy, 0)  # geometry-lattice
 default_material = mp.Medium(index=n1)
-geometry = [mp.Block(mp.Vector3(mp.inf, 1, mp.inf),
-                     center=mp.Vector3(),
+geometry = [mp.Block(mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
+                     center=mp.Vector3(sx/2 + Delta_x(alpha(chi_deg)), -sy/2),
+                     e1=mp.Vector3( 1/math.tan(alpha(chi_deg)), 1, 0),
+                     e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
+                     e3=mp.Vector3(0, 0, 1),
                      material=mp.Medium(index=n2))]
 
 
@@ -119,7 +123,7 @@ def Gauss(r, W_y=w_0):
 
 # -----------------------------------------------------------------------------
 # plane wave decomposition
-# (purpose: calculate field amplitude at light source position if not 
+# (purpose: calculate field amplitude at light source position if not
 #           coinciding with beam waist)
 # -----------------------------------------------------------------------------
 
