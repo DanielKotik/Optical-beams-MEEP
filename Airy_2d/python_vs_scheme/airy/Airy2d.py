@@ -62,7 +62,8 @@ pml_thickness = 0.25
 freq = 5
 runtime = 90
 pixel = 6
-source_shift = 0
+#source_shift = 0
+source_shift = -0.4*(sx - 2*pml_thickness)
 
 # -----------------------------------------------------------------------------
 # derived Meep parameters (do not change)
