@@ -45,8 +45,8 @@ W = 4
 
 # angle of incidence
 try:
-    chi_deg = 45
-    #chi_deg = 1.0*Critical(n1, n2)
+    #chi_deg = 45
+    chi_deg = 1.0*Critical(n1, n2)
     #chi_deg = 0.95*Brewster(n1, n2)
 except Exception as e:
     print(e)
@@ -107,7 +107,7 @@ geometry = [mp.Block(mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
 # add absorbing boundary conditions and discretize structure
 # -----------------------------------------------------------------------------
 pml_layers = [mp.PML(pml_thickness)]
-resolution = pixel * n1 * freq
+resolution = pixel * (n1 if n1 > n2 else n2) * freq
 # set Courant factor (mandatory if either n1 or n2 is smaller than 1)
 Courant = (n1 if n1 < n2 else n2) / 2
 

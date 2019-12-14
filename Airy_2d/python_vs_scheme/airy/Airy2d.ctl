@@ -38,7 +38,7 @@
                                             ; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2
 (define-param n1  1.00)                     ; index of refraction of the incident medium
 (define-param n2  0.65)                     ; index of refraction of the refracted medium
-(define-param kw_0   12)                     ; beam width (>5 is good)
+(define-param kw_0  12)                     ; beam width (>5 is good)
 (define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 (define-param M  0)                         ; center of integration window
@@ -56,8 +56,8 @@
 
 ;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)
 ;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))
-;(define-param chi_deg  (* 1.0 (Critical n1 n2)))
-(define-param chi_deg  45.0)
+(define-param chi_deg  (* 1.0 (Critical n1 n2)))
+;(define-param chi_deg  45.0)
 
 ;;------------------------------------------------------------------------------------------------
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
