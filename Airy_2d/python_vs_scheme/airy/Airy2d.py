@@ -9,10 +9,24 @@ date:    30.11.2019
 """
 import math
 import meep as mp
+import scipy as sp
 import sys
+
 from datetime import datetime
+from scipy.integrate import quad
 
 # TODO: parse arguments with argparse
+
+def complex_quad(func, a, b, **kwargs):
+    """Integrate real and imaginary part of the given function."""
+    def real_integral():
+        return quad(lambda x: sp.real(func(x)), a, b, **kwargs)
+    def imag_integral():
+        return quad(lambda x: sp.imag(func(x)), a, b, **kwargs)
+    
+    return (real_integral()[0] + 1j * imag_integral()[0], 
+            real_integral()[1:], imag_integral()[1:])
+
 
 def Critical(n1, n2):
     """Calculate critical angle in degrees."""
@@ -119,6 +133,14 @@ def Gauss(r, W_y=w_0):
     """Gauss profile."""
     return math.exp(-(r.y / W_y)**2)
 
+
+def Ai_inc(r, W_y=w_0, M=M, W=W):
+    """Incomplete Airy function."""
+    return complex_quad(lambda xi: sp.exp(1.0j*(-(xi**3)/3 + (xi * r.y/W_y))), 
+                        M-W, M+W)
+
+#print("w_0:", w_0)
+#print("Airy function 1:", Ai_inc(mp.Vector3(1,-0.3,1), w_0, 0, 4)[0])
 
 # -----------------------------------------------------------------------------
 # spectrum amplitude distribution
