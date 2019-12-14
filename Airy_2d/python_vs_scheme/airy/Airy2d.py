@@ -25,7 +25,7 @@ def complex_quad(func, a, b, **kwargs):
         return quad(lambda x: sp.imag(func(x)), a, b, **kwargs)
     
     return (real_integral()[0] + 1j * imag_integral()[0], 
-            real_integral()[1:], imag_integral()[1:])
+            real_integral()[1], imag_integral()[1])
 
 
 def Critical(n1, n2):
@@ -59,8 +59,8 @@ W = 4
 
 # angle of incidence
 try:
-    #chi_deg = 45
-    chi_deg = 1.0*Critical(n1, n2)
+    chi_deg = 45
+    #chi_deg = 1.0*Critical(n1, n2)
     #chi_deg = 0.95*Brewster(n1, n2)
 except Exception as e:
     print(e)
@@ -136,11 +136,13 @@ def Gauss(r, W_y=w_0):
 
 def Ai_inc(r, W_y=w_0, M=M, W=W):
     """Incomplete Airy function."""
-    return complex_quad(lambda xi: sp.exp(1.0j*(-(xi**3)/3 + (xi * r.y/W_y))), 
-                        M-W, M+W)
+    integrand = lambda xi: sp.exp(1.0j*(-(xi**3)/3 + (xi * r.y/W_y)))
+    result, real_tol, imag_tol = complex_quad(integrand, M-W, M+W)
+    #print("%e, %e" % (real_tol, imag_tol))
+    return result
 
-#print("w_0:", w_0)
-#print("Airy function 1:", Ai_inc(mp.Vector3(1,-0.3,1), w_0, 0, 4)[0])
+print("w_0:", w_0)
+print("Airy function 1:", Ai_inc(mp.Vector3(1,-0.3,1), w_0, 0, 4))
 
 # -----------------------------------------------------------------------------
 # spectrum amplitude distribution
@@ -172,7 +174,9 @@ sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                      component=mp.Ez if s_pol else mp.Ey,
                      size=mp.Vector3(0, 9, 0),
                      center=mp.Vector3(source_shift, 0, 0),
-                     amp_func=lambda r: Gauss(r, w_0))
+                     #amp_func=lambda r: Gauss(r, w_0)
+                     amp_func=lambda r: Ai_inc(r, w_0, M, W)
+                    )
            ]
 
 sim = mp.Simulation(cell_size=cell,
