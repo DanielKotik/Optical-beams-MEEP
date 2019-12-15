@@ -141,12 +141,17 @@ def Ai_inc(r, W_y=w_0, M=M, W=W):
     #print("%e, %e" % (real_tol, imag_tol))
     return result
 
-print("w_0:", w_0)
-print("Airy function 1:", Ai_inc(mp.Vector3(1,-0.3,1), w_0, 0, 4))
+#print("w_0:", w_0)
+#print("Airy function 1:", Ai_inc(mp.Vector3(1,-0.3,1), w_0, 0, 4))
 
 # -----------------------------------------------------------------------------
 # spectrum amplitude distribution
 # -----------------------------------------------------------------------------
+def f_Gauss(k_y, W_y=w_0):
+    """Gaussian spectrum amplitude."""
+    return math.exp(-(k_y*W_y/2)**2)
+    
+
 
 # -----------------------------------------------------------------------------
 # plane wave decomposition
@@ -174,8 +179,8 @@ sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                      component=mp.Ez if s_pol else mp.Ey,
                      size=mp.Vector3(0, 9, 0),
                      center=mp.Vector3(source_shift, 0, 0),
-                     #amp_func=lambda r: Gauss(r, w_0)
-                     amp_func=lambda r: Ai_inc(r, w_0, M, W)
+                     amp_func=lambda r: Gauss(r, w_0)
+                     #amp_func=lambda r: Ai_inc(r, w_0, M, W)
                     )
            ]
 
