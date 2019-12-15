@@ -148,7 +148,7 @@ def Ai_inc(r, W_y=w_0, M=M, W=W):
 # spectrum amplitude distribution
 # -----------------------------------------------------------------------------
 def Heaviside(x):
-    """..."""
+    """Heaviside (Theta) function."""
     return 0 if x<0 else 1
     
 
@@ -158,7 +158,7 @@ def f_Gauss(k_y, W_y=w_0):
 
 
 def f_Airy(k_y, W_y=w_0, M=M, W=W):
-    """..."""
+    """Airy spectrum amplitude."""
     return W_y*sp.exp(1.0j*(-1/3)*(k_y*W_y)**3)*Heaviside(W_y*k_y - (M-W))*Heaviside((M+W) - (W_y*k_y))
     
 
@@ -210,6 +210,18 @@ sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                      amp_func=lambda r: psi(r, lambda k_y: f_Airy(k_y, w_0, M, W), shift)
                     )
            ]
+
+def eSquared(r, ex, ey, ez):
+    """Calculate |E|^2 with |.| denoting the complex modulus if
+    'force-complex-fields?' is set to true, otherwise |.|
+    gives the Euclidean norm.
+    """
+    return magnitude(ex)**2 + magnitude(ey)**2 + magnitude(ez)**2
+
+def output_efield2():
+    """..."""
+    # (output-real-field-function (if s-pol? "e2_s" "e2_p")
+    #                                    (list Ex Ey Ez) eSquared))
 
 sim = mp.Simulation(cell_size=cell,
                     boundary_layers=pml_layers,
