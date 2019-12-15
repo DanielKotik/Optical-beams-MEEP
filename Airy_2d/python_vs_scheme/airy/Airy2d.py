@@ -147,11 +147,24 @@ def Ai_inc(r, W_y=w_0, M=M, W=W):
 # -----------------------------------------------------------------------------
 # spectrum amplitude distribution
 # -----------------------------------------------------------------------------
+def Heaviside(x):
+    """..."""
+    return 0 if x<0 else 1
+    
+
 def f_Gauss(k_y, W_y=w_0):
     """Gaussian spectrum amplitude."""
     return math.exp(-(k_y*W_y/2)**2)
+
+
+def f_Airy(k_y, W_y=w_0, M=M, W=W):
+    """..."""
+    return W_y*sp.exp(1.0j*(-1/3)*(k_y*W_y)**3)*Heaviside(W_y*k_y - (M-W))*Heaviside((M+W) - (W_y*k_y))
     
 
+# simple test outputs
+#print("Airy spectrum:", f_Airy(0.2, w_0, 0, 4))
+#sys.exit()
 
 # -----------------------------------------------------------------------------
 # plane wave decomposition
@@ -193,7 +206,8 @@ sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                      center=mp.Vector3(source_shift, 0, 0),
                      #amp_func=lambda r: Gauss(r, w_0)
                      #amp_func=lambda r: Ai_inc(r, w_0, M, W)
-                     amp_func=lambda r: psi(r, lambda k_y: f_Gauss(k_y, w_0), shift)
+                     #amp_func=lambda r: psi(r, lambda k_y: f_Gauss(k_y, w_0), shift)
+                     amp_func=lambda r: psi(r, lambda k_y: f_Airy(k_y, w_0, M, W), shift)
                     )
            ]
 

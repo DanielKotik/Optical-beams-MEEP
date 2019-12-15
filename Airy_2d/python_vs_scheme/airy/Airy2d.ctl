@@ -207,9 +207,9 @@
                       (if s-pol? (component Ez) (component Ey))
                       (size 0 9 0)
                       (center source_shift 0 0)
-                      (amp-func (Gauss w_0)))
+                      ;(amp-func (Gauss w_0)))
                       ;(amp-func (Ai_inc w_0 M W)))
-                      ;(amp-func (psi (f_Airy w_0 M W) shift)))
+                      (amp-func (psi (f_Airy w_0 M W) shift)))
                   ))
 
 ;; calculates |E|^2 with |.| denoting the complex modulus if 'force-complex-fields?' is set to true, otherwise |.|
