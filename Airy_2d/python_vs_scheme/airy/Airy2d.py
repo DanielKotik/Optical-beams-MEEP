@@ -158,6 +158,18 @@ def f_Gauss(k_y, W_y=w_0):
 # (purpose: calculate field amplitude at light source position if not
 #           coinciding with beam waist)
 # -----------------------------------------------------------------------------
+def integrand(k_y, f, x, y):
+    """..."""
+    return f(k_y) * sp.exp(1.0j*(x*math.sqrt(k1**2 - k_y**2) + k_y*y))
+    
+
+def psi(r, f, x):
+    """..."""
+    result, real_tol, imag_tol = complex_quad(lambda k_y: integrand(k_y, f, x, r.y), 
+                                              -k1, k1)
+    return result
+    
+
 
 # -----------------------------------------------------------------------------
 # display values of physical variables
@@ -179,8 +191,9 @@ sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                      component=mp.Ez if s_pol else mp.Ey,
                      size=mp.Vector3(0, 9, 0),
                      center=mp.Vector3(source_shift, 0, 0),
-                     amp_func=lambda r: Gauss(r, w_0)
+                     #amp_func=lambda r: Gauss(r, w_0)
                      #amp_func=lambda r: Ai_inc(r, w_0, M, W)
+                     amp_func=lambda r: psi(r, lambda k_y: f_Gauss(k_y, w_0), shift)
                     )
            ]
 
