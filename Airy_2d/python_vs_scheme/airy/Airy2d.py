@@ -216,12 +216,8 @@ def eSquared(r, ex, ey, ez):
     'force-complex-fields?' is set to true, otherwise |.|
     gives the Euclidean norm.
     """
-    return magnitude(ex)**2 + magnitude(ey)**2 + magnitude(ez)**2
+    return mp.Vector3(ex, ey, ez).norm()**2
 
-def output_efield2():
-    """..."""
-    # (output-real-field-function (if s-pol? "e2_s" "e2_p")
-    #                                    (list Ex Ey Ez) eSquared))
 
 sim = mp.Simulation(cell_size=cell,
                     boundary_layers=pml_layers,
@@ -231,8 +227,18 @@ sim = mp.Simulation(cell_size=cell,
                     sources=sources,
                     resolution=resolution)
 
+
+def output_efield2(sim):
+    """Output E-field intensity."""
+    name = "e2_s" if s_pol else "e2_p"
+    func = eSquared
+    cs = [mp.Ex, mp.Ey, mp.Ez]
+    return sim.output_field_function(name, cs, func, real_only=True)
+
+
 sim.run(mp.at_beginning(mp.output_epsilon),
         mp.at_end(mp.output_efield_z if s_pol else mp.output_efield_y),
+        mp.at_end(output_efield2),
         until=runtime)
 
 
