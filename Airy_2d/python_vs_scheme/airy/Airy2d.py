@@ -140,8 +140,10 @@ def main(args):
         #print("%e, %e" % (real_tol, imag_tol))
         return result
 
+    # simple test outputs
     #print("w_0:", w_0)
     #print("Airy function 1:", Ai_inc(mp.Vector3(1,-0.3,1), w_0, 0, 4))
+    #sys.exit()
 
     # -----------------------------------------------------------------------------
     # spectrum amplitude distribution
@@ -180,7 +182,6 @@ def main(args):
         result, real_tol, imag_tol = complex_quad(lambda k_y: integrand(k_y, f, x, r.y), 
                                                   -k1, k1)
         return result
-
 
 
     # -----------------------------------------------------------------------------
