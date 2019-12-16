@@ -200,6 +200,9 @@ print("\n")
 # -----------------------------------------------------------------------------
 # specify current source, output functions and run simulation
 # -----------------------------------------------------------------------------
+force_complex_fields=False          # default: False
+eps_averaging=True                  # default: True
+    
 sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                      component=mp.Ez if s_pol else mp.Ey,
                      size=mp.Vector3(0, 9, 0),
@@ -211,21 +214,26 @@ sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                     )
            ]
 
-def eSquared(r, ex, ey, ez):
-    """Calculate |E|^2 with |.| denoting the complex modulus if
-    'force-complex-fields?' is set to true, otherwise |.|
-    gives the Euclidean norm.
-    """
-    return mp.Vector3(ex, ey, ez).norm()**2
-
-
 sim = mp.Simulation(cell_size=cell,
                     boundary_layers=pml_layers,
                     default_material=default_material,
                     Courant=Courant,
                     geometry=geometry,
                     sources=sources,
-                    resolution=resolution)
+                    resolution=resolution,
+                    force_complex_fields=force_complex_fields,
+                    eps_averaging=eps_averaging,
+                    )
+
+sim.use_output_directory()   # put output files in a separate folder
+
+
+def eSquared(r, ex, ey, ez):
+    """Calculate |E|^2 with |.| denoting the complex modulus if
+    'force-complex-fields?' is set to true, otherwise |.|
+    gives the Euclidean norm.
+    """
+    return mp.Vector3(ex, ey, ez).norm()**2
 
 
 def output_efield2(sim):
