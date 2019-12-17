@@ -257,14 +257,50 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-n1', type=float, default=1.0, help='index of refraction of the incident medium (default: %(default)s)')
-    parser.add_argument('-n2', type=float, default=0.65, help='index of refraction of the refracted medium (default: %(default)s)')
-    parser.add_argument('-s_pol', type=bool, default=True, help='True for s-spol, False for p-pol (default: %(default)s)')
-    parser.add_argument('-ref_medium', type=int, default=0, help='reference medium: 0 - free space, 1 - incident medium, 2 - refracted medium (default: %(default)s)')
-    parser.add_argument('-kw_0', type=float, default=12, help='beam width (>5 is good) (default: %(default)s)')
-    parser.add_argument('-kr_w', type=float, default=0, help='beam waist distance to interface (30 to 50 is good if source position coincides with beam waist) (default: %(default)s)')
-    parser.add_argument('-M', type=float, default=0, help='(default: %(default)s)')
-    parser.add_argument('-W', type=float, default=4, help='(default: %(default)s)')
-    parser.add_argument('-chi_deg', type=float, default=45, help='incidence angle in degrees (default: %(default)s)')
+    parser.add_argument('-n1', 
+                        type=float, 
+                        default=1.0, 
+                        help='index of refraction of the incident medium (default: %(default)s)')
+    
+    parser.add_argument('-n2', 
+                        type=float,
+                        default=0.65, 
+                        help='index of refraction of the refracted medium (default: %(default)s)')
+    
+    parser.add_argument('-s_pol', 
+                        type=bool, 
+                        default=True, 
+                        help='True for s-spol, False for p-pol (default: %(default)s)')
+    
+    parser.add_argument('-ref_medium', 
+                        type=int, 
+                        default=0, 
+                        help=('reference medium: 0 - free space, 1 - incident medium, '
+                              '2 - refracted medium (default: %(default)s)'))
+    
+    parser.add_argument('-kw_0', 
+                        type=float, 
+                        default=12, 
+                        help='beam width (>5 is good) (default: %(default)s)')
+    
+    parser.add_argument('-kr_w', 
+                        type=float, 
+                        default=0, 
+                        help=('beam waist distance to interface (30 to 50 is good if source '
+                              'position coincides with beam waist) (default: %(default)s)'))
+    
+    parser.add_argument('-M', 
+                        type=float, 
+                        default=0, 
+                        help='Airy beam parameter (default: %(default)s)')
+    
+    parser.add_argument('-W', 
+                        type=float, default=4, 
+                        help='Airy beam parameter (default: %(default)s)')
+    
+    parser.add_argument('-chi_deg', 
+                        type=float, default=45, 
+                        help='incidence angle in degrees (default: %(default)s)')
+    
     args = parser.parse_args()
     main(args)
