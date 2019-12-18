@@ -18,6 +18,15 @@ from scipy.integrate import quad
 
 print("Meep version:", mp.__version__, end="\n\n")
 
+def interfaceType(string):
+    value = string
+    if (value != "planar" and 
+        value != "concave" and
+        value != "convex"):
+        raise argparse.ArgumentTypeError('Value has to be either concave, ' 
+                                         'convex or planar (but %s is provided)' % value)
+    return value
+
 
 def complex_quad(func, a, b, **kwargs):
     """Integrate real and imaginary part of the given function."""
@@ -65,14 +74,16 @@ def main(args):
     #chi_deg = 1.0*Critical(n1, n2)
     #chi_deg = 0.95*Brewster(n1, n2)
     
+    print(interface)
+    
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     
     parser.add_argument('-interface', 
-                        type=float, 
+                        type=interfaceType, 
                         default='planar', 
-                        help='specify type of interface (default: %(default)s)')
+                        help='specify type of interface (concave, convex, planar) (default: %(default)s)')
     
     parser.add_argument('-n1', 
                         type=float, 
