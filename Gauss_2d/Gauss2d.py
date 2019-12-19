@@ -18,13 +18,16 @@ from scipy.integrate import quad
 
 print("Meep version:", mp.__version__, end="\n\n")
 
+
 def interfaceType(string):
+    """..."""
     value = string
-    if (value != "planar" and 
+    if (value != "planar" and
         value != "concave" and
         value != "convex"):
-        raise argparse.ArgumentTypeError('Value has to be either concave, ' 
-                                         'convex or planar (but %s is provided)' % value)
+        raise argparse.ArgumentTypeError('Value has to be either concave, '
+                                         'convex or planar (but %s is provided)'
+                                         % value)
     return value
 
 
@@ -32,10 +35,11 @@ def complex_quad(func, a, b, **kwargs):
     """Integrate real and imaginary part of the given function."""
     def real_integral():
         return quad(lambda x: sp.real(func(x)), a, b, **kwargs)
+
     def imag_integral():
         return quad(lambda x: sp.imag(func(x)), a, b, **kwargs)
-    
-    return (real_integral()[0] + 1j * imag_integral()[0], 
+
+    return (real_integral()[0] + 1j * imag_integral()[0],
             real_integral()[1], imag_integral()[1])
 
 
@@ -60,10 +64,10 @@ def main(args):
     interface = args.interface
     s_pol = args.s_pol
     ref_medium = args.ref_medium
-    
-    n1 = args.n1 
+
+    n1 = args.n1
     n2 = args.n2
-    
+
     kw_0 = args.kw_0
     kr_w = args.kr_w
 
@@ -73,58 +77,58 @@ def main(args):
     chi_deg = args.chi_deg
     #chi_deg = 1.0*Critical(n1, n2)
     #chi_deg = 0.95*Brewster(n1, n2)
-    
+
     print(interface)
-    
-    
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    
-    parser.add_argument('-interface', 
-                        type=interfaceType, 
-                        default='planar', 
+
+    parser.add_argument('-interface',
+                        type=interfaceType,
+                        default='planar',
                         help='specify type of interface (concave, convex, planar) (default: %(default)s)')
-    
-    parser.add_argument('-n1', 
-                        type=float, 
-                        default=1.0, 
-                        help='index of refraction of the incident medium (default: %(default)s)')
-    
-    parser.add_argument('-n2', 
+
+    parser.add_argument('-n1',
                         type=float,
-                        default=0.65, 
+                        default=1.0,
+                        help='index of refraction of the incident medium (default: %(default)s)')
+
+    parser.add_argument('-n2',
+                        type=float,
+                        default=0.65,
                         help='index of refraction of the refracted medium (default: %(default)s)')
-    
-    parser.add_argument('-s_pol', 
-                        type=bool, 
-                        default=True, 
+
+    parser.add_argument('-s_pol',
+                        type=bool,
+                        default=True,
                         help='True for s-spol, False for p-pol (default: %(default)s)')
-    
-    parser.add_argument('-ref_medium', 
-                        type=int, 
-                        default=0, 
+
+    parser.add_argument('-ref_medium',
+                        type=int,
+                        default=0,
                         help=('reference medium: 0 - free space, 1 - incident medium, '
                               '2 - refracted medium (default: %(default)s)'))
-    
-    parser.add_argument('-kw_0', 
-                        type=float, 
-                        default=12, 
+
+    parser.add_argument('-kw_0',
+                        type=float,
+                        default=12,
                         help='beam width (>5 is good) (default: %(default)s)')
-    
-    parser.add_argument('-kr_w', 
-                        type=float, 
-                        default=0, 
+
+    parser.add_argument('-kr_w',
+                        type=float,
+                        default=0,
                         help=('beam waist distance to interface (30 to 50 is good if source '
                               'position coincides with beam waist) (default: %(default)s)'))
-    
-    parser.add_argument('-kr_c', 
-                        type=float, 
-                        default=1500, 
+
+    parser.add_argument('-kr_c',
+                        type=float,
+                        default=1500,
                         help='radius of curvature (if interface is either concave of convex) (default: %(default)s)')
-    
-    parser.add_argument('-chi_deg', 
-                        type=float, default=45, 
+
+    parser.add_argument('-chi_deg',
+                        type=float, default=45,
                         help='incidence angle in degrees (default: %(default)s)')
-    
+
     args = parser.parse_args()
     main(args)
