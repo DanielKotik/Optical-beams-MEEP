@@ -226,9 +226,10 @@ def main(args):
     sim.use_output_directory()   # put output files in a separate folder
 
     def eSquared(r, ex, ey, ez):
-        """Calculate |E|^2 with |.| denoting the complex modulus if
-        'force-complex-fields?' is set to true, otherwise |.|
-        gives the Euclidean norm.
+        """Calculate |E|^2.
+
+        With |.| denoting the complex modulus if 'force_complex_fields?'
+        is set to true, otherwise |.| gives the Euclidean norm.
         """
         return mp.Vector3(ex, ey, ez).norm()**2
 
