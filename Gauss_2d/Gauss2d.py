@@ -57,10 +57,10 @@ def Brewster(n1, n2):
 def main(args):
     print("\nstart time:", datetime.now())
 
-    # -----------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # physical parameters characterizing light source and interface characteristics
     # (must be adjusted - eihter here or via command line interface (CLI))
-    # -----------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     interface = args.interface
     s_pol = args.s_pol
     ref_medium = args.ref_medium
@@ -87,44 +87,51 @@ if __name__ == '__main__':
     parser.add_argument('-interface',
                         type=interfaceType,
                         default='planar',
-                        help='specify type of interface (concave, convex, planar) (default: %(default)s)')
+                        help=('specify type of interface (concave, convex, '
+                              'planar) (default: %(default)s)'))
 
     parser.add_argument('-n1',
                         type=float,
-                        default=1.0,
-                        help='index of refraction of the incident medium (default: %(default)s)')
+                        default=1.54,
+                        help=('index of refraction of the incident medium '
+                              '(default: %(default)s)'))
 
     parser.add_argument('-n2',
                         type=float,
-                        default=0.65,
-                        help='index of refraction of the refracted medium (default: %(default)s)')
+                        default=1.00,
+                        help=('index of refraction of the refracted medium '
+                              '(default: %(default)s)'))
 
     parser.add_argument('-s_pol',
                         type=bool,
                         default=True,
-                        help='True for s-spol, False for p-pol (default: %(default)s)')
+                        help=('True for s-spol, False for p-pol '
+                              '(default: %(default)s)'))
 
     parser.add_argument('-ref_medium',
                         type=int,
                         default=0,
-                        help=('reference medium: 0 - free space, 1 - incident medium, '
+                        help=('reference medium: 0 - free space, '
+                              '1 - incident medium, '
                               '2 - refracted medium (default: %(default)s)'))
 
     parser.add_argument('-kw_0',
                         type=float,
-                        default=12,
+                        default=8,
                         help='beam width (>5 is good) (default: %(default)s)')
 
     parser.add_argument('-kr_w',
                         type=float,
-                        default=0,
-                        help=('beam waist distance to interface (30 to 50 is good if source '
-                              'position coincides with beam waist) (default: %(default)s)'))
+                        default=60,
+                        help=('beam waist distance to interface (30 to 50 is 
+                              'good if source position coincides with beam '
+                              'waist) (default: %(default)s)'))
 
     parser.add_argument('-kr_c',
                         type=float,
-                        default=1500,
-                        help='radius of curvature (if interface is either concave of convex) (default: %(default)s)')
+                        default=150,
+                        help=('radius of curvature (if interface is either '
+                              'concave of convex) (default: %(default)s)'))
 
     parser.add_argument('-chi_deg',
                         type=float, default=45,
