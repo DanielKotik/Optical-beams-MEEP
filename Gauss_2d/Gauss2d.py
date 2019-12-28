@@ -77,8 +77,31 @@ def main(args):
     chi_deg = args.chi_deg
     #chi_deg = 1.0*Critical(n1, n2)
     #chi_deg = 0.95*Brewster(n1, n2)
-
-    print(interface)
+    
+    # --------------------------------------------------------------------------
+    # specific Meep parameters (may need to be adjusted - either here or via CLI)
+    # --------------------------------------------------------------------------
+    # TODO: add short comments for every parameter
+    sx = 5
+    sy = 5
+    pml_thickness = 0.25
+    freq = 12
+    runtime = 10
+    pixel = 10
+    source_shift = -2.15
+    
+    # --------------------------------------------------------------------------
+    # derived Meep parameters (do not change)
+    # --------------------------------------------------------------------------
+    k_vac = 2 * math.pi * freq
+    k1 = n1 * k_vac
+    n_ref = (1  if ref_medium == 0 else
+             n1 if ref_medium == 1 else
+             n2 if ref_medium == 2 else math.nan)
+    rw = kr_w / (n_ref * k_vac)  # TODO: rw --> r_w
+    w_0 = kw_0 / (n_ref * k_vac)
+    r_c = kr_c / (n_ref * k_vac)
+    shift = source_shift + rw
 
 
 if __name__ == '__main__':
