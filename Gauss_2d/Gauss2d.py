@@ -173,6 +173,20 @@ def main(args):
     # --------------------------------------------------------------------------
     # display values of physical variables
     # --------------------------------------------------------------------------
+    print("\n")
+    print("Specified variables and derived values:")
+    print("n1:", n1)
+    print("n2:", n2)
+    print("chi:  ", chi_deg, " [degree]")
+    print("incl.:", 90 - chi_deg, " [degree]")
+    print("kw_0: ", kw_0)
+    if interface != "planar":
+        print("kr_c: ", kr_c)
+    print("kr_w: ", kr_w)
+    print("k_vac:", k_vac)
+    print("polarisation:", "s" if s_pol else "p")
+    print("interface:", interface)
+    print("\n")
     
     # --------------------------------------------------------------------------
     # specify current source, output functions and run simulation
