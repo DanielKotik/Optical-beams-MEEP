@@ -159,6 +159,16 @@ def main(args):
     # (purpose: calculate field amplitude at light source position if not
     #           coinciding with beam waist)
     # --------------------------------------------------------------------------
+    def integrand(k_y, f, x, y):
+        """..."""
+        return f(k_y) * sp.exp(1.0j*(x*math.sqrt(k1**2 - k_y**2) + k_y*y))
+
+    def psi(r, f, x):
+        """..."""
+        result, real_tol, imag_tol = complex_quad(lambda k_y:
+                                                  integrand(k_y, f, x, r.y),
+                                                  -k1, k1)
+        return result
     
     # --------------------------------------------------------------------------
     # display values of physical variables
