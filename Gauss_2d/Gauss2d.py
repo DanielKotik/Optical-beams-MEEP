@@ -143,6 +143,9 @@ def main(args):
     # --------------------------------------------------------------------------
     # beam profile distribution (field amplitude) at the waist of the beam
     # --------------------------------------------------------------------------
+    def Gauss(r, W_y=w_0):
+        """Gauss profile."""
+        return math.exp(-(r.y / W_y)**2)
     
     # --------------------------------------------------------------------------
     # spectrum amplitude distribution
