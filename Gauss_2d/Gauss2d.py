@@ -191,7 +191,18 @@ def main(args):
     # --------------------------------------------------------------------------
     # specify current source, output functions and run simulation
     # --------------------------------------------------------------------------
+    force_complex_fields = False          # default: False
+    eps_averaging = True                  # default: True
 
+    sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
+                         component=mp.Ez if s_pol else mp.Ey,
+                         size=mp.Vector3(0, 2, 0),
+                         center=mp.Vector3(source_shift, 0, 0),
+                         #amp_func=lambda r: Gauss(r, w_0)
+                         amp_func=lambda r: psi(r, lambda k_y: f_Gauss(k_y, w_0), shift)
+                         )
+               ]
+    
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
