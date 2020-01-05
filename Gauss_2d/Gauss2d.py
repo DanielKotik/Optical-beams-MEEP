@@ -135,7 +135,11 @@ def main(args):
     # --------------------------------------------------------------------------
     # add absorbing boundary conditions and discretize structure
     # --------------------------------------------------------------------------
-
+    pml_layers = [mp.PML(pml_thickness)]
+    resolution = pixel * (n1 if n1 > n2 else n2) * freq
+    # set Courant factor (mandatory if either n1 or n2 is smaller than 1)
+    Courant = (n1 if n1 < n2 else n2) / 2
+    
     # --------------------------------------------------------------------------
     # beam profile distribution (field amplitude) at the waist of the beam
     # --------------------------------------------------------------------------
