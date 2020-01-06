@@ -122,13 +122,14 @@ def main(args):
     if interface == "planar":
         default_material = mp.Medium(index=n1)
         geometry = [mp.Block(mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
-                         center=mp.Vector3(sx/2 + Delta_x(alpha(chi_deg)), -sy/2),
-                         e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
-                         e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
-                         e3=mp.Vector3(0, 0, 1),
-                         material=mp.Medium(index=n2))]
+                    center=mp.Vector3(sx/2 + Delta_x(alpha(chi_deg)), -sy/2),
+                    e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
+                    e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
+                    e3=mp.Vector3(0, 0, 1),
+                    material=mp.Medium(index=n2))]
     elif interface == "concave":
-        pass
+        default_material = mp.Medium(index=n2)
+        geometry = []
     elif interface == "convex":
         pass
     
