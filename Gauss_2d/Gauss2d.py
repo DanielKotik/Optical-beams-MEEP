@@ -77,7 +77,7 @@ def main(args):
     chi_deg = args.chi_deg
     #chi_deg = 1.0*Critical(n1, n2)
     #chi_deg = 0.95*Brewster(n1, n2)
-    
+
     # --------------------------------------------------------------------------
     # specific Meep parameters (may need to be adjusted - either here or via CLI)
     # --------------------------------------------------------------------------
@@ -89,7 +89,7 @@ def main(args):
     runtime = 10
     pixel = 10
     source_shift = -2.15
-    
+
     # --------------------------------------------------------------------------
     # derived Meep parameters (do not change)
     # --------------------------------------------------------------------------
@@ -102,7 +102,7 @@ def main(args):
     w_0 = kw_0 / (n_ref * k_vac)
     r_c = kr_c / (n_ref * k_vac)
     shift = source_shift + rw
-    
+
     # --------------------------------------------------------------------------
     # placement of the dielectric interface within the computational cell
     # --------------------------------------------------------------------------
@@ -118,7 +118,7 @@ def main(args):
         return (sx/2) * (((math.sqrt(2) - cos_alpha) - sin_alpha) / sin_alpha)
 
     cell = mp.Vector3(sx, sy, 0)  # geometry-lattice
-    
+
     if interface == "planar":
         default_material = mp.Medium(index=n1)
         geometry = [mp.Block(mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
@@ -132,7 +132,7 @@ def main(args):
         geometry = []
     elif interface == "convex":
         pass
-    
+
     # --------------------------------------------------------------------------
     # add absorbing boundary conditions and discretize structure
     # --------------------------------------------------------------------------
@@ -140,21 +140,21 @@ def main(args):
     resolution = pixel * (n1 if n1 > n2 else n2) * freq
     # set Courant factor (mandatory if either n1 or n2 is smaller than 1)
     Courant = (n1 if n1 < n2 else n2) / 2
-    
+
     # --------------------------------------------------------------------------
     # beam profile distribution (field amplitude) at the waist of the beam
     # --------------------------------------------------------------------------
     def Gauss(r, W_y=w_0):
         """Gauss profile."""
         return math.exp(-(r.y / W_y)**2)
-    
+
     # --------------------------------------------------------------------------
     # spectrum amplitude distribution
     # --------------------------------------------------------------------------
     def f_Gauss(k_y, W_y=w_0):
         """Gaussian spectrum amplitude."""
-        return math.exp(-(k_y*W_y/2)**2)    
-    
+        return math.exp(-(k_y*W_y/2)**2)
+
     # --------------------------------------------------------------------------
     # plane wave decomposition
     # (purpose: calculate field amplitude at light source position if not
@@ -170,7 +170,7 @@ def main(args):
                                                   integrand(k_y, f, x, r.y),
                                                   -k1, k1)
         return result
-    
+
     # --------------------------------------------------------------------------
     # display values of physical variables
     # --------------------------------------------------------------------------
@@ -188,7 +188,7 @@ def main(args):
     print("polarisation:", "s" if s_pol else "p")
     print("interface:", interface)
     print("\n")
-    
+
     # --------------------------------------------------------------------------
     # specify current source, output functions and run simulation
     # --------------------------------------------------------------------------
@@ -203,7 +203,7 @@ def main(args):
                          amp_func=lambda r: psi(r, lambda k_y: f_Gauss(k_y, w_0), shift)
                          )
                ]
-    
+
      sim = mp.Simulation(cell_size=cell,
                          boundary_layers=pml_layers,
                          default_material=default_material,
@@ -238,8 +238,8 @@ def main(args):
             until=runtime)
 
     print("\nend time:", datetime.now())
-    
-    
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
@@ -282,7 +282,7 @@ if __name__ == '__main__':
     parser.add_argument('-kr_w',
                         type=float,
                         default=60,
-                        help=('beam waist distance to interface (30 to 50 is 
+                        help=('beam waist distance to interface (30 to 50 is
                               'good if source position coincides with beam '
                               'waist) (default: %(default)s)'))
 
