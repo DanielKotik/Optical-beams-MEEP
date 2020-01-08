@@ -121,12 +121,12 @@ def main(args):
 
     if interface == "planar":
         default_material = mp.Medium(index=n1)
-        geometry = [mp.Block(mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
-                    center=mp.Vector3(sx/2 + Delta_x(alpha(chi_deg)), -sy/2),
-                    e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
-                    e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
-                    e3=mp.Vector3(0, 0, 1),
-                    material=mp.Medium(index=n2))]
+        geometry = [mp.Block(size=mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
+                             center=mp.Vector3(sx/2 + Delta_x(alpha(chi_deg)), -sy/2),
+                             e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
+                             e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
+                             e3=mp.Vector3(0, 0, 1),
+                             material=mp.Medium(index=n2))]
     elif interface == "concave":
         default_material = mp.Medium(index=n2)
         geometry = []
@@ -204,15 +204,15 @@ def main(args):
                          )
                ]
 
-     sim = mp.Simulation(cell_size=cell,
-                         boundary_layers=pml_layers,
-                         default_material=default_material,
-                         Courant=Courant,
-                         geometry=geometry,
-                         sources=sources,
-                         resolution=resolution,
-                         force_complex_fields=force_complex_fields,
-                         eps_averaging=eps_averaging,
+    sim = mp.Simulation(cell_size=cell,
+                        boundary_layers=pml_layers,
+                        default_material=default_material,
+                        Courant=Courant,
+                        geometry=geometry,
+                        sources=sources,
+                        resolution=resolution,
+                        force_complex_fields=force_complex_fields,
+                        eps_averaging=eps_averaging,
                         )
 
     sim.use_output_directory()   # put output files in a separate folder
@@ -282,7 +282,7 @@ if __name__ == '__main__':
     parser.add_argument('-kr_w',
                         type=float,
                         default=60,
-                        help=('beam waist distance to interface (30 to 50 is
+                        help=('beam waist distance to interface (30 to 50 is '
                               'good if source position coincides with beam '
                               'waist) (default: %(default)s)'))
 
