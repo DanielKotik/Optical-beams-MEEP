@@ -121,6 +121,7 @@ def main(args):
 
     if interface == "planar":
         default_material = mp.Medium(index=n1)
+        # located at lower right edge for 45 degree
         geometry = [mp.Block(size=mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
                              center=mp.Vector3(sx/2 + Delta_x(alpha(chi_deg)), -sy/2),
                              e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
@@ -129,7 +130,13 @@ def main(args):
                              material=mp.Medium(index=n2))]
     elif interface == "concave":
         default_material = mp.Medium(index=n2)
-        geometry = []
+        # move center to the right in order to ensure that the point of impact 
+        # is always centrally placed
+        geometry = [mp.Cylinder(center=mp.Vector3(-r_c*math.cos(math.radians(chi_deg)),
+                                                  r_c*math.sin(math.radians(chi_deg))),
+                                height=mp.inf,
+                                radius=r_c,
+                                material=mp.Medium(index=n1))]
     elif interface == "convex":
         pass
 
