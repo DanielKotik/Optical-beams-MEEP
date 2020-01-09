@@ -133,13 +133,21 @@ def main(args):
         # move center to the right in order to ensure that the point of impact 
         # is always centrally placed
         geometry = [mp.Cylinder(center=mp.Vector3(-r_c*math.cos(math.radians(chi_deg)),
-                                                  r_c*math.sin(math.radians(chi_deg))),
+                                                  +r_c*math.sin(math.radians(chi_deg))),
                                 height=mp.inf,
                                 radius=r_c,
                                 material=mp.Medium(index=n1))]
     elif interface == "convex":
-        pass
-
+        default_material = mp.Medium(index=n1)
+        # move center to the right in order to ensure that the point of impact 
+        # is always centrally placed
+        geometry = [mp.Cylinder(center=mp.Vector3(+r_c*math.cos(math.radians(chi_deg)),
+                                                  -r_c*math.sin(math.radians(chi_deg))),
+                                height=mp.inf,
+                                radius=r_c,
+                                material=mp.Medium(index=n2))]
+        
+        
     # --------------------------------------------------------------------------
     # add absorbing boundary conditions and discretize structure
     # --------------------------------------------------------------------------
