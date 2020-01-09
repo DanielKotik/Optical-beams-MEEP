@@ -230,7 +230,7 @@ def main(args):
                         eps_averaging=eps_averaging,
                         )
 
-    sim.use_output_directory()   # put output files in a separate folder
+    sim.use_output_directory("interface")   # put output files in a separate folder
 
     def eSquared(r, ex, ey, ez):
         """Calculate |E|^2.
