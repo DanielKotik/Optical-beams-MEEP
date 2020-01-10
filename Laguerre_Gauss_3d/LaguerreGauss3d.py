@@ -61,8 +61,10 @@ def main(args):
     # physical parameters characterizing light source and interface characteristics
     # (must be adjusted - eihter here or via command line interface (CLI))
     # --------------------------------------------------------------------------
-    interface = args.interface
-    s_pol = args.s_pol
+    e_z = args.e_z
+    e_y = args.e_y
+    
+    m_charge = args.m_charge
     ref_medium = args.ref_medium
 
     n1 = args.n1
@@ -70,8 +72,6 @@ def main(args):
 
     kw_0 = args.kw_0
     kr_w = args.kr_w
-
-    kr_c = args.kr_c
 
     # angle of incidence
     chi_deg = args.chi_deg
@@ -257,13 +257,23 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-
-    parser.add_argument('-interface',
-                        type=interfaceType,
-                        default='planar',
-                        help=('specify type of interface (concave, convex, '
-                              'planar) (default: %(default)s)'))
-
+    
+    parser.add_argument('-e_z',
+                        type=complex,
+                        default=1,
+                        help='z-component of Jones vector (default: %(default)s)')
+    
+    parser.add_argument('-e_y',
+                        type=complex,
+                        default=0,
+                        help='y-component of Jones vector (default: %(default)s)')
+    
+    parser.add_argument('-m_charge',
+                        type=int,
+                        default=2,
+                        help=('vortex charge (azimuthal quantum number)'
+                              ' (default: %(default)s)'))
+    
     parser.add_argument('-n1',
                         type=float,
                         default=1.54,
@@ -274,12 +284,6 @@ if __name__ == '__main__':
                         type=float,
                         default=1.00,
                         help=('index of refraction of the refracted medium '
-                              '(default: %(default)s)'))
-
-    parser.add_argument('-s_pol',
-                        type=bool,
-                        default=True,
-                        help=('True for s-spol, False for p-pol '
                               '(default: %(default)s)'))
 
     parser.add_argument('-ref_medium',
@@ -300,12 +304,6 @@ if __name__ == '__main__':
                         help=('beam waist distance to interface (30 to 50 is '
                               'good if source position coincides with beam '
                               'waist) (default: %(default)s)'))
-
-    parser.add_argument('-kr_c',
-                        type=float,
-                        default=150,
-                        help=('radius of curvature (if interface is either '
-                              'concave of convex) (default: %(default)s)'))
 
     parser.add_argument('-chi_deg',
                         type=float, default=45,
