@@ -175,6 +175,13 @@ def main(args):
 
     def psi(r, f, x):
         """..."""
+        try:
+            getattr(psi, "called")
+        except AttributeError:
+            psi.called = True
+            print("Calculating inital field configuration. "
+                  "This will take some time...") 
+            
         result, real_tol, imag_tol = complex_quad(lambda k_y:
                                                   integrand(k_y, f, x, r.y),
                                                   -k1, k1)
