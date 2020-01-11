@@ -16,7 +16,7 @@ import sys
 from datetime import datetime
 from scipy.integrate import quad
 
-print("Meep version:", mp.__version__, end="\n\n")
+print("Meep version:", mp.__version__)
 
 
 def complex_quad(func, a, b, **kwargs):
@@ -184,7 +184,7 @@ def main(args):
     # --------------------------------------------------------------------------
     # display values of physical variables
     # --------------------------------------------------------------------------
-    print("\n")
+    print()
     print("Specified variables and derived values:")
     print("n1:", n1)
     print("n2:", n2)
@@ -194,7 +194,7 @@ def main(args):
     print("kr_w: ", kr_w)
     print("k_vac:", k_vac)
     print("polarisation:", "s" if s_pol else "p")
-    print("\n")
+    print()
 
     # --------------------------------------------------------------------------
     # specify current source, output functions and run simulation
