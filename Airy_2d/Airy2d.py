@@ -211,6 +211,7 @@ def main(args):
     # --------------------------------------------------------------------------
     force_complex_fields = False          # default: False
     eps_averaging = True                  # default: True
+    filename_prefix = None
 
     sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                          component=mp.Ez if s_pol else mp.Ey,
@@ -231,7 +232,8 @@ def main(args):
                         sources=sources,
                         resolution=resolution,
                         force_complex_fields=force_complex_fields,
-                        eps_averaging=eps_averaging
+                        eps_averaging=eps_averaging,
+                        filename_prefix=filename_prefix
                         )
 
     sim.use_output_directory()   # put output files in a separate folder
