@@ -216,7 +216,7 @@ def main(args):
     # --------------------------------------------------------------------------
     force_complex_fields = False          # default: False
     eps_averaging = True                  # default: True
-    filename_prefix = ''
+    filename_prefix = None
 
     sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                          component=mp.Ez if s_pol else mp.Ey,
