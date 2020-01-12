@@ -186,7 +186,7 @@ def main(args):
         (result, 
          real_tol, 
          imag_tol) = complex_quad(lambda k_y: f(k_y) * sp.exp(1.0j*phi(k_y, x, r.y)), 
-                                  -k1, k1)
+                                  -k1, k1, limit=100)
         
         return result
 
