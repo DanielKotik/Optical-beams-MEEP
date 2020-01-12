@@ -16,7 +16,7 @@ import sys
 from datetime import datetime
 from scipy.integrate import quad
 
-print("Meep version:", mp.__version__, end="\n\n")
+print("Meep version:", mp.__version__)
 
 
 def interfaceType(string):
@@ -181,6 +181,13 @@ def main(args):
 
     def psi(r, f, x):
         """..."""
+        try:
+            getattr(psi, "called")
+        except AttributeError:
+            psi.called = True
+            print("Calculating inital field configuration. "
+                  "This will take some time...") 
+
         result, real_tol, imag_tol = complex_quad(lambda k_y:
                                                   integrand(k_y, f, x, r.y),
                                                   -k1, k1)
@@ -189,7 +196,7 @@ def main(args):
     # --------------------------------------------------------------------------
     # display values of physical variables
     # --------------------------------------------------------------------------
-    print("\n")
+    print()
     print("Specified variables and derived values:")
     print("n1:", n1)
     print("n2:", n2)
@@ -202,13 +209,14 @@ def main(args):
     print("k_vac:", k_vac)
     print("polarisation:", "s" if s_pol else "p")
     print("interface:", interface)
-    print("\n")
+    print()
 
     # --------------------------------------------------------------------------
     # specify current source, output functions and run simulation
     # --------------------------------------------------------------------------
     force_complex_fields = False          # default: False
     eps_averaging = True                  # default: True
+    filename_prefix = ''
 
     sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                          component=mp.Ez if s_pol else mp.Ey,
@@ -228,9 +236,10 @@ def main(args):
                         resolution=resolution,
                         force_complex_fields=force_complex_fields,
                         eps_averaging=eps_averaging,
+                        filename_prefix=filename_prefix
                         )
-
-    sim.use_output_directory("interface")   # put output files in a separate folder
+    
+    sim.use_output_directory(interface)   # put output files in a separate folder
 
     def eSquared(r, ex, ey, ez):
         """Calculate |E|^2.
@@ -251,7 +260,7 @@ def main(args):
             mp.at_end(mp.output_efield_z if s_pol else mp.output_efield_y),
             mp.at_end(output_efield2),
             until=runtime)
-
+    
     print("\nend time:", datetime.now())
 
 
