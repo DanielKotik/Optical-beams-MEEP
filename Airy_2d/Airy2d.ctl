@@ -56,8 +56,8 @@
 
 ;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)
 ;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))
-(define-param chi_deg  (* 1.0 (Critical n1 n2)))
-;(define-param chi_deg  45.0)
+;(define-param chi_deg  (* 1.0 (Critical n1 n2)))
+(define-param chi_deg  45.0)
 
 ;;------------------------------------------------------------------------------------------------ 
 ;; specific Meep paramters (may need to be adjusted - either here or via command line)
