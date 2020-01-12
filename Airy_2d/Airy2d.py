@@ -74,9 +74,9 @@ def main(args):
     sx = 10
     sy = 10
     pml_thickness = 0.25
-    freq = 5
+    freq = 12
     runtime = 90
-    pixel = 6
+    pixel = 15
     #source_shift = 0
     source_shift = -0.4*(sx - 2*pml_thickness)
 
@@ -290,7 +290,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-kw_0',
                         type=float,
-                        default=12,
+                        default=7,
                         help='beam width (>5 is good) (default: %(default)s)')
 
     parser.add_argument('-kr_w',
