@@ -16,7 +16,7 @@ import sys
 from datetime import datetime
 from scipy.integrate import quad
 
-print("Meep version:", mp.__version__, end="\n\n")
+print("Meep version:", mp.__version__)
 
 
 def complex_quad(func, a, b, **kwargs):
@@ -74,9 +74,9 @@ def main(args):
     sx = 10
     sy = 10
     pml_thickness = 0.25
-    freq = 5
+    freq = 12
     runtime = 90
-    pixel = 6
+    pixel = 15
     #source_shift = 0
     source_shift = -0.4*(sx - 2*pml_thickness)
 
@@ -169,22 +169,32 @@ def main(args):
     # (purpose: calculate field amplitude at light source position if not
     #           coinciding with beam waist)
     # --------------------------------------------------------------------------
-    def integrand(k_y, f, x, y):
-        """..."""
-        return f(k_y) * sp.exp(1.0j*(x*math.sqrt(k1**2 - k_y**2) + k_y*y))
-
     def psi(r, f, x):
-        """..."""
-        result, real_tol, imag_tol = complex_quad(lambda k_y:
-                                                  integrand(k_y, f, x, r.y),
-                                                  -k1, k1)
+        """Field amplitude function."""
+        
+        try:
+            getattr(psi, "called")
+        except AttributeError:
+            psi.called = True
+            print("Calculating inital field configuration. "
+                  "This will take some time...") 
+            
+        def phi(k_y, x, y):
+            """Phase function."""
+            return x*math.sqrt(k1**2 - k_y**2) + k_y*y
+            
+        (result, 
+         real_tol, 
+         imag_tol) = complex_quad(lambda k_y: f(k_y) * sp.exp(1.0j*phi(k_y, x, r.y)), 
+                                  -k1, k1, limit=100)
+        
         return result
 
 
     # --------------------------------------------------------------------------
     # display values of physical variables
     # --------------------------------------------------------------------------
-    print("\n")
+    print()
     print("Specified variables and derived values:")
     print("n1:", n1)
     print("n2:", n2)
@@ -194,13 +204,14 @@ def main(args):
     print("kr_w: ", kr_w)
     print("k_vac:", k_vac)
     print("polarisation:", "s" if s_pol else "p")
-    print("\n")
+    print()
 
     # --------------------------------------------------------------------------
     # specify current source, output functions and run simulation
     # --------------------------------------------------------------------------
     force_complex_fields = False          # default: False
     eps_averaging = True                  # default: True
+    filename_prefix = None
 
     sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                          component=mp.Ez if s_pol else mp.Ey,
@@ -222,6 +233,7 @@ def main(args):
                         resolution=resolution,
                         force_complex_fields=force_complex_fields,
                         eps_averaging=eps_averaging,
+                        filename_prefix=filename_prefix
                         )
 
     sim.use_output_directory()   # put output files in a separate folder
@@ -278,7 +290,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-kw_0',
                         type=float,
-                        default=12,
+                        default=7,
                         help='beam width (>5 is good) (default: %(default)s)')
 
     parser.add_argument('-kr_w',
