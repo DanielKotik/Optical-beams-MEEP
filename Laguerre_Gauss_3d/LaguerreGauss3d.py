@@ -227,7 +227,7 @@ def main(args):
                         sources=sources,
                         resolution=resolution,
                         force_complex_fields=force_complex_fields,
-                        eps_averaging=eps_averaging,
+                        eps_averaging=eps_averaging
                         )
 
     sim.use_output_directory("interface")   # put output files in a separate folder
