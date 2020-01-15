@@ -108,36 +108,16 @@ def main(args):
         cos_alpha = math.cos(alpha)
         return (sx/2) * (((math.sqrt(2) - cos_alpha) - sin_alpha) / sin_alpha)
 
-    cell = mp.Vector3(sx, sy, 0)  # geometry-lattice
+    cell = mp.Vector3(sx, sy, sz)  # geometry-lattice
 
-    if interface == "planar":
-        default_material = mp.Medium(index=n1)
-        # located at lower right edge for 45 degree
-        geometry = [mp.Block(size=mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
-                             center=mp.Vector3(sx/2 + Delta_x(alpha(chi_deg)), -sy/2),
-                             e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
-                             e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
-                             e3=mp.Vector3(0, 0, 1),
-                             material=mp.Medium(index=n2))]
-    elif interface == "concave":
-        default_material = mp.Medium(index=n2)
-        # move center to the right in order to ensure that the point of impact 
-        # is always centrally placed
-        geometry = [mp.Cylinder(center=mp.Vector3(-r_c*math.cos(math.radians(chi_deg)),
-                                                  +r_c*math.sin(math.radians(chi_deg))),
-                                height=mp.inf,
-                                radius=r_c,
-                                material=mp.Medium(index=n1))]
-    elif interface == "convex":
-        default_material = mp.Medium(index=n1)
-        # move center to the right in order to ensure that the point of impact 
-        # is always centrally placed
-        geometry = [mp.Cylinder(center=mp.Vector3(+r_c*math.cos(math.radians(chi_deg)),
-                                                  -r_c*math.sin(math.radians(chi_deg))),
-                                height=mp.inf,
-                                radius=r_c,
-                                material=mp.Medium(index=n2))]
-        
+    default_material = mp.Medium(index=n1)
+    # located at lower right edge for 45 degree tilt
+    geometry = [mp.Block(size=mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
+                         center=mp.Vector3(sx/2 + Delta_x(alpha(chi_deg)), -sy/2),
+                         e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
+                         e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
+                         e3=mp.Vector3(0, 0, 1),
+                         material=mp.Medium(index=n2))]
         
     # --------------------------------------------------------------------------
     # add absorbing boundary conditions and discretize structure
@@ -145,7 +125,7 @@ def main(args):
     pml_layers = [mp.PML(pml_thickness)]
     resolution = pixel * (n1 if n1 > n2 else n2) * freq
     # set Courant factor (mandatory if either n1 or n2 is smaller than 1)
-    Courant = (n1 if n1 < n2 else n2) / 2
+    Courant = (n1 if n1 < n2 else n2) / 3
 
     # --------------------------------------------------------------------------
     # beam profile distribution (field amplitude) at the waist of the beam
