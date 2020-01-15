@@ -42,7 +42,7 @@
 (define-param kr_w   0)                     ; beam waist distance to interface (30 to 50 is good if
                                             ; source position coincides with beam waist)
 (define-param M  0)                         ; center of integration window
-(define-param W  4)                         ; width of integration window
+(set-param!   W  4)                         ; width of integration window
 
 (define (Critical n1 n2)                    ; calculates the critical angle in degrees
     (cond
