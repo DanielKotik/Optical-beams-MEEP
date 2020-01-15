@@ -128,12 +128,17 @@ def main(args):
     Courant = (n1 if n1 < n2 else n2) / 3
 
     # --------------------------------------------------------------------------
-    # beam profile distribution (field amplitude) at the waist of the beam
+    # 2d-beam profile distribution (field amplitude) at the waist of the beam
     # --------------------------------------------------------------------------
     def Gauss(r, W_y=w_0):
         """Gauss profile."""
-        return math.exp(-(r.y / W_y)**2)
-
+        return math.exp(-((r.y**2 + r.z**2) / W_y**2))
+    
+    # --------------------------------------------------------------------------
+    # some test outputs (uncomment if needed)
+    # --------------------------------------------------------------------------
+    #print("Gauss 2d beam profile:", Gauss(r=mp.Vector3(0, 0.5, 0.2), w_0))
+    
     # --------------------------------------------------------------------------
     # spectrum amplitude distribution
     # --------------------------------------------------------------------------
