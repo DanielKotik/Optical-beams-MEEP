@@ -19,18 +19,6 @@ from scipy.integrate import quad
 print("Meep version:", mp.__version__)
 
 
-def interfaceType(string):
-    """..."""
-    value = string
-    if (value != "planar" and
-        value != "concave" and
-        value != "convex"):
-        raise argparse.ArgumentTypeError('Value has to be either concave, '
-                                         'convex or planar (but %s is provided)'
-                                         % value)
-    return value
-
-
 def complex_quad(func, a, b, **kwargs):
     """Integrate real and imaginary part of the given function."""
     def real_integral():
@@ -84,8 +72,9 @@ def main(args):
     # TODO: add short comments for every parameter
     sx = 5
     sy = 5
+    sz = 4
     pml_thickness = 0.25
-    freq = 12
+    freq = 5
     runtime = 10
     pixel = 10
     source_shift = -2.15
@@ -276,13 +265,13 @@ if __name__ == '__main__':
     
     parser.add_argument('-n1',
                         type=float,
-                        default=1.54,
+                        default=1.00,
                         help=('index of refraction of the incident medium '
                               '(default: %(default)s)'))
 
     parser.add_argument('-n2',
                         type=float,
-                        default=1.00,
+                        default=1.54,
                         help=('index of refraction of the refracted medium '
                               '(default: %(default)s)'))
 
@@ -300,7 +289,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-kr_w',
                         type=float,
-                        default=60,
+                        default=0,
                         help=('beam waist distance to interface (30 to 50 is '
                               'good if source position coincides with beam '
                               'waist) (default: %(default)s)'))
