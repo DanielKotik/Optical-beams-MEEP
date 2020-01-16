@@ -78,6 +78,7 @@ def main(args):
     runtime = 10
     pixel = 10
     source_shift = -2.15
+    chi_rad = math.radians(chi_deg)
 
     # --------------------------------------------------------------------------
     # derived Meep parameters (do not change)
@@ -98,9 +99,9 @@ def main(args):
     # placement of the dielectric interface within the computational cell
     # --------------------------------------------------------------------------
     # helper functions
-    def alpha(chi_deg):
+    def alpha(chi_rad):
         """Angle of inclined plane with y-axis in radians."""
-        return math.pi/2 - math.radians(chi_deg)
+        return math.pi/2 - chi_rad
 
     def Delta_x(alpha):
         """Inclined plane offset to the center of the cell."""
@@ -113,9 +114,9 @@ def main(args):
     default_material = mp.Medium(index=n1)
     # located at lower right edge for 45 degree tilt
     geometry = [mp.Block(size=mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
-                         center=mp.Vector3(sx/2 + Delta_x(alpha(chi_deg)), -sy/2),
-                         e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
-                         e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
+                         center=mp.Vector3(sx/2 + Delta_x(alpha(chi_rad)), -sy/2),
+                         e1=mp.Vector3(1/math.tan(alpha(chi_rad)), 1, 0),
+                         e2=mp.Vector3(-1, 1/math.tan(alpha(chi_rad)), 0),
                          e3=mp.Vector3(0, 0, 1),
                          material=mp.Medium(index=n2))]
         
