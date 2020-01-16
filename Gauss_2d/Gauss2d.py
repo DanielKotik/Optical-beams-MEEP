@@ -102,14 +102,15 @@ def main(args):
     w_0 = kw_0 / (n_ref * k_vac)
     r_c = kr_c / (n_ref * k_vac)
     shift = source_shift + rw
+    chi_rad = math.radians(chi_deg)
 
     # --------------------------------------------------------------------------
     # placement of the dielectric interface within the computational cell
     # --------------------------------------------------------------------------
     # helper functions
-    def alpha(chi_deg):
+    def alpha(chi_rad):
         """Angle of inclined plane with y-axis in radians."""
-        return math.pi/2 - math.radians(chi_deg)
+        return math.pi/2 - chi_rad
 
     def Delta_x(alpha):
         """Inclined plane offset to the center of the cell."""
@@ -123,18 +124,18 @@ def main(args):
         default_material = mp.Medium(index=n1)
         # located at lower right edge for 45 degree
         geometry = [mp.Block(size=mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
-                             center=mp.Vector3(+sx/2 + Delta_x(alpha(chi_deg)),
+                             center=mp.Vector3(+sx/2 + Delta_x(alpha(chi_rad)),
                                                -sy/2),
-                             e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
-                             e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
+                             e1=mp.Vector3(1/math.tan(alpha(chi_rad)), 1, 0),
+                             e2=mp.Vector3(-1, 1/math.tan(alpha(chi_rad)), 0),
                              e3=mp.Vector3(0, 0, 1),
                              material=mp.Medium(index=n2))]
     elif interface == "concave":
         default_material = mp.Medium(index=n2)
         # move center to the right in order to ensure that the point of impact
         # is always centrally placed
-        geometry = [mp.Cylinder(center=mp.Vector3(-r_c*math.cos(math.radians(chi_deg)),
-                                                  +r_c*math.sin(math.radians(chi_deg))),
+        geometry = [mp.Cylinder(center=mp.Vector3(-r_c*math.cos(chi_rad),
+                                                  +r_c*math.sin(chi_rad)),
                                 height=mp.inf,
                                 radius=r_c,
                                 material=mp.Medium(index=n1))]
@@ -142,8 +143,8 @@ def main(args):
         default_material = mp.Medium(index=n1)
         # move center to the right in order to ensure that the point of impact
         # is always centrally placed
-        geometry = [mp.Cylinder(center=mp.Vector3(+r_c*math.cos(math.radians(chi_deg)),
-                                                  -r_c*math.sin(math.radians(chi_deg))),
+        geometry = [mp.Cylinder(center=mp.Vector3(+r_c*math.cos(chi_rad),
+                                                  -r_c*math.sin(chi_rad)),
                                 height=mp.inf,
                                 radius=r_c,
                                 material=mp.Medium(index=n2))]
