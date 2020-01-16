@@ -11,7 +11,6 @@ import argparse
 import math
 import meep as mp
 import scipy as sp
-import sys
 
 from datetime import datetime
 from scipy.integrate import quad
