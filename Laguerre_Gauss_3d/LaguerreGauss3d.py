@@ -19,18 +19,6 @@ from scipy.integrate import quad
 print("Meep version:", mp.__version__)
 
 
-def interfaceType(string):
-    """..."""
-    value = string
-    if (value != "planar" and
-        value != "concave" and
-        value != "convex"):
-        raise argparse.ArgumentTypeError('Value has to be either concave, '
-                                         'convex or planar (but %s is provided)'
-                                         % value)
-    return value
-
-
 def complex_quad(func, a, b, **kwargs):
     """Integrate real and imaginary part of the given function."""
     def real_integral():
@@ -84,11 +72,13 @@ def main(args):
     # TODO: add short comments for every parameter
     sx = 5
     sy = 5
+    sz = 4
     pml_thickness = 0.25
-    freq = 12
+    freq = 5
     runtime = 10
     pixel = 10
     source_shift = -2.15
+    chi_rad = math.radians(chi_deg)
 
     # --------------------------------------------------------------------------
     # derived Meep parameters (do not change)
@@ -100,16 +90,18 @@ def main(args):
              n2 if ref_medium == 2 else math.nan)
     rw = kr_w / (n_ref * k_vac)  # TODO: rw --> r_w
     w_0 = kw_0 / (n_ref * k_vac)
-    r_c = kr_c / (n_ref * k_vac)
     shift = source_shift + rw
-
+    s_pol = True if (e_z == 1 and e_y == 0) else False
+    p_pol = True if (e_z == 0 and e_y == 1) else False
+    a_pol = True if (not s_pol and not p_pol) else False
+    
     # --------------------------------------------------------------------------
     # placement of the dielectric interface within the computational cell
     # --------------------------------------------------------------------------
     # helper functions
-    def alpha(chi_deg):
+    def alpha(chi_rad):
         """Angle of inclined plane with y-axis in radians."""
-        return math.pi/2 - math.radians(chi_deg)
+        return math.pi/2 - chi_rad
 
     def Delta_x(alpha):
         """Inclined plane offset to the center of the cell."""
@@ -117,36 +109,16 @@ def main(args):
         cos_alpha = math.cos(alpha)
         return (sx/2) * (((math.sqrt(2) - cos_alpha) - sin_alpha) / sin_alpha)
 
-    cell = mp.Vector3(sx, sy, 0)  # geometry-lattice
+    cell = mp.Vector3(sx, sy, sz)  # geometry-lattice
 
-    if interface == "planar":
-        default_material = mp.Medium(index=n1)
-        # located at lower right edge for 45 degree
-        geometry = [mp.Block(size=mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
-                             center=mp.Vector3(sx/2 + Delta_x(alpha(chi_deg)), -sy/2),
-                             e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
-                             e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
-                             e3=mp.Vector3(0, 0, 1),
-                             material=mp.Medium(index=n2))]
-    elif interface == "concave":
-        default_material = mp.Medium(index=n2)
-        # move center to the right in order to ensure that the point of impact 
-        # is always centrally placed
-        geometry = [mp.Cylinder(center=mp.Vector3(-r_c*math.cos(math.radians(chi_deg)),
-                                                  +r_c*math.sin(math.radians(chi_deg))),
-                                height=mp.inf,
-                                radius=r_c,
-                                material=mp.Medium(index=n1))]
-    elif interface == "convex":
-        default_material = mp.Medium(index=n1)
-        # move center to the right in order to ensure that the point of impact 
-        # is always centrally placed
-        geometry = [mp.Cylinder(center=mp.Vector3(+r_c*math.cos(math.radians(chi_deg)),
-                                                  -r_c*math.sin(math.radians(chi_deg))),
-                                height=mp.inf,
-                                radius=r_c,
-                                material=mp.Medium(index=n2))]
-        
+    default_material = mp.Medium(index=n1)
+    # located at lower right edge for 45 degree tilt
+    geometry = [mp.Block(size=mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
+                         center=mp.Vector3(sx/2 + Delta_x(alpha(chi_rad)), -sy/2),
+                         e1=mp.Vector3(1/math.tan(alpha(chi_rad)), 1, 0),
+                         e2=mp.Vector3(-1, 1/math.tan(alpha(chi_rad)), 0),
+                         e3=mp.Vector3(0, 0, 1),
+                         material=mp.Medium(index=n2))]
         
     # --------------------------------------------------------------------------
     # add absorbing boundary conditions and discretize structure
@@ -154,15 +126,20 @@ def main(args):
     pml_layers = [mp.PML(pml_thickness)]
     resolution = pixel * (n1 if n1 > n2 else n2) * freq
     # set Courant factor (mandatory if either n1 or n2 is smaller than 1)
-    Courant = (n1 if n1 < n2 else n2) / 2
+    Courant = (n1 if n1 < n2 else n2) / 3
 
     # --------------------------------------------------------------------------
-    # beam profile distribution (field amplitude) at the waist of the beam
+    # 2d-beam profile distribution (field amplitude) at the waist of the beam
     # --------------------------------------------------------------------------
     def Gauss(r, W_y=w_0):
         """Gauss profile."""
-        return math.exp(-(r.y / W_y)**2)
-
+        return math.exp(-((r.y**2 + r.z**2) / W_y**2))
+    
+    # --------------------------------------------------------------------------
+    # some test outputs (uncomment if needed)
+    # --------------------------------------------------------------------------
+    #print("Gauss 2d beam profile:", Gauss(r=mp.Vector3(0, 0.5, 0.2), w_0))
+    
     # --------------------------------------------------------------------------
     # spectrum amplitude distribution
     # --------------------------------------------------------------------------
@@ -276,13 +253,13 @@ if __name__ == '__main__':
     
     parser.add_argument('-n1',
                         type=float,
-                        default=1.54,
+                        default=1.00,
                         help=('index of refraction of the incident medium '
                               '(default: %(default)s)'))
 
     parser.add_argument('-n2',
                         type=float,
-                        default=1.00,
+                        default=1.54,
                         help=('index of refraction of the refracted medium '
                               '(default: %(default)s)'))
 
@@ -300,7 +277,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-kr_w',
                         type=float,
-                        default=60,
+                        default=0,
                         help=('beam waist distance to interface (30 to 50 is '
                               'good if source position coincides with beam '
                               'waist) (default: %(default)s)'))
