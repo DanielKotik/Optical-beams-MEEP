@@ -109,12 +109,12 @@ def main(args):
     cell = mp.Vector3(sx, sy, 0)  # geometry-lattice
     default_material = mp.Medium(index=n1)
     geometry = [mp.Block(mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
-                         center=mp.Vector3(sx/2 + Delta_x(alpha(chi_deg)), -sy/2),
+                         center=mp.Vector3(+sx/2 + Delta_x(alpha(chi_deg)),
+                                           -sy/2),
                          e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
                          e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
                          e3=mp.Vector3(0, 0, 1),
                          material=mp.Medium(index=n2))]
-
 
     # --------------------------------------------------------------------------
     # add absorbing boundary conditions and discretize structure
@@ -123,7 +123,6 @@ def main(args):
     resolution = pixel * (n1 if n1 > n2 else n2) * freq
     # set Courant factor (mandatory if either n1 or n2 is smaller than 1)
     Courant = (n1 if n1 < n2 else n2) / 2
-
 
     # --------------------------------------------------------------------------
     # beam profile distribution (field amplitude) at the waist of the beam
@@ -149,7 +148,7 @@ def main(args):
     # --------------------------------------------------------------------------
     def Heaviside(x):
         """Heaviside (Theta) function."""
-        return 0 if x<0 else 1
+        return 0 if x < 0 else 1
 
     def f_Gauss(k_y, W_y=w_0):
         """Gaussian spectrum amplitude."""
@@ -171,25 +170,23 @@ def main(args):
     # --------------------------------------------------------------------------
     def psi(r, f, x):
         """Field amplitude function."""
-        
         try:
             getattr(psi, "called")
         except AttributeError:
             psi.called = True
             print("Calculating inital field configuration. "
-                  "This will take some time...") 
-            
+                  "This will take some time...")
+
         def phi(k_y, x, y):
             """Phase function."""
             return x*math.sqrt(k1**2 - k_y**2) + k_y*y
-            
-        (result, 
-         real_tol, 
-         imag_tol) = complex_quad(lambda k_y: f(k_y) * sp.exp(1.0j*phi(k_y, x, r.y)), 
-                                  -k1, k1, limit=100)
-        
-        return result
 
+        (result,
+         real_tol,
+         imag_tol) = complex_quad(lambda k_y: f(k_y) * sp.exp(1.0j*phi(k_y, x, r.y)),
+                                  -k1, k1, limit=100)
+
+        return result
 
     # --------------------------------------------------------------------------
     # display values of physical variables
