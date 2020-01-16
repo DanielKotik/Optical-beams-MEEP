@@ -20,7 +20,7 @@ print("Meep version:", mp.__version__)
 
 
 def interfaceType(string):
-    """..."""
+    """Provide interface argument type."""
     value = string
     if (value != "planar" and
         value != "concave" and
@@ -123,14 +123,15 @@ def main(args):
         default_material = mp.Medium(index=n1)
         # located at lower right edge for 45 degree
         geometry = [mp.Block(size=mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
-                             center=mp.Vector3(sx/2 + Delta_x(alpha(chi_deg)), -sy/2),
+                             center=mp.Vector3(+sx/2 + Delta_x(alpha(chi_deg)),
+                                               -sy/2),
                              e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
                              e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
                              e3=mp.Vector3(0, 0, 1),
                              material=mp.Medium(index=n2))]
     elif interface == "concave":
         default_material = mp.Medium(index=n2)
-        # move center to the right in order to ensure that the point of impact 
+        # move center to the right in order to ensure that the point of impact
         # is always centrally placed
         geometry = [mp.Cylinder(center=mp.Vector3(-r_c*math.cos(math.radians(chi_deg)),
                                                   +r_c*math.sin(math.radians(chi_deg))),
@@ -139,15 +140,14 @@ def main(args):
                                 material=mp.Medium(index=n1))]
     elif interface == "convex":
         default_material = mp.Medium(index=n1)
-        # move center to the right in order to ensure that the point of impact 
+        # move center to the right in order to ensure that the point of impact
         # is always centrally placed
         geometry = [mp.Cylinder(center=mp.Vector3(+r_c*math.cos(math.radians(chi_deg)),
                                                   -r_c*math.sin(math.radians(chi_deg))),
                                 height=mp.inf,
                                 radius=r_c,
                                 material=mp.Medium(index=n2))]
-        
-        
+
     # --------------------------------------------------------------------------
     # add absorbing boundary conditions and discretize structure
     # --------------------------------------------------------------------------
@@ -183,16 +183,16 @@ def main(args):
             psi.called = True
             print("Calculating inital field configuration. "
                   "This will take some time...")
-        
+
         def phi(k_y, x, y):
             """Phase function."""
             return x*math.sqrt(k1**2 - k_y**2) + k_y*y
 
         (result,
          real_tol,
-         imag_tol) = complex_quad(lambda k_y: f(k_y) * sp.exp(1.0j*phi(k_y, x, r.y)), 
+         imag_tol) = complex_quad(lambda k_y: f(k_y) * sp.exp(1.0j*phi(k_y, x, r.y)),
                                   -k1, k1)
-        
+
         return result
 
     # --------------------------------------------------------------------------
@@ -240,8 +240,8 @@ def main(args):
                         eps_averaging=eps_averaging,
                         filename_prefix=filename_prefix
                         )
-    
-    sim.use_output_directory(interface)   # put output files in a separate folder
+
+    sim.use_output_directory(interface)  # put output files in a separate folder
 
     def eSquared(r, ex, ey, ez):
         """Calculate |E|^2.
@@ -262,7 +262,7 @@ def main(args):
             mp.at_end(mp.output_efield_z if s_pol else mp.output_efield_y),
             mp.at_end(output_efield2),
             until=runtime)
-    
+
     print("\nend time:", datetime.now())
 
 
