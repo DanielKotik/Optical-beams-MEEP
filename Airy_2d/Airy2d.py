@@ -91,14 +91,15 @@ def main(args):
     rw = kr_w / (n_ref * k_vac)
     w_0 = kw_0 / (n_ref * k_vac)
     shift = source_shift + rw
+    chi_rad = math.radians(chi_deg)
 
     # --------------------------------------------------------------------------
     # placement of the dielectric interface within the computational cell
     # --------------------------------------------------------------------------
     # helper functions
-    def alpha(chi_deg):
+    def alpha(chi_rad):
         """Angle of inclined plane with y-axis in radians."""
-        return math.pi/2 - math.radians(chi_deg)
+        return math.pi/2 - chi_rad
 
     def Delta_x(alpha):
         """Inclined plane offset to the center of the cell."""
@@ -109,10 +110,10 @@ def main(args):
     cell = mp.Vector3(sx, sy, 0)  # geometry-lattice
     default_material = mp.Medium(index=n1)
     geometry = [mp.Block(mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
-                         center=mp.Vector3(+sx/2 + Delta_x(alpha(chi_deg)),
+                         center=mp.Vector3(+sx/2 + Delta_x(alpha(chi_rad)),
                                            -sy/2),
-                         e1=mp.Vector3(1/math.tan(alpha(chi_deg)), 1, 0),
-                         e2=mp.Vector3(-1, 1/math.tan(alpha(chi_deg)), 0),
+                         e1=mp.Vector3(1/math.tan(alpha(chi_rad)), 1, 0),
+                         e2=mp.Vector3(-1, 1/math.tan(alpha(chi_rad)), 0),
                          e3=mp.Vector3(0, 0, 1),
                          material=mp.Medium(index=n2))]
 
