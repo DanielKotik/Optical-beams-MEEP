@@ -141,11 +141,21 @@ def main(args):
     #print("Gauss 2d beam profile:", Gauss(r=mp.Vector3(0, 0.5, 0.2), w_0))
 
     # --------------------------------------------------------------------------
-    # spectrum amplitude distribution
+    # spectrum amplitude distribution(s)
     # --------------------------------------------------------------------------
-    def f_Gauss(k_y, W_y=w_0):
-        """Gaussian spectrum amplitude."""
-        return math.exp(-(k_y*W_y/2)**2)
+    
+    # cartesian coordinates (not recommmended) -------------------------
+    def f_Gauss_cartesian(k_y, k_z, W_y=w_0):
+        """2d-Gaussian spectrum amplitude."""
+        return math.exp(-W_y**2 * (k_y**2 + k_z**2)/4)
+    
+    def f_Laguerre_Gauss_cartesian(k_y, k_z, W_y=w_0, m=m_charge):
+        """Laguerre-Gaussian spectrum amplitude."""
+        return f_Gauss_cartesian(k_y, k_z, W_y) * \
+               sp.exp(1j*m*phi(k_y, k_z, k1)) * theta(k_y, k_z, k1)**abs(m)
+    
+    # spherical coordinates --------------------------------------------
+    # coordinate transformation: from k-space to (theta, phi)-space
 
     # --------------------------------------------------------------------------
     # plane wave decomposition
