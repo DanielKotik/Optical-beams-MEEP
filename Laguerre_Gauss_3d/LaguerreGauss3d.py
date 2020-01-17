@@ -50,7 +50,7 @@ def main(args):
     # --------------------------------------------------------------------------
     e_z = args.e_z
     e_y = args.e_y
-    
+
     m_charge = args.m_charge
     ref_medium = args.ref_medium
 
@@ -93,7 +93,7 @@ def main(args):
     s_pol = True if (e_z == 1 and e_y == 0) else False
     p_pol = True if (e_z == 0 and e_y == 1) else False
     a_pol = True if (not s_pol and not p_pol) else False
-    
+
     # --------------------------------------------------------------------------
     # placement of the dielectric interface within the computational cell
     # --------------------------------------------------------------------------
@@ -113,12 +113,13 @@ def main(args):
     default_material = mp.Medium(index=n1)
     # located at lower right edge for 45 degree tilt
     geometry = [mp.Block(size=mp.Vector3(mp.inf, sx*math.sqrt(2), mp.inf),
-                         center=mp.Vector3(sx/2 + Delta_x(alpha(chi_rad)), -sy/2),
+                         center=mp.Vector3(+sx/2 + Delta_x(alpha(chi_rad)),
+                                           -sy/2),
                          e1=mp.Vector3(1/math.tan(alpha(chi_rad)), 1, 0),
                          e2=mp.Vector3(-1, 1/math.tan(alpha(chi_rad)), 0),
                          e3=mp.Vector3(0, 0, 1),
                          material=mp.Medium(index=n2))]
-        
+
     # --------------------------------------------------------------------------
     # add absorbing boundary conditions and discretize structure
     # --------------------------------------------------------------------------
@@ -133,12 +134,12 @@ def main(args):
     def Gauss(r, W_y=w_0):
         """Gauss profile."""
         return math.exp(-((r.y**2 + r.z**2) / W_y**2))
-    
+
     # --------------------------------------------------------------------------
     # some test outputs (uncomment if needed)
     # --------------------------------------------------------------------------
     #print("Gauss 2d beam profile:", Gauss(r=mp.Vector3(0, 0.5, 0.2), w_0))
-    
+
     # --------------------------------------------------------------------------
     # spectrum amplitude distribution
     # --------------------------------------------------------------------------
@@ -172,12 +173,9 @@ def main(args):
     print("chi:  ", chi_deg, " [degree]")
     print("incl.:", 90 - chi_deg, " [degree]")
     print("kw_0: ", kw_0)
-    if interface != "planar":
-        print("kr_c: ", kr_c)
     print("kr_w: ", kr_w)
     print("k_vac:", k_vac)
     print("polarisation:", "s" if s_pol else "p")
-    print("interface:", interface)
     print()
 
     # --------------------------------------------------------------------------
@@ -233,23 +231,23 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    
+
     parser.add_argument('-e_z',
                         type=complex,
                         default=1,
                         help='z-component of Jones vector (default: %(default)s)')
-    
+
     parser.add_argument('-e_y',
                         type=complex,
                         default=0,
                         help='y-component of Jones vector (default: %(default)s)')
-    
+
     parser.add_argument('-m_charge',
                         type=int,
                         default=2,
                         help=('vortex charge (azimuthal quantum number)'
                               ' (default: %(default)s)'))
-    
+
     parser.add_argument('-n1',
                         type=float,
                         default=1.00,
