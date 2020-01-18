@@ -166,6 +166,24 @@ def main(args):
         #return math.acos(sp.sqrt(k**2 - k_y**2 - k_z**2).real / k)
         return math.acos(math.sqrt(k**2 - k_y**2 - k_z**2) / k)
 
+    def f_Gauss_spherical(sin_theta, W_y):
+        """..."""
+        return math.exp(-(k1*W_y*sin_theta/2)**2)
+    
+    def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, m):
+        """..."""
+        return f_Gauss_spherical(sin_theta, W_y) * theta**abs(m) * sp.exp(1j*m*phi)
+        
+    
+    # --------------------------------------------------------------------------
+    # some test outputs (uncomment if needed)
+    # --------------------------------------------------------------------------
+    #print("Gauss spectrum (cartesian):", f_Gauss_cartesian(k_y, k_z, w_0))
+    #print("Gauss spectrum (spherical):", f_Gauss_spherical(k_y, k_z, w_0))
+    #print("L-G spectrum   (cartesian):", f_Laguerre_Gauss_cartesian(...))
+    #print("L-G spectrum   (spherical):", f_Laguerre_Gauss_spherical(...))
+    
+
     # --------------------------------------------------------------------------
     # plane wave decomposition
     # (purpose: calculate field amplitude at light source position if not
