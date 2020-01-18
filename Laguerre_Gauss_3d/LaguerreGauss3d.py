@@ -178,10 +178,16 @@ def main(args):
     # --------------------------------------------------------------------------
     # some test outputs (uncomment if needed)
     # --------------------------------------------------------------------------
-    #print("Gauss spectrum (cartesian):", f_Gauss_cartesian(k_y, k_z, w_0))
-    #print("Gauss spectrum (spherical):", f_Gauss_spherical(k_y, k_z, w_0))
-    #print("L-G spectrum   (cartesian):", f_Laguerre_Gauss_cartesian(...))
-    #print("L-G spectrum   (spherical):", f_Laguerre_Gauss_spherical(...))
+    #print("Gauss spectrum (cartesian):", 
+    #      f_Gauss_cartesian(k_y, k_z, w_0))
+    #print("Gauss spectrum (spherical):", 
+    #      f_Gauss_spherical(math.sin(theta(k_y, k_z, k)), w_0))
+    #print("L-G spectrum   (cartesian):", 
+    #      f_Laguerre_Gauss_cartesian(k_y, k_z, w_0, m_charge))
+    #print("L-G spectrum   (spherical):", 
+    #      f_Laguerre_Gauss_spherical(math.sin(theta(k_y, k_z, k)), 
+    #                                 theta(k_y, k_z, k), phi(k_y, k_z)))
+          
     
 
     # --------------------------------------------------------------------------
