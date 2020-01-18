@@ -156,6 +156,15 @@ def main(args):
     
     # spherical coordinates --------------------------------------------
     # coordinate transformation: from k-space to (theta, phi)-space
+    def phi(k_y, k_z):
+        """..."""
+        return math.atan(-k_y / k_z)
+    
+    def theta(k_y, k_z, k):
+        """..."""
+        #return math.acos(np.lib.scimath.sqrt(k**2 - k_y**2 - k_z**2).real / k)
+        #return math.acos(sp.sqrt(k**2 - k_y**2 - k_z**2).real / k)
+        return math.acos(math.sqrt(k**2 - k_y**2 - k_z**2) / k)
 
     # --------------------------------------------------------------------------
     # plane wave decomposition
