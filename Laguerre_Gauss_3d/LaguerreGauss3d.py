@@ -11,6 +11,7 @@ import argparse
 import math
 import meep as mp
 import scipy as sp
+import sys
 
 from datetime import datetime
 from scipy.integrate import quad
@@ -64,6 +65,8 @@ def main(args):
     chi_deg = args.chi_deg
     #chi_deg = 1.0*Critical(n1, n2)
     #chi_deg = 0.95*Brewster(n1, n2)
+    
+    test_output = args.test_output
 
     # --------------------------------------------------------------------------
     # specific Meep parameters (may need to be adjusted - either here or via CLI)
@@ -136,9 +139,11 @@ def main(args):
         return math.exp(-((r.y**2 + r.z**2) / W_y**2))
 
     # --------------------------------------------------------------------------
-    # some test outputs (uncomment if needed)
+    # some test outputs
     # --------------------------------------------------------------------------
-    #print("Gauss 2d beam profile:", Gauss(r=mp.Vector3(0, 0.5, 0.2), w_0))
+    if test_output:
+        print("Gauss 2d beam profile:", Gauss(r=mp.Vector3(0, 0.5, 0.2), W_y=w_0))
+        print()
 
     # --------------------------------------------------------------------------
     # spectrum amplitude distribution(s)
@@ -152,7 +157,7 @@ def main(args):
     def f_Laguerre_Gauss_cartesian(k_y, k_z, W_y=w_0, m=m_charge):
         """Laguerre-Gaussian spectrum amplitude."""
         return f_Gauss_cartesian(k_y, k_z, W_y) * \
-               sp.exp(1j*m*phi(k_y, k_z, k1)) * theta(k_y, k_z, k1)**abs(m)
+               sp.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k1)**abs(m)
     
     # spherical coordinates --------------------------------------------
     # coordinate transformation: from k-space to (theta, phi)-space
@@ -176,19 +181,23 @@ def main(args):
         
     
     # --------------------------------------------------------------------------
-    # some test outputs (uncomment if needed)
+    # some test outputs
     # --------------------------------------------------------------------------
-    #print("Gauss spectrum (cartesian):", 
-    #      f_Gauss_cartesian(k_y, k_z, w_0))
-    #print("Gauss spectrum (spherical):", 
-    #      f_Gauss_spherical(math.sin(theta(k_y, k_z, k)), w_0))
-    #print("L-G spectrum   (cartesian):", 
-    #      f_Laguerre_Gauss_cartesian(k_y, k_z, w_0, m_charge))
-    #print("L-G spectrum   (spherical):", 
-    #      f_Laguerre_Gauss_spherical(math.sin(theta(k_y, k_z, k)), 
-    #                                 theta(k_y, k_z, k), phi(k_y, k_z)))
-          
-    
+    if test_output:
+        k_y, k_z = 1.0, 5.2
+        print("Gauss spectrum (cartesian):", 
+              f_Gauss_cartesian(k_y, k_z, w_0))
+        print("Gauss spectrum (spherical):", 
+              f_Gauss_spherical(math.sin(theta(k_y, k_z, k1)), w_0))
+        print()
+        print("L-G spectrum   (cartesian):", 
+              f_Laguerre_Gauss_cartesian(k_y, k_z, w_0, m_charge))
+        print("L-G spectrum   (spherical):", 
+              f_Laguerre_Gauss_spherical(math.sin(theta(k_y, k_z, k1)), 
+                                         theta(k_y, k_z, k1), 
+                                         phi(k_y, k_z), w_0, m_charge))
+        sys.exit()
+
 
     # --------------------------------------------------------------------------
     # plane wave decomposition
@@ -325,6 +334,10 @@ if __name__ == '__main__':
     parser.add_argument('-chi_deg',
                         type=float, default=45,
                         help='incidence angle in degrees (default: %(default)s)')
+    
+    parser.add_argument('-test_output',
+                        type=bool, default=False,
+                        help='enables test print statements (default: %(default)s)')
 
     args = parser.parse_args()
     main(args)
