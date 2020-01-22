@@ -202,9 +202,19 @@ def main(args):
     # (purpose: calculate field amplitude at light source position if not
     #           coinciding with beam waist)
     # --------------------------------------------------------------------------
-    def integrand(k_y, f, x, y):
+    def integrand_cartesian(k_y, k_z, f, x, y, z):
         """..."""
-        return f(k_y) * sp.exp(1.0j*(x*math.sqrt(k1**2 - k_y**2) + k_y*y))
+        return f(k_y, k_z) * sp.exp(1j*(x*math.sqrt(k1**2 - k_y**2 - k_z**2)
+                                        + y*k_y * z*k_z))
+
+    def integrand_spherical(theta, phi, f, x, y, z):
+        """..."""
+        sin_theta = math.sin(theta)
+        cos_theta = math.cos(theta)
+
+        return sin_theta * cos_theta * f(sin_theta, theta, phi) * \
+            sp.exp(1j*k1*(sin_theta*(y*math.sin(phi) - z*math.cos(phi))
+                          + cos_theta*x))
 
     def psi(r, f, x):
         """..."""
