@@ -65,7 +65,7 @@ def main(args):
     chi_deg = args.chi_deg
     #chi_deg = 1.0*Critical(n1, n2)
     #chi_deg = 0.95*Brewster(n1, n2)
-    
+
     test_output = args.test_output
 
     # --------------------------------------------------------------------------
@@ -142,31 +142,31 @@ def main(args):
     # some test outputs
     # --------------------------------------------------------------------------
     if test_output:
-        print("Gauss 2d beam profile:", Gauss(r=mp.Vector3(0, 0.5, 0.2), W_y=w_0))
+        print("Gauss 2d beam profile:", Gauss(mp.Vector3(0, 0.5, 0.2), w_0))
         print()
 
     # --------------------------------------------------------------------------
     # spectrum amplitude distribution(s)
     # --------------------------------------------------------------------------
-    
+
     # cartesian coordinates (not recommmended) -------------------------
     def f_Gauss_cartesian(k_y, k_z, W_y=w_0):
         """2d-Gaussian spectrum amplitude."""
         return math.exp(-W_y**2 * (k_y**2 + k_z**2)/4)
-    
+
     def f_Laguerre_Gauss_cartesian(k_y, k_z, W_y=w_0, m=m_charge):
         """Laguerre-Gaussian spectrum amplitude."""
         return f_Gauss_cartesian(k_y, k_z, W_y) * \
-               sp.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k1)**abs(m)
-    
+            sp.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k1)**abs(m)
+
     # spherical coordinates --------------------------------------------
     # coordinate transformation: from k-space to (theta, phi)-space
     def phi(k_y, k_z):
-        """..."""
+        """Azimuthal angle."""
         return math.atan(-k_y / k_z)
-    
+
     def theta(k_y, k_z, k):
-        """..."""
+        """Polar angle."""
         #return math.acos(np.lib.scimath.sqrt(k**2 - k_y**2 - k_z**2).real / k)
         #return math.acos(sp.sqrt(k**2 - k_y**2 - k_z**2).real / k)
         return math.acos(math.sqrt(k**2 - k_y**2 - k_z**2) / k)
@@ -174,30 +174,28 @@ def main(args):
     def f_Gauss_spherical(sin_theta, W_y):
         """..."""
         return math.exp(-(k1*W_y*sin_theta/2)**2)
-    
+
     def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, m):
         """..."""
         return f_Gauss_spherical(sin_theta, W_y) * theta**abs(m) * sp.exp(1j*m*phi)
-        
-    
+
     # --------------------------------------------------------------------------
     # some test outputs
     # --------------------------------------------------------------------------
     if test_output:
         k_y, k_z = 1.0, 5.2
-        print("Gauss spectrum (cartesian):", 
+        print("Gauss spectrum (cartesian):",
               f_Gauss_cartesian(k_y, k_z, w_0))
-        print("Gauss spectrum (spherical):", 
+        print("Gauss spectrum (spherical):",
               f_Gauss_spherical(math.sin(theta(k_y, k_z, k1)), w_0))
         print()
-        print("L-G spectrum   (cartesian):", 
+        print("L-G spectrum   (cartesian):",
               f_Laguerre_Gauss_cartesian(k_y, k_z, w_0, m_charge))
-        print("L-G spectrum   (spherical):", 
-              f_Laguerre_Gauss_spherical(math.sin(theta(k_y, k_z, k1)), 
-                                         theta(k_y, k_z, k1), 
+        print("L-G spectrum   (spherical):",
+              f_Laguerre_Gauss_spherical(math.sin(theta(k_y, k_z, k1)),
+                                         theta(k_y, k_z, k1),
                                          phi(k_y, k_z), w_0, m_charge))
         sys.exit()
-
 
     # --------------------------------------------------------------------------
     # plane wave decomposition
@@ -334,7 +332,7 @@ if __name__ == '__main__':
     parser.add_argument('-chi_deg',
                         type=float, default=45,
                         help='incidence angle in degrees (default: %(default)s)')
-    
+
     parser.add_argument('-test_output',
                         type=bool, default=False,
                         help='enables test print statements (default: %(default)s)')
