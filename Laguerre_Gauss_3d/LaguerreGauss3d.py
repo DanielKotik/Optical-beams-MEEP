@@ -216,13 +216,24 @@ def main(args):
             sp.exp(1j*k1*(sin_theta*(y*math.sin(phi) - z*math.cos(phi))
                           + cos_theta*x))
 
-    def psi(r, f, x):
+    def psi_cartesian(r, f, x):
         """..."""
-        result, real_tol, imag_tol = complex_quad(lambda k_y:
-                                                  integrand(k_y, f, x, r.y),
-                                                  -k1, k1)
+        (result,
+         real_tol,
+         imag_tol) = complex_quad(lambda k_y, k_z:
+                                  integrand_cartesian(k_y, k_z, f, x, r.y, r.z),
+                                  -k1, -k1, k1, k1)
         return result
 
+    def psi_spherical():
+        """..."""
+        (result,
+         real_tol,
+         imag_tol) = complex_quad(lambda theta, phi:
+                                  integrand_spherical(theta, phi, f, x, r.y, r.z),
+                                  0, 0, math.pi/2, 2*math.pi)
+
+        return k1**2 * result
     # --------------------------------------------------------------------------
     # display values of physical variables
     # --------------------------------------------------------------------------
