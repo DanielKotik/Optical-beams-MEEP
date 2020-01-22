@@ -11,6 +11,7 @@ import argparse
 import math
 import meep as mp
 import scipy as sp
+import sys
 
 from datetime import datetime
 from scipy.integrate import quad
@@ -66,6 +67,8 @@ def main(args):
     chi_deg = args.chi_deg
     #chi_deg = 1.0*Critical(n1, n2)
     #chi_deg = 0.95*Brewster(n1, n2)
+    
+    test_output = args.test_output
 
     # --------------------------------------------------------------------------
     # specific Meep parameters (may need to be adjusted - either here or via CLI)
@@ -138,10 +141,10 @@ def main(args):
         #print("%e, %e" % (real_tol, imag_tol))
         return result
 
-    # simple test outputs
-    #print("w_0:", w_0)
-    #print("Airy function 1:", Ai_inc(mp.Vector3(1,-0.3,1), w_0, 0, 4))
-    #sys.exit()
+    
+    if test_output:
+        print("w_0:", w_0)
+        print("Airy function 1:", Ai_inc(mp.Vector3(1,-0.3,1), w_0, 0, 4))
 
     # --------------------------------------------------------------------------
     # spectrum amplitude distribution
@@ -159,9 +162,9 @@ def main(args):
         return W_y*sp.exp(1.0j*(-1/3)*(k_y*W_y)**3)*Heaviside(W_y*k_y - (M-W))*Heaviside((M+W) - (W_y*k_y))
 
 
-    # simple test outputs
-    #print("Airy spectrum:", f_Airy(0.2, w_0, 0, 4))
-    #sys.exit()
+    if test_output:
+        print("Airy spectrum:", f_Airy(0.2, w_0, 0, 4))
+        sys.exit()
 
     # --------------------------------------------------------------------------
     # plane wave decomposition
@@ -310,6 +313,10 @@ if __name__ == '__main__':
     parser.add_argument('-chi_deg',
                         type=float, default=45,
                         help='incidence angle in degrees (default: %(default)s)')
+    
+    parser.add_argument('-test_output',
+                        type=bool, default=False,
+                        help='enables test print statements (default: %(default)s)')
 
     args = parser.parse_args()
     main(args)
