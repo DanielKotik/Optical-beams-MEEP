@@ -171,11 +171,11 @@ def main(args):
         #return math.acos(sp.sqrt(k**2 - k_y**2 - k_z**2).real / k)
         return math.acos(math.sqrt(k**2 - k_y**2 - k_z**2) / k)
 
-    def f_Gauss_spherical(sin_theta, W_y):
+    def f_Gauss_spherical(sin_theta, W_y=w_0):
         """..."""
         return math.exp(-(k1*W_y*sin_theta/2)**2)
 
-    def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, m):
+    def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, m=m_charge):
         """..."""
         return f_Gauss_spherical(sin_theta, W_y) * theta**abs(m) * sp.exp(1j*m*phi)
 
@@ -225,7 +225,7 @@ def main(args):
                                   -k1, -k1, k1, k1)
         return result
 
-    def psi_spherical():
+    def psi_spherical(r, f, x):
         """..."""
         (result,
          real_tol,
@@ -234,6 +234,23 @@ def main(args):
                                   0, 0, math.pi/2, 2*math.pi)
 
         return k1**2 * result
+    
+    # --------------------------------------------------------------------------
+    # some test outputs (uncomment if needed)
+    # --------------------------------------------------------------------------
+    if test_output:
+        k_y, k_z = 1.0, 5.2
+        x, y, z = -2.15, 0.4, 0.5
+        
+        print("integrand      (cartesian):", integrand_cartesian(k_y, k_z, 
+                                                                 f=f_Laguerre_Gauss_cartesian, x, y, z))
+        print("integrand      (spherical):", integrand_spherical(theta(k_y, k_z, k1), phi(k_y, k_z), 
+                                                                 f=f_Laguerre_Gauss_spherical, x, y, z))
+        print()    
+        print("psi            (cartesian):", psi_cartesian(mp.Vector3(0, y, z), f=f_Laguerre_Gauss_cartesian, x)
+        print("psi            (spherical):", psi_spherical(mp.Vector3(0, y, z), f=f_Laguerre_Gauss_spherical, x)
+        print("psi       (origin, simple):", Gauss(mp.Vector3(0, y, z))
+        
     # --------------------------------------------------------------------------
     # display values of physical variables
     # --------------------------------------------------------------------------
