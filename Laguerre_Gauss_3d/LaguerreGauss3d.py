@@ -276,9 +276,28 @@ def main(args):
     print("degree of circular polarisation:", 2*(-e_z.conjugate()*e_y).imag)
 
     # --------------------------------------------------------------------------
+    # exploiting symmetries to reduce computational effort
+    # (only possible for beams without intrinsic orbital angular momentum, i.e. 
+    #  no vortex charge)
+    # --------------------------------------------------------------------------
+
+    # The plane of incidence (x-y-plane) is a mirror plane which is characterised 
+    # to be orthogonal to the z-axis (symmetry of the geometric structure). 
+    # Symmetry of the sources must be ensured simultaneously, which is only
+    # possible for certain cases. If I am not mistaken this can only be achieved 
+    # for vortex free beams with pure s- or p-polarisation, i.e. where either 
+    # the Ez or Ey component is specified.
+    if m_charge == 0:
+        if s_pol:
+            symmetries = [mp.mirror-sym(direction=Z, phase=-1)]
+        if p_pol:
+            symmetries = [mp.mirror-sym(direction=Z, phase=+1)]
+        
+    
+    # --------------------------------------------------------------------------
     # specify current source, output functions and run simulation
     # --------------------------------------------------------------------------
-    force_complex_fields = False          # default: False
+    force_complex_fields = True           # default: True 
     eps_averaging = True                  # default: True
 
     sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
@@ -292,6 +311,7 @@ def main(args):
 
     sim = mp.Simulation(cell_size=cell,
                         boundary_layers=pml_layers,
+                        symmetries=symmetries,
                         default_material=default_material,
                         Courant=Courant,
                         geometry=geometry,
