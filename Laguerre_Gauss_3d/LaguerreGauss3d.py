@@ -234,37 +234,46 @@ def main(args):
                                   0, 0, math.pi/2, 2*math.pi)
 
         return k1**2 * result
-    
+
     # --------------------------------------------------------------------------
     # some test outputs (uncomment if needed)
     # --------------------------------------------------------------------------
     if test_output:
         k_y, k_z = 1.0, 5.2
         x, y, z = -2.15, 0.4, 0.5
-        
-        print("integrand      (cartesian):", integrand_cartesian(k_y, k_z, 
+
+        print("integrand      (cartesian):", integrand_cartesian(k_y, k_z,
                                                                  f=f_Laguerre_Gauss_cartesian, x, y, z))
-        print("integrand      (spherical):", integrand_spherical(theta(k_y, k_z, k1), phi(k_y, k_z), 
+        print("integrand      (spherical):", integrand_spherical(theta(k_y, k_z, k1), phi(k_y, k_z),
                                                                  f=f_Laguerre_Gauss_spherical, x, y, z))
-        print()    
-        print("psi            (cartesian):", psi_cartesian(mp.Vector3(0, y, z), f=f_Laguerre_Gauss_cartesian, x)
-        print("psi            (spherical):", psi_spherical(mp.Vector3(0, y, z), f=f_Laguerre_Gauss_spherical, x)
-        print("psi       (origin, simple):", Gauss(mp.Vector3(0, y, z))
-        
+        print()
+        print("psi            (cartesian):", psi_cartesian(mp.Vector3(0, y, z), f=f_Laguerre_Gauss_cartesian, x))
+        print("psi            (spherical):", psi_spherical(mp.Vector3(0, y, z), f=f_Laguerre_Gauss_spherical, x))
+        print("psi       (origin, simple):", Gauss(mp.Vector3(0, y, z)))
+
     # --------------------------------------------------------------------------
     # display values of physical variables
     # --------------------------------------------------------------------------
     print()
+    print("Expected output file size:",
+          round(8*(sx*sy*sz*resolution**3)/(1024**2)), "MiB")
     print("Specified variables and derived values:")
     print("n1:", n1)
     print("n2:", n2)
     print("chi:  ", chi_deg, " [degree]")
+    # interface inclination with respect to the x-axis
     print("incl.:", 90 - chi_deg, " [degree]")
     print("kw_0: ", kw_0)
     print("kr_w: ", kr_w)
     print("k_vac:", k_vac)
-    print("polarisation:", "s" if s_pol else "p")
-    print()
+    print("vortex charge:", m_charge)
+    print("Jones vector components: (e_z=", e_z, ", e_y=", e_y, ")")
+    print("--->", ("s-" if s_pol else
+                   "p-" if p_pol else
+                   "mixed-" if a_pol else None) + "polarisation")
+    print("degree of linear   polarisation at pi/4:",
+          2*(-e_z.conjugate()*e_y).real)
+    print("degree of circular polarisation:", 2*(-e_z.conjugate()*e_y).imag)
 
     # --------------------------------------------------------------------------
     # specify current source, output functions and run simulation
