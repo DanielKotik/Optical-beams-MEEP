@@ -359,10 +359,17 @@ def main(args):
         """
         return ex.imag**2 + ey.imag**2 + ez.imag**2
 
-    def output_efield2(sim):
-        """Output E-field intensity."""
-        name = "e2_s" if s_pol else "e2_p"
-        func = eSquared
+    def output_efield_real_squared(sim):
+        """Output E-field (real part) intensity."""
+        name = "e_real2_s" if s_pol else "e_real2_p" if p_pol else "e_real2_mixed"
+        func = efield_real_squared
+        cs = [mp.Ex, mp.Ey, mp.Ez]
+        return sim.output_field_function(name, cs, func, real_only=True)
+    
+    def output_efield_imag_squared(sim):
+        """Output E-field (imag part) intensity."""
+        name = "e_imag2_s" if s_pol else "e_imag2_p" if p_pol else "e_imag2_mixed"
+        func = efield_imag_squared
         cs = [mp.Ex, mp.Ey, mp.Ez]
         return sim.output_field_function(name, cs, func, real_only=True)
 
