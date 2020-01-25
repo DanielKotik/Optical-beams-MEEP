@@ -195,7 +195,6 @@ def main(args):
               f_Laguerre_Gauss_spherical(math.sin(theta(k_y, k_z, k1)),
                                          theta(k_y, k_z, k1),
                                          phi(k_y, k_z), w_0, m_charge))
-        sys.exit()
 
     # --------------------------------------------------------------------------
     # plane wave decomposition
@@ -251,6 +250,7 @@ def main(args):
         print("psi            (cartesian):", psi_cartesian(r, f_Laguerre_Gauss_cartesian, x))
         print("psi            (spherical):", psi_spherical(r, f_Laguerre_Gauss_spherical, x))
         print("psi       (origin, simple):", Gauss(r))
+        sys.exit()
 
     # --------------------------------------------------------------------------
     # display values of physical variables
