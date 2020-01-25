@@ -343,13 +343,21 @@ def main(args):
 
     sim.use_output_directory()   # put output files in a separate folder
 
-    def eSquared(r, ex, ey, ez):
-        """Calculate |E|^2.
+    def efield_real_squared(r, ex, ey, ez):
+        """Calculate |Re E|^2.
 
         With |.| denoting the complex modulus if 'force_complex_fields?'
         is set to true, otherwise |.| gives the Euclidean norm.
         """
-        return mp.Vector3(ex, ey, ez).norm()**2
+        return ex.real**2 + ey.real**2 + ez.real**2
+    
+    def efield_imag_squared(r, ex, ey, ez):
+        """Calculate |Im E|^2.
+
+        With |.| denoting the complex modulus if 'force_complex_fields?'
+        is set to true, otherwise |.| gives the Euclidean norm.
+        """
+        return ex.imag**2 + ey.imag**2 + ez.imag**2
 
     def output_efield2(sim):
         """Output E-field intensity."""
