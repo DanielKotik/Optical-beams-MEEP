@@ -171,7 +171,7 @@ def main(args):
         #return math.acos(sp.sqrt(k**2 - k_y**2 - k_z**2).real / k)
         return math.acos(math.sqrt(k**2 - k_y**2 - k_z**2) / k)
 
-    def f_Gauss_spherical(sin_theta, W_y=w_0):
+    def f_Gauss_spherical(sin_theta, theta, W_y=w_0):
         """..."""
         return math.exp(-(k1*W_y*sin_theta/2)**2)
 
@@ -300,14 +300,34 @@ def main(args):
     force_complex_fields = True           # default: True 
     eps_averaging = True                  # default: True
 
-    sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
-                         component=mp.Ez if s_pol else mp.Ey,
-                         size=mp.Vector3(0, 2, 0),
-                         center=mp.Vector3(source_shift, 0, 0),
-                         #amp_func=lambda r: Gauss(r, w_0)
-                         amp_func=lambda r: psi(r, lambda k_y: f_Gauss(k_y, w_0), shift)
-                         )
-               ]
+    sources = []
+    
+    if e_z != 0:
+        source_Ez = mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
+                             component=mp.Ez,
+                             amplitude=e_z,
+                             size=mp.Vector3(0, 3, 3),
+                             center=mp.Vector3(source_shift, 0, 0),
+                             #amp_func=lambda r: Gauss(r, w_0)
+                             #amp_func=lambda r: psi_spherical(r, lambda sin_theta, theta, phi: f_Gauss_spherical(sin_theta, theta, phi, w_0), shift),
+                             amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
+                             amp_func=lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)                             
+                             )
+        sources.append(source_Ez)
+        
+               
+    if e_y != 0:
+        source_Ey = mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
+                             component=mp.Ey,
+                             amplitude=e_y,
+                             size=mp.Vector3(0, 3, 3),
+                             center=mp.Vector3(source_shift, 0, 0),
+                             #amp_func=lambda r: Gauss(r, w_0)
+                             #amp_func=lambda r: psi_spherical(r, lambda sin_theta, theta, phi: f_Gauss_spherical(sin_theta, theta, phi, w_0), shift),
+                             amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
+                             amp_func=lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)                             
+                             )
+        sources.append(source_Ey)
 
     sim = mp.Simulation(cell_size=cell,
                         boundary_layers=pml_layers,
