@@ -244,12 +244,12 @@ def main(args):
         r = mp.Vector3(0, y, z)
 
         print("integrand      (cartesian):", integrand_cartesian(k_y, k_z,
-                                                                 f=f_Laguerre_Gauss_cartesian, x, y, z))
+                                                                 f_Laguerre_Gauss_cartesian, x, y, z))
         print("integrand      (spherical):", integrand_spherical(theta(k_y, k_z, k1), phi(k_y, k_z),
-                                                                 f=f_Laguerre_Gauss_spherical, x, y, z))
+                                                                 f_Laguerre_Gauss_spherical, x, y, z))
         print()
-        print("psi            (cartesian):", psi_cartesian(r, f=f_Laguerre_Gauss_cartesian, x))
-        print("psi            (spherical):", psi_spherical(r, f=f_Laguerre_Gauss_spherical, x))
+        print("psi            (cartesian):", psi_cartesian(r, f_Laguerre_Gauss_cartesian, x))
+        print("psi            (spherical):", psi_spherical(r, f_Laguerre_Gauss_spherical, x))
         print("psi       (origin, simple):", Gauss(r))
 
     # --------------------------------------------------------------------------
@@ -288,11 +288,12 @@ def main(args):
     # possible for certain cases. If I am not mistaken this can only be achieved 
     # for vortex free beams with pure s- or p-polarisation, i.e. where either 
     # the Ez or Ey component is specified.
+    symmetries = []
     if m_charge == 0:
         if s_pol:
-            symmetries = [mp.mirror-sym(direction=Z, phase=-1)]
+            symmetries.append(mp.mirror-sym(direction=Z, phase=-1))
         if p_pol:
-            symmetries = [mp.mirror-sym(direction=Z, phase=+1)]
+            symmetries.append(mp.mirror-sym(direction=Z, phase=+1))
         
     
     # --------------------------------------------------------------------------
@@ -311,8 +312,8 @@ def main(args):
                              center=mp.Vector3(source_shift, 0, 0),
                              #amp_func=lambda r: Gauss(r, w_0)
                              #amp_func=lambda r: psi_spherical(r, lambda sin_theta, theta, phi: f_Gauss_spherical(sin_theta, theta, phi, w_0), shift),
-                             amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
-                             amp_func=lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)                             
+                             amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else 
+                                      lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)                             
                              )
         sources.append(source_Ez)
         
@@ -326,7 +327,7 @@ def main(args):
                              #amp_func=lambda r: Gauss(r, w_0)
                              #amp_func=lambda r: psi_spherical(r, lambda sin_theta, theta, phi: f_Gauss_spherical(sin_theta, theta, phi, w_0), shift),
                              amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
-                             amp_func=lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)                             
+                                      lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)                             
                              )
         sources.append(source_Ey)
 
