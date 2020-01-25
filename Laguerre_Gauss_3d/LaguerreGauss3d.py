@@ -241,15 +241,16 @@ def main(args):
     if test_output:
         k_y, k_z = 1.0, 5.2
         x, y, z = -2.15, 0.4, 0.5
+        r = mp.Vector3(0, y, z)
 
         print("integrand      (cartesian):", integrand_cartesian(k_y, k_z,
                                                                  f=f_Laguerre_Gauss_cartesian, x, y, z))
         print("integrand      (spherical):", integrand_spherical(theta(k_y, k_z, k1), phi(k_y, k_z),
                                                                  f=f_Laguerre_Gauss_spherical, x, y, z))
         print()
-        print("psi            (cartesian):", psi_cartesian(mp.Vector3(0, y, z), f=f_Laguerre_Gauss_cartesian, x))
-        print("psi            (spherical):", psi_spherical(mp.Vector3(0, y, z), f=f_Laguerre_Gauss_spherical, x))
-        print("psi       (origin, simple):", Gauss(mp.Vector3(0, y, z)))
+        print("psi            (cartesian):", psi_cartesian(r, f=f_Laguerre_Gauss_cartesian, x))
+        print("psi            (spherical):", psi_spherical(r, f=f_Laguerre_Gauss_spherical, x))
+        print("psi       (origin, simple):", Gauss(r))
 
     # --------------------------------------------------------------------------
     # display values of physical variables
