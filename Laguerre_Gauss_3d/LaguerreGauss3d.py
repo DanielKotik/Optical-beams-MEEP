@@ -210,8 +210,8 @@ def main(args):
     # --------------------------------------------------------------------------
     def integrand_cartesian(k_y, k_z, f, x, y, z):
         """..."""
-        return f(k_y, k_z) * sp.exp(1j*(x*sp.sqrt(k1**2 - k_y**2 - k_z**2).real
-                                        + y*k_y * z*k_z))
+        return f(k_y, k_z) * sp.exp(1j*(x*sp.sqrt(k1**2 - k_y**2 - k_z**2).real 
+                                        + y*k_y + z*k_z))
 
     def integrand_spherical(theta, phi, f, x, y, z):
         """..."""
@@ -246,7 +246,7 @@ def main(args):
     # --------------------------------------------------------------------------
     if test_output:
         k_y, k_z = 1.0, 5.2
-        x, y, z = -2.15, 0.4, 0.5
+        x, y, z = -2.15, 0.3, 0.5
         r = mp.Vector3(0, y, z)
 
         print("integrand      (cartesian):", integrand_cartesian(k_y, k_z,
