@@ -228,7 +228,7 @@ def main(args):
          real_tol,
          imag_tol) = complex_dblquad(lambda k_y, k_z:
                                      integrand_cartesian(k_y, k_z, f, x, r.y, r.z),
-                                     -k1, -k1, k1, k1)
+                                     -k1, k1, -k1, k1)
         return result
 
     def psi_spherical(r, f, x):
@@ -237,7 +237,7 @@ def main(args):
          real_tol,
          imag_tol) = complex_dblquad(lambda theta, phi:
                                      integrand_spherical(theta, phi, f, x, r.y, r.z),
-                                     0, 0, math.pi/2, 2*math.pi)
+                                     0, 2*math.pi, 0, math.pi/2)
 
         return k1**2 * result
 
