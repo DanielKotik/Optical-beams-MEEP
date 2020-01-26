@@ -250,13 +250,17 @@ def main(args):
         r = mp.Vector3(0, y, z)
         print("phi:", phi(k_y, k_z))
         print()
-        print("integrand      (cartesian):", integrand_cartesian(k_y, k_z,
-                                                                 f_Laguerre_Gauss_cartesian, x, y, z))
-        print("integrand      (spherical):", integrand_spherical(theta(k_y, k_z, k1), phi(k_y, k_z),
-                                                                 f_Laguerre_Gauss_spherical, x, y, z))
+        print("integrand      (cartesian):", 
+              integrand_cartesian(k_y, k_z, 
+                                  f_Laguerre_Gauss_cartesian, x, y, z))
+        print("integrand      (spherical):", 
+              integrand_spherical(theta(k_y, k_z, k1), phi(k_y, k_z), 
+                                  f_Laguerre_Gauss_spherical, x, y, z))
         print()
-        print("psi            (cartesian):", psi_cartesian(r, f_Laguerre_Gauss_cartesian, x))
-        print("psi            (spherical):", psi_spherical(r, f_Laguerre_Gauss_spherical, x))
+        print("psi            (cartesian):", 
+              psi_cartesian(r, f_Laguerre_Gauss_cartesian, x))
+        print("psi            (spherical):", 
+              psi_spherical(r, f_Laguerre_Gauss_spherical, x))
         print("psi       (origin, simple):", Gauss(r))
         sys.exit()
 
