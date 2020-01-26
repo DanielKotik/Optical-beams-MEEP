@@ -102,7 +102,6 @@ def main(args):
     shift = source_shift + rw
     s_pol = True if (e_z == 1 and e_y == 0) else False
     p_pol = True if (e_z == 0 and e_y == 1) else False
-    a_pol = True if (not s_pol and not p_pol) else False
 
     # --------------------------------------------------------------------------
     # placement of the dielectric interface within the computational cell
@@ -277,8 +276,8 @@ def main(args):
     print("vortex charge:", m_charge)
     print("Jones vector components: (e_z=", e_z, ", e_y=", e_y, ")")
     print("--->", ("s-" if s_pol else
-                   "p-" if p_pol else
-                   "mixed-" if a_pol else None) + "polarisation")
+                   "p-" if p_pol else 
+                   "mixed-") + "polarisation")
     print("degree of linear   polarisation at pi/4:",
           2*(-e_z.conjugate()*e_y).real)
     print("degree of circular polarisation:", 2*(-e_z.conjugate()*e_y).imag)
