@@ -174,8 +174,8 @@ def main(args):
     def theta(k_y, k_z, k):
         """Polar angle."""
         #return math.acos(np.lib.scimath.sqrt(k**2 - k_y**2 - k_z**2).real / k)
-        #return math.acos(sp.sqrt(k**2 - k_y**2 - k_z**2).real / k)
-        return math.acos(math.sqrt(k**2 - k_y**2 - k_z**2) / k)
+        return math.acos(sp.sqrt(k**2 - k_y**2 - k_z**2).real / k)
+        #return math.acos(math.sqrt(k**2 - k_y**2 - k_z**2) / k)
 
     def f_Gauss_spherical(sin_theta, theta, W_y=w_0):
         """..."""
@@ -201,6 +201,7 @@ def main(args):
               f_Laguerre_Gauss_spherical(math.sin(theta(k_y, k_z, k1)),
                                          theta(k_y, k_z, k1),
                                          phi(k_y, k_z), w_0, m_charge))
+        print()
 
     # --------------------------------------------------------------------------
     # plane wave decomposition
@@ -209,7 +210,7 @@ def main(args):
     # --------------------------------------------------------------------------
     def integrand_cartesian(k_y, k_z, f, x, y, z):
         """..."""
-        return f(k_y, k_z) * sp.exp(1j*(x*math.sqrt(k1**2 - k_y**2 - k_z**2)
+        return f(k_y, k_z) * sp.exp(1j*(x*sp.sqrt(k1**2 - k_y**2 - k_z**2).real
                                         + y*k_y * z*k_z))
 
     def integrand_spherical(theta, phi, f, x, y, z):
