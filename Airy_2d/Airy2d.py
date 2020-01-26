@@ -27,8 +27,11 @@ def complex_quad(func, a, b, **kwargs):
     def imag_integral():
         return quad(lambda x: sp.imag(func(x)), a, b, **kwargs)
 
-    return (real_integral()[0] + 1j * imag_integral()[0],
-            real_integral()[1], imag_integral()[1])
+    result = real_integral()[0] + 1j * imag_integral()[0]
+    real_tol = real_integral()[1]
+    imag_tol = imag_integral()[1]
+    
+    return result, real_tol, imag_tol
 
 
 def Critical(n1, n2):
