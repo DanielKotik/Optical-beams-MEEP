@@ -14,21 +14,28 @@ import scipy as sp
 import sys
 
 from datetime import datetime
-from scipy.integrate import quad
+from scipy.integrate import dblquad
 
 print("Meep version:", mp.__version__)
 
 
-def complex_quad(func, a, b, **kwargs):
+def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
     """Integrate real and imaginary part of the given function."""
+    def real_func(x, y):
+        return sp.real(func(x, y))
+    def imag_func(x, y):
+        return sp.imag(func(x, y))
+    
     def real_integral():
-        return quad(lambda x: sp.real(func(x)), a, b, **kwargs)
-
+        return dblquad(real_func, a, b, gfun, hfun, **kwargs)
     def imag_integral():
-        return quad(lambda x: sp.imag(func(x)), a, b, **kwargs)
-
-    return (real_integral()[0] + 1j * imag_integral()[0],
-            real_integral()[1], imag_integral()[1])
+        return dblquad(imag_func, a, b, gfun, hfun, **kwargs)
+    
+    result = real_integral()[0] + 1j * imag_integral()[0]
+    real_tol = real_integral()[1]
+    imag_tol = imag_integral()[1]
+    
+    return result, real_tol, imag_tol
 
 
 def Critical(n1, n2):
@@ -219,18 +226,18 @@ def main(args):
         """..."""
         (result,
          real_tol,
-         imag_tol) = complex_quad(lambda k_y, k_z:
-                                  integrand_cartesian(k_y, k_z, f, x, r.y, r.z),
-                                  -k1, -k1, k1, k1)
+         imag_tol) = complex_dblquad(lambda k_y, k_z:
+                                     integrand_cartesian(k_y, k_z, f, x, r.y, r.z),
+                                     -k1, -k1, k1, k1)
         return result
 
     def psi_spherical(r, f, x):
         """..."""
         (result,
          real_tol,
-         imag_tol) = complex_quad(lambda theta, phi:
-                                  integrand_spherical(theta, phi, f, x, r.y, r.z),
-                                  0, 0, math.pi/2, 2*math.pi)
+         imag_tol) = complex_dblquad(lambda theta, phi:
+                                     integrand_spherical(theta, phi, f, x, r.y, r.z),
+                                     0, 0, math.pi/2, 2*math.pi)
 
         return k1**2 * result
 
