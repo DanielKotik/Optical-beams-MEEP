@@ -169,7 +169,7 @@ def main(args):
     # coordinate transformation: from k-space to (theta, phi)-space
     def phi(k_y, k_z):
         """Azimuthal angle."""
-        return math.atan(-k_y / k_z)
+        return  math.atan2(k_y, -k_z) 
 
     def theta(k_y, k_z, k):
         """Polar angle."""
@@ -248,7 +248,8 @@ def main(args):
         k_y, k_z = 1.0, 5.2
         x, y, z = -2.15, 0.3, 0.5
         r = mp.Vector3(0, y, z)
-
+        print("phi:", phi(k_y, k_z))
+        print()
         print("integrand      (cartesian):", integrand_cartesian(k_y, k_z,
                                                                  f_Laguerre_Gauss_cartesian, x, y, z))
         print("integrand      (spherical):", integrand_spherical(theta(k_y, k_z, k1), phi(k_y, k_z),
