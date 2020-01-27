@@ -326,7 +326,7 @@ def main(args):
                               size=mp.Vector3(0, 3, 3),
                               center=mp.Vector3(source_shift, 0, 0),
                               #amp_func=lambda r: Gauss(r, w_0)
-                              #amp_func=lambda r: psi_spherical(r, lambda sin_theta, theta, phi: f_Gauss_spherical(sin_theta, theta, phi, w_0), shift),
+                              #amp_func=lambda r: psi_cartesian(r, f_Laguerre_Gauss_cartesian, shift)
                               amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
                                        lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)
                               )
@@ -339,7 +339,7 @@ def main(args):
                               size=mp.Vector3(0, 3, 3),
                               center=mp.Vector3(source_shift, 0, 0),
                               #amp_func=lambda r: Gauss(r, w_0)
-                              #amp_func=lambda r: psi_spherical(r, lambda sin_theta, theta, phi: f_Gauss_spherical(sin_theta, theta, phi, w_0), shift),
+                              #amp_func=lambda r: psi_cartesian(r, f_Laguerre_Gauss_cartesian, shift)
                               amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
                                        lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)
                               )
@@ -394,7 +394,7 @@ def main(args):
             #mp.at_end(mp.output_efield_z),         # output of E_y component
             #mp.at_end(mp.output_efield_y),         # output of E_z component
             mp.at_end(output_efield_real_squared),  # output of electric field intensity
-            mp.at_end(output_efield_real_squared) if force_complex_fields else None,
+            mp.at_end(output_efield_imag_squared) if force_complex_fields else None,
             until=runtime)
 
     print("\nend time:", datetime.now())
