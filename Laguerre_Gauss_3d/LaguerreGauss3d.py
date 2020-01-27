@@ -23,18 +23,20 @@ def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
     """Integrate real and imaginary part of the given function."""
     def real_func(x, y):
         return sp.real(func(x, y))
+
     def imag_func(x, y):
         return sp.imag(func(x, y))
-    
+
     def real_integral():
         return dblquad(real_func, a, b, gfun, hfun, **kwargs)
+
     def imag_integral():
         return dblquad(imag_func, a, b, gfun, hfun, **kwargs)
-    
+
     result = real_integral()[0] + 1j * imag_integral()[0]
     real_tol = real_integral()[1]
     imag_tol = imag_integral()[1]
-    
+
     return result, real_tol, imag_tol
 
 
@@ -169,7 +171,7 @@ def main(args):
     # coordinate transformation: from k-space to (theta, phi)-space
     def phi(k_y, k_z):
         """Azimuthal angle."""
-        return  math.atan2(k_y, -k_z) 
+        return math.atan2(k_y, -k_z)
 
     def theta(k_y, k_z, k):
         """Polar angle."""
@@ -210,7 +212,7 @@ def main(args):
     # --------------------------------------------------------------------------
     def integrand_cartesian(k_y, k_z, f, x, y, z):
         """..."""
-        return f(k_y, k_z) * sp.exp(1j*(x*sp.sqrt(k1**2 - k_y**2 - k_z**2).real 
+        return f(k_y, k_z) * sp.exp(1j*(x*sp.sqrt(k1**2 - k_y**2 - k_z**2).real
                                         + y*k_y + z*k_z))
 
     def integrand_spherical(theta, phi, f, x, y, z):
@@ -250,16 +252,16 @@ def main(args):
         r = mp.Vector3(0, y, z)
         print("phi:", phi(k_y, k_z))
         print()
-        print("integrand      (cartesian):", 
-              integrand_cartesian(k_y, k_z, 
+        print("integrand      (cartesian):",
+              integrand_cartesian(k_y, k_z,
                                   f_Laguerre_Gauss_cartesian, x, y, z))
-        print("integrand      (spherical):", 
-              integrand_spherical(theta(k_y, k_z, k1), phi(k_y, k_z), 
+        print("integrand      (spherical):",
+              integrand_spherical(theta(k_y, k_z, k1), phi(k_y, k_z),
                                   f_Laguerre_Gauss_spherical, x, y, z))
         print()
-        print("psi            (cartesian):", 
+        print("psi            (cartesian):",
               psi_cartesian(r, f_Laguerre_Gauss_cartesian, x))
-        print("psi            (spherical):", 
+        print("psi            (spherical):",
               psi_spherical(r, f_Laguerre_Gauss_spherical, x))
         print("psi       (origin, simple):", Gauss(r))
         sys.exit()
@@ -270,6 +272,7 @@ def main(args):
     print()
     print("Expected output file size:",
           round(8*(sx*sy*sz*resolution**3)/(1024**2)), "MiB")
+    print()
     print("Specified variables and derived values:")
     print("n1:", n1)
     print("n2:", n2)
@@ -280,25 +283,26 @@ def main(args):
     print("kr_w: ", kr_w)
     print("k_vac:", k_vac)
     print("vortex charge:", m_charge)
-    print("Jones vector components: (e_z=", e_z, ", e_y=", e_y, ")")
-    print("--->", ("s-" if s_pol else
-                   "p-" if p_pol else 
-                   "mixed-") + "polarisation")
+    print("Jones vector components: "
+          "(e_z=", e_z, ", e_y=", e_y, ")", sep="", end="")
+    print(" --->", ("s-" if s_pol else
+                    "p-" if p_pol else
+                    "mixed-") + "polarisation")
     print("degree of linear   polarisation at pi/4:",
           2*(-e_z.conjugate()*e_y).real)
     print("degree of circular polarisation:", 2*(-e_z.conjugate()*e_y).imag)
 
     # --------------------------------------------------------------------------
     # exploiting symmetries to reduce computational effort
-    # (only possible for beams without intrinsic orbital angular momentum, i.e. 
+    # (only possible for beams without intrinsic orbital angular momentum, i.e.
     #  no vortex charge)
     # --------------------------------------------------------------------------
 
-    # The plane of incidence (x-y-plane) is a mirror plane which is characterised 
-    # to be orthogonal to the z-axis (symmetry of the geometric structure). 
+    # The plane of incidence (x-y-plane) is a mirror plane which is characterised
+    # to be orthogonal to the z-axis (symmetry of the geometric structure).
     # Symmetry of the sources must be ensured simultaneously, which is only
-    # possible for certain cases. If I am not mistaken this can only be achieved 
-    # for vortex free beams with pure s- or p-polarisation, i.e. where either 
+    # possible for certain cases. If I am not mistaken this can only be achieved
+    # for vortex free beams with pure s- or p-polarisation, i.e. where either
     # the Ez or Ey component is specified.
     symmetries = []
     if m_charge == 0:
@@ -306,41 +310,39 @@ def main(args):
             symmetries.append(mp.mirror-sym(direction=Z, phase=-1))
         if p_pol:
             symmetries.append(mp.mirror-sym(direction=Z, phase=+1))
-        
-    
+
     # --------------------------------------------------------------------------
     # specify current source, output functions and run simulation
     # --------------------------------------------------------------------------
-    force_complex_fields = True           # default: True 
+    force_complex_fields = True           # default: True
     eps_averaging = True                  # default: True
 
     sources = []
-    
+
     if e_z != 0:
         source_Ez = mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
-                             component=mp.Ez,
-                             amplitude=e_z,
-                             size=mp.Vector3(0, 3, 3),
-                             center=mp.Vector3(source_shift, 0, 0),
-                             #amp_func=lambda r: Gauss(r, w_0)
-                             #amp_func=lambda r: psi_spherical(r, lambda sin_theta, theta, phi: f_Gauss_spherical(sin_theta, theta, phi, w_0), shift),
-                             amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else 
-                                      lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)                             
-                             )
+                              component=mp.Ez,
+                              amplitude=e_z,
+                              size=mp.Vector3(0, 3, 3),
+                              center=mp.Vector3(source_shift, 0, 0),
+                              #amp_func=lambda r: Gauss(r, w_0)
+                              #amp_func=lambda r: psi_spherical(r, lambda sin_theta, theta, phi: f_Gauss_spherical(sin_theta, theta, phi, w_0), shift),
+                              amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
+                                       lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)
+                              )
         sources.append(source_Ez)
-        
-               
+
     if e_y != 0:
         source_Ey = mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
-                             component=mp.Ey,
-                             amplitude=e_y,
-                             size=mp.Vector3(0, 3, 3),
-                             center=mp.Vector3(source_shift, 0, 0),
-                             #amp_func=lambda r: Gauss(r, w_0)
-                             #amp_func=lambda r: psi_spherical(r, lambda sin_theta, theta, phi: f_Gauss_spherical(sin_theta, theta, phi, w_0), shift),
-                             amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
-                                      lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)                             
-                             )
+                              component=mp.Ey,
+                              amplitude=e_y,
+                              size=mp.Vector3(0, 3, 3),
+                              center=mp.Vector3(source_shift, 0, 0),
+                              #amp_func=lambda r: Gauss(r, w_0)
+                              #amp_func=lambda r: psi_spherical(r, lambda sin_theta, theta, phi: f_Gauss_spherical(sin_theta, theta, phi, w_0), shift),
+                              amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
+                                       lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)
+                              )
         sources.append(source_Ey)
 
     sim = mp.Simulation(cell_size=cell,
@@ -364,7 +366,7 @@ def main(args):
         is set to true, otherwise |.| gives the Euclidean norm.
         """
         return ex.real**2 + ey.real**2 + ez.real**2
-    
+
     def efield_imag_squared(r, ex, ey, ez):
         """Calculate |Im E|^2.
 
@@ -379,7 +381,7 @@ def main(args):
         func = efield_real_squared
         cs = [mp.Ex, mp.Ey, mp.Ez]
         return sim.output_field_function(name, cs, func, real_only=True)
-    
+
     def output_efield_imag_squared(sim):
         """Output E-field (imag part) intensity."""
         name = "e_imag2_s" if s_pol else "e_imag2_p" if p_pol else "e_imag2_mixed"
