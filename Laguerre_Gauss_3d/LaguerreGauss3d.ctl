@@ -250,7 +250,7 @@
 ;    (print "psi            (spherical): " ((psi_spherical (f_Laguerre_Gauss_spherical w_0 m_charge) x)
 ;                                           (vector3 0 y z)) "\n")
 ;
-;    (print "psi       (origin, simple): " ((Gauss w_0) (vector3 0 0.2 0.2)) "\n")
+;    (print "psi       (origin, simple): " ((Gauss w_0) (vector3 0 y z)) "\n")
 ;)
 ;(exit)
 
