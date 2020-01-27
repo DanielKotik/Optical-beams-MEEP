@@ -78,7 +78,7 @@ def main(args):
     test_output = args.test_output
 
     # --------------------------------------------------------------------------
-    # specific Meep parameters (may need to be adjusted - either here or via CLI)
+    # specific Meep parameters (may need to be adjusted)
     # --------------------------------------------------------------------------
     # TODO: add short comments for every parameter
     sx = 5
