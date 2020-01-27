@@ -389,13 +389,17 @@ def main(args):
         cs = [mp.Ex, mp.Ey, mp.Ez]
         return sim.output_field_function(name, cs, func, real_only=True)
 
-    sim.run(#mp.at_beginning(mp.output_epsilon),    # output of dielectric function
-            #mp.at_end(mp.output_efield_x),         # output of E_x component
-            #mp.at_end(mp.output_efield_z),         # output of E_y component
-            #mp.at_end(mp.output_efield_y),         # output of E_z component
-            mp.at_end(output_efield_real_squared),  # output of electric field intensity
-            mp.at_end(output_efield_imag_squared) if force_complex_fields else None,
-            until=runtime)
+    run_args = [#mp.at_beginning(mp.output_epsilon),    # output of dielectric function
+                #mp.at_end(mp.output_efield_x),         # output of E_x component
+                #mp.at_end(mp.output_efield_z),         # output of E_y component
+                #mp.at_end(mp.output_efield_y),         # output of E_z component
+                mp.at_end(output_efield_real_squared)  # output of electric field intensity
+                ]
+    
+    if force_complex_fields:
+        run_args.append(mp.at_end(output_efield_imag_squared))
+    
+    sim.run(*run_args, until=runtime)
 
     print("\nend time:", datetime.now())
 
