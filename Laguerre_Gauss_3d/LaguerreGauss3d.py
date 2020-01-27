@@ -307,9 +307,9 @@ def main(args):
     symmetries = []
     if m_charge == 0:
         if s_pol:
-            symmetries.append(mp.mirror-sym(direction=Z, phase=-1))
+            symmetries.append(mp.Mirror(mp.Z, phase=-1))
         if p_pol:
-            symmetries.append(mp.mirror-sym(direction=Z, phase=+1))
+            symmetries.append(mp.Mirror(mp.Y, phase=+1))
 
     # --------------------------------------------------------------------------
     # specify current source, output functions and run simulation
