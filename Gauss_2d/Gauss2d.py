@@ -176,7 +176,6 @@ def main(args):
         """Gaussian spectrum amplitude."""
         return math.exp(-(k_y*W_y/2)**2)
 
-
     if test_output:
         print("Gauss spectrum:", f_Gauss(0.2, w_0))
         sys.exit()
