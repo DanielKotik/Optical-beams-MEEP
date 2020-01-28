@@ -395,10 +395,10 @@ def main(args):
                 #mp.at_end(mp.output_efield_y),         # output of E_z component
                 mp.at_end(output_efield_real_squared)  # output of electric field intensity
                 ]
-    
+
     if force_complex_fields:
         run_args.append(mp.at_end(output_efield_imag_squared))
-    
+
     sim.run(*run_args, until=runtime)
 
     print("\nend time:", datetime.now())

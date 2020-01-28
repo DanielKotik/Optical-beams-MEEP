@@ -30,7 +30,7 @@ def complex_quad(func, a, b, **kwargs):
     result = real_integral()[0] + 1j * imag_integral()[0]
     real_tol = real_integral()[1]
     imag_tol = imag_integral()[1]
-    
+
     return result, real_tol, imag_tol
 
 
@@ -70,7 +70,7 @@ def main(args):
     chi_deg = args.chi_deg
     #chi_deg = 1.0*Critical(n1, n2)
     #chi_deg = 0.95*Brewster(n1, n2)
-    
+
     test_output = args.test_output
 
     # --------------------------------------------------------------------------
@@ -144,7 +144,7 @@ def main(args):
         #print("%e, %e" % (real_tol, imag_tol))
         return result
 
-    
+
     if test_output:
         print("w_0:", w_0)
         print("Airy function 1:", Ai_inc(mp.Vector3(1,-0.3,1), w_0, 0, 4))
@@ -316,7 +316,7 @@ if __name__ == '__main__':
     parser.add_argument('-chi_deg',
                         type=float, default=45,
                         help='incidence angle in degrees (default: %(default)s)')
-    
+
     parser.add_argument('-test_output',
                         type=bool, default=False,
                         help='enables test print statements (default: %(default)s)')
