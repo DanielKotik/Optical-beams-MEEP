@@ -89,7 +89,6 @@ def main(args):
     runtime = 10
     pixel = 10
     source_shift = -2.15
-    chi_rad = math.radians(chi_deg)
 
     # --------------------------------------------------------------------------
     # derived Meep parameters (do not change)
@@ -102,6 +101,7 @@ def main(args):
     rw = kr_w / (n_ref * k_vac)  # TODO: rw --> r_w
     w_0 = kw_0 / (n_ref * k_vac)
     shift = source_shift + rw
+    chi_rad = math.radians(chi_deg)
     s_pol = True if (e_z == 1 and e_y == 0) else False
     p_pol = True if (e_z == 0 and e_y == 1) else False
 
