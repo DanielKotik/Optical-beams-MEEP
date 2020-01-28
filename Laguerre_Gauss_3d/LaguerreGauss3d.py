@@ -225,7 +225,17 @@ def main(args):
                           + cos_theta*x))
 
     def psi_cartesian(r, f, x):
-        """..."""
+        """Field amplitude function.
+
+        Integration in Cartesian coordinates.
+        """
+        try:
+            getattr(psi_cartesian, "called")
+        except AttributeError:
+            psi_cartesian.called = True
+            print("Calculating inital field configuration. "
+                  "This will take some time...")
+
         (result,
          real_tol,
          imag_tol) = complex_dblquad(lambda k_y, k_z:
@@ -234,7 +244,17 @@ def main(args):
         return result
 
     def psi_spherical(r, f, x):
-        """..."""
+        """Field amplitude function.
+
+        Integration in spherical coordinates.
+        """
+        try:
+            getattr(psi_spherical, "called")
+        except AttributeError:
+            psi_spherical.called = True
+            print("Calculating inital field configuration. "
+                  "This will take some time...")
+
         (result,
          real_tol,
          imag_tol) = complex_dblquad(lambda theta, phi:
