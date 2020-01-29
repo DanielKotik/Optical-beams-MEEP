@@ -179,7 +179,7 @@ def main(args):
         return math.acos(sp.sqrt(k**2 - k_y**2 - k_z**2).real / k)
         #return math.acos(math.sqrt(k**2 - k_y**2 - k_z**2) / k)
 
-    def f_Gauss_spherical(sin_theta, theta, W_y=w_0):
+    def f_Gauss_spherical(sin_theta, theta, phi, W_y=w_0):
         """..."""
         return math.exp(-(k1*W_y*sin_theta/2)**2)
 
