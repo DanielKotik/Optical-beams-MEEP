@@ -192,18 +192,19 @@ def main(args):
     # --------------------------------------------------------------------------
     if test_output:
         k_y, k_z = 1.0, 5.2
+        theta_ = theta(k_y, k_z, k1)
+        phi_ = phi(k_y, k_z)
+        
         print("Gauss spectrum (cartesian):",
               f_Gauss_cartesian(k_y, k_z, w_0))
         print("Gauss spectrum (spherical):",
-              f_Gauss_spherical(math.sin(theta(k_y, k_z, k1)), 
-                                theta(k_y, k_z, k1), phi(k_y, k_z), w_0))
+              f_Gauss_spherical(math.sin(theta_), theta_, phi_, w_0))
         print()
         print("L-G spectrum   (cartesian):",
               f_Laguerre_Gauss_cartesian(k_y, k_z, w_0, m_charge))
         print("L-G spectrum   (spherical):",
-              f_Laguerre_Gauss_spherical(math.sin(theta(k_y, k_z, k1)),
-                                         theta(k_y, k_z, k1),
-                                         phi(k_y, k_z), w_0, m_charge))
+              f_Laguerre_Gauss_spherical(math.sin(theta_), theta_, phi_, w_0, 
+                                         m_charge))
         print()
 
     # --------------------------------------------------------------------------
@@ -282,13 +283,16 @@ def main(args):
         k_y, k_z = 1.0, 5.2
         x, y, z = -2.15, 0.3, 0.5
         r = mp.Vector3(0, y, z)
+        theta_ = theta(k_y, k_z, k1)
+        phi_ = phi(k_y, k_z)
+        
         print("phi:", phi(k_y, k_z))
         print()
         print("integrand      (cartesian):",
-              integrand_cartesian(k_y, k_z,
+              integrand_cartesian(k_y, k_z, 
                                   f_Laguerre_Gauss_cartesian, x, y, z))
         print("integrand      (spherical):",
-              integrand_spherical(theta(k_y, k_z, k1), phi(k_y, k_z),
+              integrand_spherical(theta_, phi_,
                                   f_Laguerre_Gauss_spherical, x, y, z))
         print()
         print("psi            (cartesian):",
