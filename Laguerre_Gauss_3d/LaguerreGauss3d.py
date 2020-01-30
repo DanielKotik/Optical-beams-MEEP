@@ -184,7 +184,8 @@ def main(args):
 
     def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, m=m_charge):
         """..."""
-        return f_Gauss_spherical(sin_theta, W_y) * theta**abs(m) * np.exp(1j*m*phi)
+        return f_Gauss_spherical(sin_theta, theta, phi, W_y) * theta**abs(m) * \
+            np.exp(1j*m*phi)
 
     # --------------------------------------------------------------------------
     # some test outputs
@@ -194,7 +195,8 @@ def main(args):
         print("Gauss spectrum (cartesian):",
               f_Gauss_cartesian(k_y, k_z, w_0))
         print("Gauss spectrum (spherical):",
-              f_Gauss_spherical(math.sin(theta(k_y, k_z, k1)), w_0))
+              f_Gauss_spherical(math.sin(theta(k_y, k_z, k1)), 
+                                theta(k_y, k_z, k1), phi(k_y, k_z), w_0))
         print()
         print("L-G spectrum   (cartesian):",
               f_Laguerre_Gauss_cartesian(k_y, k_z, w_0, m_charge))
