@@ -186,11 +186,15 @@ def main(args):
         def phi(k_y, x, y):
             """Phase function."""
             return x*math.sqrt(k1**2 - k_y**2) + k_y*y
-
-        (result,
-         real_tol,
-         imag_tol) = complex_quad(lambda k_y: f(k_y) * np.exp(1.0j*phi(k_y, x, r.y)),
-                                  -k1, k1, limit=100)
+        
+        try:
+            (result,
+             real_tol,
+             imag_tol) = complex_quad(lambda k_y: f(k_y) * np.exp(1j*phi(k_y, x, r.y)),
+                                      -k1, k1, limit=100)
+        except Exception as e:
+            print(type(e).__name__ + ":", e)
+            sys.exit()
 
         return result
 
