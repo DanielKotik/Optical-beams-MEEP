@@ -10,7 +10,8 @@ date:    10.01.2019
 import argparse
 import math
 import meep as mp
-import scipy as sp
+import numpy.lib.scimath as sm
+import numpy as np
 import sys
 
 from datetime import datetime
@@ -22,10 +23,10 @@ print("Meep version:", mp.__version__)
 def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
     """Integrate real and imaginary part of the given function."""
     def real_func(x, y):
-        return sp.real(func(x, y))
+        return np.real(func(x, y))
 
     def imag_func(x, y):
-        return sp.imag(func(x, y))
+        return np.imag(func(x, y))
 
     def real_integral():
         return dblquad(real_func, a, b, gfun, hfun, **kwargs)
@@ -165,7 +166,7 @@ def main(args):
     def f_Laguerre_Gauss_cartesian(k_y, k_z, W_y=w_0, m=m_charge):
         """Laguerre-Gaussian spectrum amplitude."""
         return f_Gauss_cartesian(k_y, k_z, W_y) * \
-            sp.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k1)**abs(m)
+            np.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k1)**abs(m)
 
     # spherical coordinates --------------------------------------------
     # coordinate transformation: from k-space to (theta, phi)-space
@@ -175,9 +176,7 @@ def main(args):
 
     def theta(k_y, k_z, k):
         """Polar angle."""
-        #return math.acos(np.lib.scimath.sqrt(k**2 - k_y**2 - k_z**2).real / k)
-        return math.acos(sp.sqrt(k**2 - k_y**2 - k_z**2).real / k)
-        #return math.acos(math.sqrt(k**2 - k_y**2 - k_z**2) / k)
+        return math.acos(sm.sqrt(k**2 - k_y**2 - k_z**2).real / k)
 
     def f_Gauss_spherical(sin_theta, theta, phi, W_y=w_0):
         """..."""
@@ -185,7 +184,7 @@ def main(args):
 
     def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, m=m_charge):
         """..."""
-        return f_Gauss_spherical(sin_theta, W_y) * theta**abs(m) * sp.exp(1j*m*phi)
+        return f_Gauss_spherical(sin_theta, W_y) * theta**abs(m) * np.exp(1j*m*phi)
 
     # --------------------------------------------------------------------------
     # some test outputs
@@ -212,7 +211,7 @@ def main(args):
     # --------------------------------------------------------------------------
     def integrand_cartesian(k_y, k_z, f, x, y, z):
         """..."""
-        return f(k_y, k_z) * sp.exp(1j*(x*sp.sqrt(k1**2 - k_y**2 - k_z**2).real
+        return f(k_y, k_z) * np.exp(1j*(x*sm.sqrt(k1**2 - k_y**2 - k_z**2).real
                                         + y*k_y + z*k_z))
 
     def integrand_spherical(theta, phi, f, x, y, z):
@@ -221,7 +220,7 @@ def main(args):
         cos_theta = math.cos(theta)
 
         return sin_theta * cos_theta * f(sin_theta, theta, phi) * \
-            sp.exp(1j*k1*(sin_theta*(y*math.sin(phi) - z*math.cos(phi))
+            np.exp(1j*k1*(sin_theta*(y*math.sin(phi) - z*math.cos(phi))
                           + cos_theta*x))
 
     def psi_cartesian(r, f, x):
@@ -254,11 +253,13 @@ def main(args):
             psi_spherical.called = True
             print("Calculating inital field configuration. "
                   "This will take some time...")
-
+        
+        
         (result,
          real_tol,
          imag_tol) = complex_dblquad(lambda theta, phi:
-                                     integrand_spherical(theta, phi, f, x, r.y, r.z),
+                                     integrand_spherical(theta, phi, f, x, 
+                                                         r.y, r.z),
                                      0, 2*math.pi, 0, math.pi/2)
 
         return k1**2 * result

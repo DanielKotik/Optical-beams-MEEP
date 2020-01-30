@@ -10,7 +10,7 @@ date:    30.11.2019
 import argparse
 import math
 import meep as mp
-import scipy as sp
+import numpy as np
 import sys
 
 from datetime import datetime
@@ -22,10 +22,10 @@ print("Meep version:", mp.__version__)
 def complex_quad(func, a, b, **kwargs):
     """Integrate real and imaginary part of the given function."""
     def real_integral():
-        return quad(lambda x: sp.real(func(x)), a, b, **kwargs)
+        return quad(lambda x: np.real(func(x)), a, b, **kwargs)
 
     def imag_integral():
-        return quad(lambda x: sp.imag(func(x)), a, b, **kwargs)
+        return quad(lambda x: np.imag(func(x)), a, b, **kwargs)
 
     result = real_integral()[0] + 1j * imag_integral()[0]
     real_tol = real_integral()[1]
@@ -139,7 +139,7 @@ def main(args):
 
     def Ai_inc(r, W_y=w_0, M=M, W=W):
         """Incomplete Airy function."""
-        integrand = lambda xi: sp.exp(1.0j*(-(xi**3)/3 + (xi * r.y/W_y)))
+        integrand = lambda xi: np.exp(1.0j*(-(xi**3)/3 + (xi * r.y/W_y)))
         result, real_tol, imag_tol = complex_quad(integrand, M-W, M+W)
         #print("%e, %e" % (real_tol, imag_tol))
         return result
@@ -162,7 +162,7 @@ def main(args):
 
     def f_Airy(k_y, W_y=w_0, M=M, W=W):
         """Airy spectrum amplitude."""
-        return W_y*sp.exp(1.0j*(-1/3)*(k_y*W_y)**3)*Heaviside(W_y*k_y - (M-W))*Heaviside((M+W) - (W_y*k_y))
+        return W_y*np.exp(1.0j*(-1/3)*(k_y*W_y)**3)*Heaviside(W_y*k_y - (M-W))*Heaviside((M+W) - (W_y*k_y))
 
 
     if test_output:
@@ -189,7 +189,7 @@ def main(args):
 
         (result,
          real_tol,
-         imag_tol) = complex_quad(lambda k_y: f(k_y) * sp.exp(1.0j*phi(k_y, x, r.y)),
+         imag_tol) = complex_quad(lambda k_y: f(k_y) * np.exp(1.0j*phi(k_y, x, r.y)),
                                   -k1, k1, limit=100)
 
         return result

@@ -10,7 +10,7 @@ date:    17.12.2019
 import argparse
 import math
 import meep as mp
-import scipy as sp
+import numpy as np
 import sys
 
 from datetime import datetime
@@ -34,10 +34,10 @@ def interfaceType(string):
 def complex_quad(func, a, b, **kwargs):
     """Integrate real and imaginary part of the given function."""
     def real_integral():
-        return quad(lambda x: sp.real(func(x)), a, b, **kwargs)
+        return quad(lambda x: np.real(func(x)), a, b, **kwargs)
 
     def imag_integral():
-        return quad(lambda x: sp.imag(func(x)), a, b, **kwargs)
+        return quad(lambda x: np.imag(func(x)), a, b, **kwargs)
 
     result = real_integral()[0] + 1j * imag_integral()[0]
     real_tol = real_integral()[1]
@@ -200,7 +200,7 @@ def main(args):
 
         (result,
          real_tol,
-         imag_tol) = complex_quad(lambda k_y: f(k_y) * sp.exp(1.0j*phi(k_y, x, r.y)),
+         imag_tol) = complex_quad(lambda k_y: f(k_y) * np.exp(1.0j*phi(k_y, x, r.y)),
                                   -k1, k1)
 
         return result
