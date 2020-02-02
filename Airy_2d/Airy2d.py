@@ -314,16 +314,19 @@ if __name__ == '__main__':
                         help='Airy beam parameter (default: %(default)s)')
 
     parser.add_argument('-W',
-                        type=float, default=4,
+                        type=float, 
+                        default=4,
                         help='Airy beam parameter (default: %(default)s)')
 
     parser.add_argument('-chi_deg',
-                        type=float, default=45,
+                        type=float, 
+                        default=45,
                         help='incidence angle in degrees (default: %(default)s)')
 
     parser.add_argument('-test_output',
-                        type=bool, default=False,
-                        help='enables test print statements (default: %(default)s)')
+                        action='store_true',
+                        default=False,
+                        help='switch to enable test print statements')
 
     args = parser.parse_args()
     main(args)
