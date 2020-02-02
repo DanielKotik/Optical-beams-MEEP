@@ -364,7 +364,7 @@ def main(args):
                               #amp_func=lambda r: Gauss(r, w_0)
                               #amp_func=lambda r: psi_cartesian(r, f_Laguerre_Gauss_cartesian, shift)
                               amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
-                                       lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)
+                                                 psi_spherical(r, f_Laguerre_Gauss_spherical, shift)
                               )
         sources.append(source_Ez)
 
@@ -377,7 +377,7 @@ def main(args):
                               #amp_func=lambda r: Gauss(r, w_0)
                               #amp_func=lambda r: psi_cartesian(r, f_Laguerre_Gauss_cartesian, shift)
                               amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
-                                       lambda r: psi_spherical(r, f_Laguerre_Gauss_spherical, shift)
+                                                 psi_spherical(r, f_Laguerre_Gauss_spherical, shift)
                               )
         sources.append(source_Ey)
 
