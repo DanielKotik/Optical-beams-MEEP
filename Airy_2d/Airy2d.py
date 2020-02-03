@@ -50,8 +50,8 @@ def main(args):
     print("\nstart time:", datetime.now())
 
     # --------------------------------------------------------------------------
-    # physical parameters characterizing light source and interface characteristics
-    # (must be adjusted - eihter here or via command line interface (CLI))
+    # physical parameters characterizing light source and interface characteris-
+    # tics (must be adjusted - eihter here or via command line interface (CLI))
     # --------------------------------------------------------------------------
     s_pol = args.s_pol
     ref_medium = args.ref_medium
@@ -74,7 +74,7 @@ def main(args):
     test_output = args.test_output
 
     # --------------------------------------------------------------------------
-    # specific Meep parameters (may need to be adjusted - either here or via CLI)
+    # specific Meep parameters (may need to be adjusted)
     # --------------------------------------------------------------------------
     sx = 10
     sy = 10
@@ -139,21 +139,22 @@ def main(args):
 
     def Ai_inc(r, W_y=w_0, M=M, W=W):
         """Incomplete Airy function."""
-        integrand = lambda xi: np.exp(1.0j*(-(xi**3)/3 + (xi * r.y/W_y)))
-        result, real_tol, imag_tol = complex_quad(integrand, M-W, M+W)
-        #print("%e, %e" % (real_tol, imag_tol))
+        (result,
+         real_tol,
+         imag_tol) = complex_quad(lambda xi:
+                                  np.exp(1.0j*(-(xi**3)/3 + (xi * r.y/W_y))),
+                                  M-W, M+W)
         return result
-
 
     if test_output:
         print("w_0:", w_0)
-        print("Airy function 1:", Ai_inc(mp.Vector3(1,-0.3,1), w_0, 0, 4))
+        print("Airy function 1:", Ai_inc(mp.Vector3(1, -0.3, 1), w_0, 0, 4))
 
     # --------------------------------------------------------------------------
     # spectrum amplitude distribution
     # --------------------------------------------------------------------------
     def Heaviside(x):
-        """Heaviside (Theta) function."""
+        """Theta (Heaviside step) function."""
         return 0 if x < 0 else 1
 
     def f_Gauss(k_y, W_y=w_0):
@@ -162,8 +163,8 @@ def main(args):
 
     def f_Airy(k_y, W_y=w_0, M=M, W=W):
         """Airy spectrum amplitude."""
-        return W_y*np.exp(1.0j*(-1/3)*(k_y*W_y)**3)*Heaviside(W_y*k_y - (M-W))*Heaviside((M+W) - (W_y*k_y))
-
+        return W_y*np.exp(1.0j*(-1/3)*(k_y*W_y)**3) \
+            * Heaviside(W_y*k_y - (M-W)) * Heaviside((M+W) - (W_y*k_y))
 
     if test_output:
         print("Airy spectrum:", f_Airy(0.2, w_0, 0, 4))
@@ -186,11 +187,12 @@ def main(args):
         def phi(k_y, x, y):
             """Phase function."""
             return x*math.sqrt(k1**2 - k_y**2) + k_y*y
-        
+
         try:
             (result,
              real_tol,
-             imag_tol) = complex_quad(lambda k_y: f(k_y) * np.exp(1j*phi(k_y, x, r.y)),
+             imag_tol) = complex_quad(lambda k_y:
+                                      f(k_y) * np.exp(1j*phi(k_y, x, r.y)),
                                       -k1, k1, limit=100)
         except Exception as e:
             print(type(e).__name__ + ":", e)
@@ -314,12 +316,12 @@ if __name__ == '__main__':
                         help='Airy beam parameter (default: %(default)s)')
 
     parser.add_argument('-W',
-                        type=float, 
+                        type=float,
                         default=4,
                         help='Airy beam parameter (default: %(default)s)')
 
     parser.add_argument('-chi_deg',
-                        type=float, 
+                        type=float,
                         default=45,
                         help='incidence angle in degrees (default: %(default)s)')
 

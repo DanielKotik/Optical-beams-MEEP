@@ -61,8 +61,8 @@ def main(args):
     print("\nstart time:", datetime.now())
 
     # --------------------------------------------------------------------------
-    # physical parameters characterizing light source and interface characteristics
-    # (must be adjusted - eihter here or via command line interface (CLI))
+    # physical parameters characterizing light source and interface characteris-
+    # tics (must be adjusted - eihter here or via command line interface (CLI))
     # --------------------------------------------------------------------------
     interface = args.interface
     s_pol = args.s_pol
@@ -84,7 +84,7 @@ def main(args):
     test_output = args.test_output
 
     # --------------------------------------------------------------------------
-    # specific Meep parameters (may need to be adjusted - either here or via CLI)
+    # specific Meep parameters (may need to be adjusted)
     # --------------------------------------------------------------------------
     # TODO: add short comments for every parameter
     sx = 5
@@ -197,11 +197,12 @@ def main(args):
         def phi(k_y, x, y):
             """Phase function."""
             return x*math.sqrt(k1**2 - k_y**2) + k_y*y
-        
+
         try:
             (result,
              real_tol,
-             imag_tol) = complex_quad(lambda k_y: f(k_y) * np.exp(1j*phi(k_y, x, r.y)),
+             imag_tol) = complex_quad(lambda k_y:
+                                      f(k_y) * np.exp(1j*phi(k_y, x, r.y)),
                                       -k1, k1)
         except Exception as e:
             print(type(e).__name__ + ":", e)
@@ -333,7 +334,7 @@ if __name__ == '__main__':
                               'concave of convex) (default: %(default)s)'))
 
     parser.add_argument('-chi_deg',
-                        type=float, 
+                        type=float,
                         default=45,
                         help='incidence angle in degrees (default: %(default)s)')
 

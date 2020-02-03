@@ -56,8 +56,8 @@ def main(args):
     print("\nstart time:", datetime.now())
 
     # --------------------------------------------------------------------------
-    # physical parameters characterizing light source and interface characteristics
-    # (must be adjusted - eihter here or via command line interface (CLI))
+    # physical parameters characterizing light source and interface characteris-
+    # tics (must be adjusted - eihter here or via command line interface (CLI))
     # --------------------------------------------------------------------------
     e_z = args.e_z
     e_y = args.e_y
@@ -194,7 +194,7 @@ def main(args):
         k_y, k_z = 1.0, 5.2
         theta_ = theta(k_y, k_z, k1)
         phi_ = phi(k_y, k_z)
-        
+
         print("Gauss spectrum (cartesian):",
               f_Gauss_cartesian(k_y, k_z, w_0))
         print("Gauss spectrum (spherical):",
@@ -203,7 +203,7 @@ def main(args):
         print("L-G spectrum   (cartesian):",
               f_Laguerre_Gauss_cartesian(k_y, k_z, w_0, m_charge))
         print("L-G spectrum   (spherical):",
-              f_Laguerre_Gauss_spherical(math.sin(theta_), theta_, phi_, w_0, 
+              f_Laguerre_Gauss_spherical(math.sin(theta_), theta_, phi_, w_0,
                                          m_charge))
         print()
 
@@ -237,18 +237,18 @@ def main(args):
             psi_cartesian.called = True
             print("Calculating inital field configuration. "
                   "This will take some time...")
-            
+
         try:
             (result,
              real_tol,
              imag_tol) = complex_dblquad(lambda k_y, k_z:
-                                         integrand_cartesian(k_y, k_z, f, 
+                                         integrand_cartesian(k_y, k_z, f,
                                                              x, r.y, r.z),
                                          -k1, k1, -k1, k1)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()
-            
+
         return result
 
     def psi_spherical(r, f, x):
@@ -262,18 +262,18 @@ def main(args):
             psi_spherical.called = True
             print("Calculating inital field configuration. "
                   "This will take some time...")
-        
+
         try:
             (result,
              real_tol,
              imag_tol) = complex_dblquad(lambda theta, phi:
-                                         integrand_spherical(theta, phi, f, 
+                                         integrand_spherical(theta, phi, f,
                                                              x, r.y, r.z),
                                          0, 2*math.pi, 0, math.pi/2)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()
-            
+
         return k1**2 * result
 
     # --------------------------------------------------------------------------
@@ -285,11 +285,11 @@ def main(args):
         r = mp.Vector3(0, y, z)
         theta_ = theta(k_y, k_z, k1)
         phi_ = phi(k_y, k_z)
-        
+
         print("phi:", phi(k_y, k_z))
         print()
         print("integrand      (cartesian):",
-              integrand_cartesian(k_y, k_z, 
+              integrand_cartesian(k_y, k_z,
                                   f_Laguerre_Gauss_cartesian, x, y, z))
         print("integrand      (spherical):",
               integrand_spherical(theta_, phi_,
@@ -491,7 +491,7 @@ if __name__ == '__main__':
                               'waist) (default: %(default)s)'))
 
     parser.add_argument('-chi_deg',
-                        type=float, 
+                        type=float,
                         default=45,
                         help='incidence angle in degrees (default: %(default)s)')
 
