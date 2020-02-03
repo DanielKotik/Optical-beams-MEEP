@@ -160,11 +160,17 @@ def main(args):
 
     # cartesian coordinates (not recommmended) -------------------------
     def f_Gauss_cartesian(k_y, k_z, W_y=w_0):
-        """2d-Gaussian spectrum amplitude."""
+        """2d-Gaussian spectrum amplitude.
+
+        Impementation for Cartesian coordinates.
+        """
         return math.exp(-W_y**2 * (k_y**2 + k_z**2)/4)
 
     def f_Laguerre_Gauss_cartesian(k_y, k_z, W_y=w_0, m=m_charge):
-        """Laguerre-Gaussian spectrum amplitude."""
+        """Laguerre-Gaussian spectrum amplitude.
+
+        Impementation for Cartesian coordinates.
+        """
         return f_Gauss_cartesian(k_y, k_z, W_y) * \
             np.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k1)**abs(m)
 
@@ -179,11 +185,17 @@ def main(args):
         return math.acos(sm.sqrt(k**2 - k_y**2 - k_z**2).real / k)
 
     def f_Gauss_spherical(sin_theta, theta, phi, W_y=w_0):
-        """..."""
+        """2d-Gaussian spectrum amplitude.
+
+        Impementation for spherical coordinates.
+        """
         return math.exp(-(k1*W_y*sin_theta/2)**2)
 
     def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, m=m_charge):
-        """..."""
+        """Laguerre-Gaussian spectrum amplitude.
+
+        Impementation for spherical coordinates.
+        """
         return f_Gauss_spherical(sin_theta, theta, phi, W_y) * theta**abs(m) * \
             np.exp(1j*m*phi)
 
