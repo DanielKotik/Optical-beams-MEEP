@@ -81,7 +81,7 @@
 (define-param freq     5)                   ; vacuum frequency of source (default 5)
 (define-param runtime 10)                   ; runs simulation for 10 times freq periods
 (define-param pixel   10)                   ; number of pixels per wavelength in the denser
-                                            ; medium (at least >10; 20 to 30 is a good choice)
+                                            ; medium (at least 10, 20 to 30 is a good choice)
 (define-param source_shift -2.15)           ; source position with respect to the center (point of impact) in Meep
 ;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with
                                             ; waist position
