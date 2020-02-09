@@ -73,7 +73,6 @@ def main(args):
 
     kw_0 = args.kw_0
     kr_w = args.kr_w
-
     kr_c = args.kr_c
 
     # angle of incidence
@@ -86,17 +85,23 @@ def main(args):
     # --------------------------------------------------------------------------
     # specific Meep parameters (may need to be adjusted)
     # --------------------------------------------------------------------------
-    # TODO: add short comments for every parameter
-    sx = 5
-    sy = 5
-    pml_thickness = 0.25
-    freq = 12
-    runtime = 10
+    sx = 5   # size of cell including PML in x-direction
+    sy = 5   # size of cell including PML in y-direction
+    pml_thickness = 0.25   # thickness of PML layer
+    freq = 12      # vacuum frequency of source (5 to 12 is good)
+    runtime = 10   # runs simulation for 10 times freq periods
+    
+    # number of pixels per wavelength in the denser medium (at least 10, 
+    # 20 to 30 is a good choice)
     pixel = 10
+    
+    # source position with respect to the center (point of impact) in Meep
+    # units (-2.15 good); if equal -r_w, then source position coincides with
+    # waist position
     source_shift = -2.15
 
     # --------------------------------------------------------------------------
-    # derived Meep parameters (do not change)
+    # derived (Meep) parameters (do not change)
     # --------------------------------------------------------------------------
     k_vac = 2 * math.pi * freq
     k1 = n1 * k_vac

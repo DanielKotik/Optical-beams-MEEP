@@ -76,17 +76,24 @@ def main(args):
     # --------------------------------------------------------------------------
     # specific Meep parameters (may need to be adjusted)
     # --------------------------------------------------------------------------
-    sx = 10
-    sy = 10
-    pml_thickness = 0.25
-    freq = 12
-    runtime = 90
+    sx = 10   # size of cell including PML in x-direction
+    sy = 10   # size of cell including PML in y-direction
+    pml_thickness = 0.25   # thickness of PML layer
+    freq = 12      # vacuum frequency of source (4 to 12 is good)
+    runtime = 90   # runs simulation for X times freq periods
+    
+    # number of pixels per wavelength in the denser medium (at least 10, 
+    # 20 to 30 is a good choice)
     pixel = 15
+    
+    # source position with respect to the center (point of impact) in Meep
+    # units (-2.15 good); if equal -r_w, then source position coincides with
+    # waist position
     #source_shift = 0
     source_shift = -0.4*(sx - 2*pml_thickness)
 
     # --------------------------------------------------------------------------
-    # derived Meep parameters (do not change)
+    # derived (Meep) parameters (do not change)
     # --------------------------------------------------------------------------
     k_vac = 2 * math.pi * freq
     k1 = n1 * k_vac
