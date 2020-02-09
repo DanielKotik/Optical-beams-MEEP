@@ -160,6 +160,15 @@
 ;;------------------------------------------------------------------------------------------------
 
 ;;cartesian coordinates (not recommended) ---------------------------
+;; coordinate transformation: from k-space to (theta, phi)-space
+(define (phi k)
+        (lambda (k_y k_z) (atan (/ k_y k) (/ (* -1 k_z) k))
+        ))
+
+(define (theta k)
+        (lambda (k_y k_z) (acos (/ (real-part (sqrt (- (* k k) (* k_y k_y) (* k_z k_z)))) k))
+        ))
+
 (define (f_Gauss_cartesian W_y)
         (lambda (k_y k_z) (exp (* -1 (* (* W_y W_y) (/ (+ (* k_y k_y) (* k_z k_z)) 4))))
         ))
@@ -170,15 +179,6 @@
         ))
 
 ;; spherical coordinates --------------------------------------------
-;; coordinate transformation: from k-space to (theta, phi)-space
-(define (phi k)
-        (lambda (k_y k_z) (atan (/ k_y k) (/ (* -1 k_z) k))
-        ))
-
-(define (theta k)
-        (lambda (k_y k_z) (acos (/ (real-part (sqrt (- (* k k) (* k_y k_y) (* k_z k_z)))) k))
-        ))
-
 (define (f_Gauss_spherical W_y)
         (lambda (sin_theta . opt)           ; opt is an optional list of (unused) arguments (here:  theta, phi)
                 (exp (* -1 (expt (/ (* k1 W_y sin_theta) 2) 2)))

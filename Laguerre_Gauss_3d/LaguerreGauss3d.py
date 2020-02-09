@@ -159,6 +159,20 @@ def main(args):
     # --------------------------------------------------------------------------
 
     # cartesian coordinates (not recommmended) -------------------------
+    def phi(k_y, k_z):
+        """Azimuthal angle.
+        
+        Part of coordinate transformation from k-space to (theta, phi)-space.
+        """
+        return math.atan2(k_y, -k_z)
+
+    def theta(k_y, k_z, k):
+        """Polar angle.
+        
+        Part of coordinate transformation from k-space to (theta, phi)-space.
+        """
+        return math.acos(sm.sqrt(k**2 - k_y**2 - k_z**2).real / k)
+    
     def f_Gauss_cartesian(k_y, k_z, W_y=w_0):
         """2d-Gaussian spectrum amplitude.
 
@@ -175,15 +189,6 @@ def main(args):
             np.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k1)**abs(m)
 
     # spherical coordinates --------------------------------------------
-    # coordinate transformation: from k-space to (theta, phi)-space
-    def phi(k_y, k_z):
-        """Azimuthal angle."""
-        return math.atan2(k_y, -k_z)
-
-    def theta(k_y, k_z, k):
-        """Polar angle."""
-        return math.acos(sm.sqrt(k**2 - k_y**2 - k_z**2).real / k)
-
     def f_Gauss_spherical(sin_theta, theta, phi, W_y=w_0):
         """2d-Gaussian spectrum amplitude.
 
