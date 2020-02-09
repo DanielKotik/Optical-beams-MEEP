@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 file:    LaguerreGauss3d.py
-brief:   ...
+brief:   Python configuration input file for the FDTD solver Meep simulating the
+         scattering of a polarised Laguerre-Gaussian beam at a planar dielectric 
+         interface (3d)
 author:  Daniel Kotik
 version: X.X.X
 date:    10.01.2019
