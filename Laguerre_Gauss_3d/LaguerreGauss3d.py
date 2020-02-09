@@ -99,9 +99,9 @@ def main(args):
     n_ref = (1  if ref_medium == 0 else
              n1 if ref_medium == 1 else
              n2 if ref_medium == 2 else math.nan)
-    rw = kr_w / (n_ref * k_vac)  # TODO: rw --> r_w
+    r_w = kr_w / (n_ref * k_vac)
     w_0 = kw_0 / (n_ref * k_vac)
-    shift = source_shift + rw
+    shift = source_shift + r_w
     chi_rad = math.radians(chi_deg)
     s_pol = True if (e_z == 1 and e_y == 0) else False
     p_pol = True if (e_z == 0 and e_y == 1) else False

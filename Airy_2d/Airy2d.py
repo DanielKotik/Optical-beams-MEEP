@@ -93,9 +93,9 @@ def main(args):
     n_ref = (1  if ref_medium == 0 else
              n1 if ref_medium == 1 else
              n2 if ref_medium == 2 else math.nan)
-    rw = kr_w / (n_ref * k_vac)
+    r_w = kr_w / (n_ref * k_vac)
     w_0 = kw_0 / (n_ref * k_vac)
-    shift = source_shift + rw
+    shift = source_shift + r_w
     chi_rad = math.radians(chi_deg)
 
     # --------------------------------------------------------------------------
