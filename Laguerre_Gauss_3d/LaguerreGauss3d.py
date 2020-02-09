@@ -8,6 +8,44 @@ brief:   Python configuration input file for the FDTD solver Meep simulating the
 author:  Daniel Kotik
 version: X.X.X
 date:    10.01.2019
+
+
+example invocations: 
+
+ a) launch the serial version of meep with specified polarisation (p)
+
+        python3 LaguerreGauss3d.py -e_z 0 -e_y 1
+
+ b) launch the parallel version of meep using 8 cores
+
+        mpirun -quiet -np 8 python3 LaguerreGauss3d.py
+
+
+coordinate system in meep (defines center of computational cell):  
+                    
+                        --|-----> x
+                          |
+                          |
+                          v y
+
+
+example visualisations:
+
+ - slice within the plane of incidence (x-y plane)
+          h5topng -S2 -0 -z 0  -c hot [HDF5FILE]
+
+ - slice transversal to the incident propagation axis (INDEX specifies slice index)
+          h5topng -S2 -x [INDEX] -c hot [HDF5FILE]
+
+ - full 3D simulation (creating a VTK file to be opened e.g., with MayaVi or ParaView)
+          h5tovtk [HDF5FILE]
+
+As input HDF5FILE choose between, for example, 'e_real2_p-000001500.h5' and 
+'e_imag2_p-000001500.h5' (these are proportional to the electric field energy 
+density) or the sum of both 'e2.h5' (which is proportional to the complex modulus 
+of the complex electric field) obtained by
+          h5math -e "d1 + d2" e2.h5 e_real2_p-000001500.h5 e_imag2_p-000001500.h5
+
 """
 import argparse
 import math
