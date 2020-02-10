@@ -82,11 +82,11 @@ def main(args):
     pml_thickness = 0.25   # thickness of PML layer
     freq = 12      # vacuum frequency of source (4 to 12 is good)
     runtime = 90   # runs simulation for X times freq periods
-    
-    # number of pixels per wavelength in the denser medium (at least 10, 
+
+    # number of pixels per wavelength in the denser medium (at least 10,
     # 20 to 30 is a good choice)
     pixel = 15
-    
+
     # source position with respect to the center (point of impact) in Meep
     # units (-2.15 good); if equal -r_w, then source position coincides with
     # waist position

@@ -3,14 +3,14 @@
 """
 file:    LaguerreGauss3d.py
 brief:   Python configuration input file for the FDTD solver Meep simulating the
-         scattering of a polarised Laguerre-Gaussian beam at a planar dielectric 
+         scattering of a polarised Laguerre-Gaussian beam at a planar dielectric
          interface (3d)
 author:  Daniel Kotik
 version: X.X.X
 date:    10.01.2019
 
 
-example invocations: 
+example invocations:
 
  a) launch the serial version of meep with specified polarisation (p)
 
@@ -21,8 +21,8 @@ example invocations:
         mpirun -quiet -np 8 python3 LaguerreGauss3d.py
 
 
-coordinate system in meep (defines center of computational cell):  
-                    
+coordinate system in meep (defines center of computational cell):
+
                         --|-----> x
                           |
                           |
@@ -40,9 +40,9 @@ example visualisations:
  - full 3D simulation (creating a VTK file to be opened e.g., with MayaVi or ParaView)
           h5tovtk [HDF5FILE]
 
-As input HDF5FILE choose between, for example, 'e_real2_p-000001500.h5' and 
-'e_imag2_p-000001500.h5' (these are proportional to the electric field energy 
-density) or the sum of both 'e2.h5' (which is proportional to the complex modulus 
+As input HDF5FILE choose between, for example, 'e_real2_p-000001500.h5' and
+'e_imag2_p-000001500.h5' (these are proportional to the electric field energy
+density) or the sum of both 'e2.h5' (which is proportional to the complex modulus
 of the complex electric field) obtained by
           h5math -e "d1 + d2" e2.h5 e_real2_p-000001500.h5 e_imag2_p-000001500.h5
 
@@ -127,16 +127,16 @@ def main(args):
     pml_thickness = 0.25   # thickness of PML layer
     freq = 5       # vacuum frequency of source (default 5)
     runtime = 10   # runs simulation for 10 times freq periods
-    
-    # number of pixels per wavelength in the denser medium (at least 10, 
+
+    # number of pixels per wavelength in the denser medium (at least 10,
     # 20 to 30 is a good choice)
     pixel = 10
-    
+
     # source position with respect to the center (point of impact) in Meep
     # units (-2.15 good); if equal -r_w, then source position coincides with
     # waist position
     source_shift = -2.15
-    
+
     # --------------------------------------------------------------------------
     # derived (Meep) parameters (do not change)
     # --------------------------------------------------------------------------
@@ -207,18 +207,18 @@ def main(args):
     # cartesian coordinates (not recommmended) -------------------------
     def phi(k_y, k_z):
         """Azimuthal angle.
-        
+
         Part of coordinate transformation from k-space to (theta, phi)-space.
         """
         return math.atan2(k_y, -k_z)
 
     def theta(k_y, k_z, k):
         """Polar angle.
-        
+
         Part of coordinate transformation from k-space to (theta, phi)-space.
         """
         return math.acos(sm.sqrt(k**2 - k_y**2 - k_z**2).real / k)
-    
+
     def f_Gauss_cartesian(k_y, k_z, W_y=w_0):
         """2d-Gaussian spectrum amplitude.
 
