@@ -200,7 +200,7 @@ def main(args):
             print("Calculating inital field configuration. "
                   "This will take some time...")
 
-        def phi(k_y, x, y):
+        def phase(k_y, x, y):
             """Phase function."""
             return x*math.sqrt(k1**2 - k_y**2) + k_y*y
 
@@ -208,7 +208,7 @@ def main(args):
             (result,
              real_tol,
              imag_tol) = complex_quad(lambda k_y:
-                                      f(k_y) * np.exp(1j*phi(k_y, x, r.y)),
+                                      f(k_y) * np.exp(1j*phase(k_y, x, r.y)),
                                       -k1, k1)
         except Exception as e:
             print(type(e).__name__ + ":", e)
