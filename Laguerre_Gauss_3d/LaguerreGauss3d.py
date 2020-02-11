@@ -275,20 +275,6 @@ def main(args):
     # (purpose: calculate field amplitude at light source position if not
     #           coinciding with beam waist)
     # --------------------------------------------------------------------------
-    def integrand_cartesian(k_y, k_z, f, x, y, z):
-        """..."""
-        return f(k_y, k_z) * np.exp(1j*(x*sm.sqrt(k1**2 - k_y**2 - k_z**2).real
-                                        + y*k_y + z*k_z))
-
-    def integrand_spherical(theta, phi, f, x, y, z):
-        """..."""
-        sin_theta = math.sin(theta)
-        cos_theta = math.cos(theta)
-
-        return sin_theta * cos_theta * f(sin_theta, theta, phi) * \
-            np.exp(1j*k1*(sin_theta*(y*math.sin(phi) - z*math.cos(phi))
-                          + cos_theta*x))
-
     def psi_cartesian(r, f, x):
         """Field amplitude function.
 
@@ -301,12 +287,16 @@ def main(args):
             print("Calculating inital field configuration. "
                   "This will take some time...")
 
+        def phase(k_y, k_z, x, y, z):
+            """Phase function."""
+            return x*sm.sqrt(k1**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
+
         try:
             (result,
              real_tol,
              imag_tol) = complex_dblquad(lambda k_y, k_z:
-                                         integrand_cartesian(k_y, k_z, f,
-                                                             x, r.y, r.z),
+                                         f(k_y, k_z) * \
+                                         np.exp(1j*phase(k_y, k_z, x, r.y, r.z)),
                                          -k1, k1, -k1, k1)
         except Exception as e:
             print(type(e).__name__ + ":", e)
@@ -326,12 +316,20 @@ def main(args):
             print("Calculating inital field configuration. "
                   "This will take some time...")
 
+        def phase(theta, phi, x, y, z):
+            """Phase function."""
+            sin_theta, sin_phi = math.sin(theta), math.sin(phi)
+            cos_theta, cos_phi = math.cos(theta), math.cos(phi)
+
+            return k1*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
+
         try:
             (result,
              real_tol,
              imag_tol) = complex_dblquad(lambda theta, phi:
-                                         integrand_spherical(theta, phi, f,
-                                                             x, r.y, r.z),
+                                         math.sin(theta) * math.cos(theta) * \
+                                         f(math.sin(theta), theta, phi) * \
+                                         np.exp(1j*phase(theta, phi, x, r.y, r.z)),
                                          0, 2*math.pi, 0, math.pi/2)
         except Exception as e:
             print(type(e).__name__ + ":", e)
@@ -346,17 +344,8 @@ def main(args):
         k_y, k_z = 1.0, 5.2
         x, y, z = -2.15, 0.3, 0.5
         r = mp.Vector3(0, y, z)
-        theta_ = theta(k_y, k_z, k1)
-        phi_ = phi(k_y, k_z)
 
         print("phi:", phi(k_y, k_z))
-        print()
-        print("integrand      (cartesian):",
-              integrand_cartesian(k_y, k_z,
-                                  f_Laguerre_Gauss_cartesian, x, y, z))
-        print("integrand      (spherical):",
-              integrand_spherical(theta_, phi_,
-                                  f_Laguerre_Gauss_spherical, x, y, z))
         print()
         print("psi            (cartesian):",
               psi_cartesian(r, f_Laguerre_Gauss_cartesian, x))
