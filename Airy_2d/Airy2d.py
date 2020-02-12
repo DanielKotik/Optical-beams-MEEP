@@ -5,8 +5,40 @@ file:    Airy2d.py
 brief:   Python configuration input file for the FDTD solver Meep simulating the
          scattering of an incomplete Airy beam at a planar dielectric interface
 author:  Daniel Kotik
-version: X.X.X
-date:    30.11.2019
+version: 1.4.0
+release date: 12.02.2020
+creation date: 30.11.2019
+
+
+invocation:
+
+ a) launch the serial version of meep with specified polarisation (p)
+
+        python3 Airy2d.py -s_pol False
+
+ b) launch the parallel version of meep using 8 cores
+
+        mpirun -quiet -np 8 python3 Airy2d.py
+
+coordinate system in meep (defines center of computational cell):
+
+                        --|-----> x
+                          |
+                          |
+                          v y
+
+
+visualisation:
+
+Parenthesis show options for overlaying the dielectric function HDF5FILE_1.
+
+      h5topng -S2 -X [SCALEX] -c hot (-a yarg -A [HDF5FILE_1]) [HDF5FILE_2]
+
+If necessary, scale the x dimension of the image by SCALEX.
+
+exmple use:
+      h5topng -X 1.2 -Zc dkbluered -a yarg -A Airy2d-eps-___.h5 Airy2d-ez-___.h5
+
 """
 import argparse
 import math

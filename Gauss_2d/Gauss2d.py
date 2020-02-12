@@ -5,8 +5,37 @@ file:    Gauss2d.py
 brief:   Python configuration input file for the FDTD solver Meep simulating the
          scattering of a Gaussian beam at planar and curved dielectric interfaces
 author:  Daniel Kotik
-version: X.X.X
-date:    17.12.2019
+version: 1.4.0
+release date: 12.02.2020
+creation date: 17.12.2019
+
+
+invocation:
+
+ a) launch the serial version of meep with specified polarisation (p)
+
+        python3 Gauss2d.py -s_pol False
+
+ b) launch the parallel version of meep using 8 cores with  a specified
+    interface (concave)
+
+        mpirun -quiet -np 8 python3 Gauss2d.py -interface concave
+
+ coordinate system in meep (defines center of computational cell):
+
+                          --|-----> x
+                            |
+                            |
+                            v y
+
+
+visualisation:
+
+Parenthesis show options for overlaying the dielectric function HDF5FILE_1.
+
+          h5topng -S2 -c  hot       (-a yarg -A [HDF5FILE_1]) HDF5FILE_2
+          h5topng -S2 -Zc dkbluered (-a gray -A [HDF5FILE_1]) HDF5FILE_2
+
 """
 import argparse
 import math

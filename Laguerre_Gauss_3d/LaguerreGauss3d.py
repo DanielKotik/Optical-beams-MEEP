@@ -6,11 +6,12 @@ brief:   Python configuration input file for the FDTD solver Meep simulating the
          scattering of a polarised Laguerre-Gaussian beam at a planar dielectric
          interface (3d)
 author:  Daniel Kotik
-version: X.X.X
-date:    10.01.2019
+version: 1.4.0
+release date: 12.02.2020
+creation date: 10.01.2019
 
 
-example invocations:
+invocation:
 
  a) launch the serial version of meep with specified polarisation (p)
 
@@ -29,10 +30,10 @@ coordinate system in meep (defines center of computational cell):
                           v y
 
 
-example visualisations:
+visualisation:
 
  - slice within the plane of incidence (x-y plane)
-          h5topng -S2 -0 -z 0  -c hot [HDF5FILE]
+          h5topng -S2 -0 -z 0 -c hot [HDF5FILE]
 
  - slice transversal to the incident propagation axis (INDEX specifies slice index)
           h5topng -S2 -x [INDEX] -c hot [HDF5FILE]
@@ -40,11 +41,11 @@ example visualisations:
  - full 3D simulation (creating a VTK file to be opened e.g., with MayaVi or ParaView)
           h5tovtk [HDF5FILE]
 
-As input HDF5FILE choose between, for example, 'e_real2_p-000001500.h5' and
-'e_imag2_p-000001500.h5' (these are proportional to the electric field energy
+As input HDF5FILE choose between, for example, 'e_real2_p-___.h5' and
+'e_imag2_p-___.h5' (these are proportional to the electric field energy
 density) or the sum of both 'e2.h5' (which is proportional to the complex modulus
 of the complex electric field) obtained by
-          h5math -e "d1 + d2" e2.h5 e_real2_p-000001500.h5 e_imag2_p-000001500.h5
+          h5math -e "d1 + d2" e2.h5 e_real2_p-___.h5 e_imag2_p-___.h5
 
 """
 import argparse
