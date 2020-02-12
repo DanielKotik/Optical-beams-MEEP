@@ -497,12 +497,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-e_z',
-                        type=complex,
+                        type=eval,
                         default=1,
                         help='z-component of Jones vector (default: %(default)s)')
 
     parser.add_argument('-e_y',
-                        type=complex,
+                        type=eval,
                         default=0,
                         help='y-component of Jones vector (default: %(default)s)')
 
