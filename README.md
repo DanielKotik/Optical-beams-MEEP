@@ -11,6 +11,7 @@
 # Optical-beams-MEEP
 [![DOI](https://zenodo.org/badge/91711821.svg)](https://zenodo.org/badge/latestdoi/91711821)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/DanielKotik/Optical-beams-MEEP/master?filepath=beam_profiles.ipynb)
+[![PyMeep](https://img.shields.io/badge/PyMeep-1.12.0-success)](https://img.shields.io/badge/PyMeep-1.12.0-success)
 [![Meep](https://img.shields.io/badge/Meep-1.7.0-success)](https://github.com/NanoComp/meep)
 [![libctl](https://img.shields.io/badge/libctl-4.1.4-success)](https://github.com/NanoComp/libctl/)
 [![Guile](https://img.shields.io/badge/Guile-2.2.3--4-success)](https://www.gnu.org/software/guile/)
@@ -18,24 +19,29 @@
 FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. A mathematical description of the currently implemented beam profiles is outlined in this [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/master/beam_profiles.ipynb).
 
 The provided files (and features) are:
-*   Scheme configuration file for Gaussian beams (2d) impinging upon planar, concave and convex dielectric interfaces
-*   Scheme configuration file for Laguerre-Gaussian (vortex) beams (3d) impinging upon a planar dielectric interface
+*   Scheme/Python configuration files for Gaussian beams (2d) impinging upon planar, concave and convex dielectric interfaces
+*   Scheme/Python configuration file for Laguerre-Gaussian (vortex) beams (3d) impinging upon a planar dielectric interface
+*   Scheme/Python configuration file for Airy beams (2d) impinging upon a planar dielectric interface
 *   Python scripts for enhanced visualisation and analysis of the generated HDF5 output files
 *   The waist/focus of the beams can be placed anywhere along the propagation direction - independently of the location of the source current distribution
 
 Originally, these files have been used in studying optical beam shifts providing independent numerical simulations. With regards to their scriptability, together with the ease and widespread use of the powerful [Meep](https://github.com/stevengj/meep) tool, these scripts can easily be adapted to other and possibly more complicated beam/interface setups.
 
 ## Invocation
-A Scheme configuration file (extension ``.ctl``) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, for example by executing commands like (notice the single quotes to specify strings and Scheme expressions):
+A Scheme (extension ``.ctl``) or Python configuration file (extension `.py`) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, for example by executing commands like (notice the single quotes to specify strings and Scheme expressions):
 
-``mpirun -quiet -np X meep-mpi interface='"concave"' Gauss2d.ctl``
+*Scheme:* ``mpirun -quiet -np X meep-mpi interface='"concave"' Gauss2d.ctl``
+
+*Python:* ``mpirun -quiet -np X python3 Gauss2d.py -interface concave``
 
 or
 
-``mpirun -quiet -np X meep-mpi n2=1.5 e_z='(/ 1+1i 2)' e_y='(/ 1-1i 2)' LaguerreGauss3d.ctl``
+*Scheme*: ``mpirun -quiet -np X meep-mpi n2=1.5 e_z='(/ 1+1i 2)' e_y='(/ 1-1i 2)' LaguerreGauss3d.ctl``
+
+*Python*: ``mpirun -quiet -np X python3 LaguerreGauss3d.py -n2 1.5 -e_z "(1+1j)/2" -e_y "(1-1j)/2"``
 
 with ``X`` indicating the number of cores. All possible Meep parameters that can be set from the command line are
-defined in expressions beginning with ``(define-param ...`` in the respective configuration files.
+defined in expressions beginning with ``(define-param ...`` in the respective Scheme configuration files.
 
 ## Visualisation
 The generated HDF5 files can be processed by different visualisation tools. To get a quick impression of the data
