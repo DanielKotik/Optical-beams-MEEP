@@ -27,18 +27,36 @@ The provided files (and features) are:
 
 Originally, these files have been used in studying optical beam shifts providing independent numerical simulations. With regards to their scriptability, together with the ease and widespread use of the powerful [Meep](https://github.com/stevengj/meep) tool, these scripts can easily be adapted to other and possibly more complicated beam/interface setups.
 
+## Installation
+We highly recommmend to install the parallel version of PyMeep via Conda:
+
+```shell
+$ conda create -n pmp -c conda-forge pymeep=*=mpi_mpich_*
+$ conda activate pmp
+```
+
+For detailed installation instructions, see the [Meep documentation](https://meep.readthedocs.io/en/latest/Installation/#conda-packages).
+
 ## Invocation
 A Scheme (extension ``.ctl``) or Python configuration file (extension `.py`) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, for example by executing commands like (notice the single quotes to specify strings and Scheme expressions):
 
-*Scheme:* ``mpirun -quiet -np X meep-mpi interface='"concave"' Gauss2d.ctl``
+```shell
+# Scheme
+$ mpirun -quiet -np X meep-mpi interface='"concave"' Gauss2d.ctl
 
-*Python:* ``mpirun -quiet -np X python3 Gauss2d.py -interface concave``
+# Python
+$ mpirun -quiet -np X python3 Gauss2d.py -interface concave
+```
 
-or
+or some other example
 
-*Scheme*: ``mpirun -quiet -np X meep-mpi n2=1.5 e_z='(/ 1+1i 2)' e_y='(/ 1-1i 2)' LaguerreGauss3d.ctl``
+```shell
+# Scheme
+$ mpirun -quiet -np X meep-mpi n2=1.5 e_z='(/ 1+1i 2)' e_y='(/ 1-1i 2)' LaguerreGauss3d.ctl
 
-*Python*: ``mpirun -quiet -np X python3 LaguerreGauss3d.py -n2 1.5 -e_z "(1+1j)/2" -e_y "(1-1j)/2"``
+# Python
+$ mpirun -quiet -np X python3 LaguerreGauss3d.py -n2 1.5 -e_z "(1+1j)/2" -e_y "(1-1j)/2"
+```
 
 with ``X`` indicating the number of cores. All possible Meep parameters that can be set from the command line are
 defined in expressions beginning with ``(define-param ...`` in the respective Scheme configuration files.
