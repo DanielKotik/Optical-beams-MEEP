@@ -8,7 +8,7 @@ brief:   Python configuration input file for the FDTD solver Meep simulating the
 author:  Daniel Kotik
 version: 1.4.0
 release date: 12.02.2020
-creation date: 10.01.2019
+creation date: 10.01.2020
 
 
 invocation:
