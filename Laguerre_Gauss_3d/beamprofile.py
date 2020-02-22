@@ -80,3 +80,21 @@ def psi_spherical(r, f, x, k):
             sys.exit()
 
         return k**2 * result
+    
+    
+if __name__ == '__main__':
+    k_y, k_z = 1.0, 5.2
+    x, y, z = -2.15, 0.3, 0.5
+    import meep as mp
+    r = mp.Vector3(0, y, z)
+    
+    k1 = 31.41592653589793
+    w_0 = 0.25464790894703254
+    m_charge = 2
+    
+    f_ = lambda sin_theta, theta, phi: f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, m=m_charge, k=k1)
+    
+    psi = lambda: psi_spherical(r, f_, x, k1)
+    
+    print("psi (spherical):", psi())
+    
