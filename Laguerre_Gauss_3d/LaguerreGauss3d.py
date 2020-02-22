@@ -55,7 +55,8 @@ import meep as mp
 import sys
 
 from datetime import datetime
-from beamprofile import psi_spherical
+
+from beamprofile import psi_spherical, f_Gauss_spherical, f_Laguerre_Gauss_spherical
 from beamprofile import complex_dblquad
 
 
@@ -224,24 +225,7 @@ def main(args):
             cmath.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k)**abs(m)
 
     # spherical coordinates --------------------------------------------
-    def f_Gauss_spherical(sin_theta, theta, phi, params):
-        """2d-Gaussian spectrum amplitude.
 
-        Impementation for spherical coordinates.
-        """
-        W_y, k = params['W_y'], params['k']
-
-        return math.exp(-(k*W_y*sin_theta/2)**2)
-
-    def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, params):
-        """Laguerre-Gaussian spectrum amplitude.
-
-        Impementation for spherical coordinates.
-        """
-        m = params['m']
-
-        return f_Gauss_spherical(sin_theta, theta, phi, params) * theta**abs(m) * \
-            cmath.exp(1j*m*phi)
 
     # --------------------------------------------------------------------------
     # some test outputs
@@ -313,8 +297,8 @@ def main(args):
         print("psi            (cartesian):",
               psi_cartesian(r, f_Laguerre_Gauss_cartesian, x, params))
         print("psi            (spherical):",
-              psi_spherical(r, f_Laguerre_Gauss_spherical, x, params))
-        print("psi       (origin, simple):", Gauss(r, params))
+              psi_spherical(r, lambda st, t, p: f_Laguerre_Gauss_spherical(st, t, p, W_y=w_0, m=m_charge, k=k1), x, k1))
+        print("psi       (origin, simple):", Gauss(r))
         sys.exit()
 
     # --------------------------------------------------------------------------

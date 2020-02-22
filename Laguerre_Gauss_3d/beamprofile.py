@@ -33,6 +33,21 @@ def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
 
     return result, real_tol, imag_tol
 
+def f_Gauss_spherical(sin_theta, theta, phi, W_y, k):
+    """2d-Gaussian spectrum amplitude.
+
+    Impementation for spherical coordinates.
+    """
+    return math.exp(-(k*W_y*sin_theta/2)**2)
+
+def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, m, k):
+    """Laguerre-Gaussian spectrum amplitude.
+
+    Impementation for spherical coordinates.
+    """
+    return f_Gauss_spherical(sin_theta, theta, phi, W_y, k) * theta**abs(m) * \
+        np.exp(1j*m*phi)
+
 def psi_spherical(r, f, x, k):
         """Field amplitude function.
 
