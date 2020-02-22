@@ -55,24 +55,11 @@ import meep as mp
 import sys
 
 from datetime import datetime
-from scipy.integrate import dblquad
+from beamprofile import psi_spherical
+from beamprofile import complex_dblquad
 
 
 print("Meep version:", mp.__version__)
-
-
-def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
-    """Integrate real and imaginary part of the given function."""
-    def real_func(x, y):
-        return func(x, y).real
-
-    def imag_func(x, y):
-        return func(x, y).imag
-
-    real, real_tol = dblquad(real_func, a, b, gfun, hfun, **kwargs)
-    imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun, **kwargs)
-
-    return real + 1j*imag, real_tol, imag_tol
 
 
 def Critical(n1, n2):
@@ -312,43 +299,6 @@ def main(args):
             sys.exit()
 
         return result
-
-    def psi_spherical(r, x, params):
-        """Field amplitude function.
-
-        Integration in spherical coordinates.
-        """
-        k, m = params['k'], params['m']
-
-        try:
-            getattr(psi_spherical, "called")
-        except AttributeError:
-            psi_spherical.called = True
-            print("Calculating inital field configuration. "
-                  "This will take some time...")
-
-        def phase(theta, phi, x, y, z):
-            """Phase function."""
-            sin_theta, sin_phi = math.sin(theta), math.sin(phi)
-            cos_theta, cos_phi = math.cos(theta), math.cos(phi)
-
-            return k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
-
-        f = (f_Gauss_spherical if m == 0 else f_Laguerre_Gauss_spherical)
-
-        try:
-            (result,
-             real_tol,
-             imag_tol) = complex_dblquad(lambda theta, phi:
-                                         math.sin(theta) * math.cos(theta) *
-                                         f(math.sin(theta), theta, phi, params) *
-                                         cmath.exp(1j*phase(theta, phi, x, r.y, r.z)),
-                                         0, 2*math.pi, 0, math.pi/2)
-        except Exception as e:
-            print(type(e).__name__ + ":", e)
-            sys.exit()
-
-        return k**2 * result
 
     # --------------------------------------------------------------------------
     # some test outputs (uncomment if needed)
