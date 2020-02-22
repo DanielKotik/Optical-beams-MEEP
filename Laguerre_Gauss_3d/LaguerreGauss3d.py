@@ -58,6 +58,7 @@ import sys
 from datetime import datetime
 from scipy.integrate import dblquad
 
+
 print("Meep version:", mp.__version__)
 
 
@@ -227,28 +228,28 @@ def main(args):
         """
         return math.exp(-W_y**2 * (k_y**2 + k_z**2)/4)
 
-    def f_Laguerre_Gauss_cartesian(k_y, k_z, W_y=w_0, m=m_charge):
+    def f_Laguerre_Gauss_cartesian(k_y, k_z, W_y=w_0, m=m_charge, k=k1):
         """Laguerre-Gaussian spectrum amplitude.
 
         Impementation for Cartesian coordinates.
         """
         return f_Gauss_cartesian(k_y, k_z, W_y) * \
-            np.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k1)**abs(m)
+            np.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k)**abs(m)
 
     # spherical coordinates --------------------------------------------
-    def f_Gauss_spherical(sin_theta, theta, phi, W_y=w_0):
+    def f_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, k=k1):
         """2d-Gaussian spectrum amplitude.
 
         Impementation for spherical coordinates.
         """
-        return math.exp(-(k1*W_y*sin_theta/2)**2)
+        return math.exp(-(k*W_y*sin_theta/2)**2)
 
-    def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, m=m_charge):
+    def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, m=m_charge, k=k1):
         """Laguerre-Gaussian spectrum amplitude.
 
         Impementation for spherical coordinates.
         """
-        return f_Gauss_spherical(sin_theta, theta, phi, W_y) * theta**abs(m) * \
+        return f_Gauss_spherical(sin_theta, theta, phi, W_y, k) * theta**abs(m) * \
             np.exp(1j*m*phi)
 
     # --------------------------------------------------------------------------
@@ -262,13 +263,13 @@ def main(args):
         print("Gauss spectrum (cartesian):",
               f_Gauss_cartesian(k_y, k_z, w_0))
         print("Gauss spectrum (spherical):",
-              f_Gauss_spherical(math.sin(theta_), theta_, phi_, w_0))
+              f_Gauss_spherical(math.sin(theta_), theta_, phi_, w_0, k1))
         print()
         print("L-G spectrum   (cartesian):",
-              f_Laguerre_Gauss_cartesian(k_y, k_z, w_0, m_charge))
+              f_Laguerre_Gauss_cartesian(k_y, k_z, w_0, m_charge, k1))
         print("L-G spectrum   (spherical):",
               f_Laguerre_Gauss_spherical(math.sin(theta_), theta_, phi_, w_0,
-                                         m_charge))
+                                         m_charge, k1))
         print()
 
     # --------------------------------------------------------------------------
@@ -276,7 +277,7 @@ def main(args):
     # (purpose: calculate field amplitude at light source position if not
     #           coinciding with beam waist)
     # --------------------------------------------------------------------------
-    def psi_cartesian(r, f, x):
+    def psi_cartesian(r, f, x, k=k1):
         """Field amplitude function.
 
         Integration in Cartesian coordinates.
@@ -290,7 +291,7 @@ def main(args):
 
         def phase(k_y, k_z, x, y, z):
             """Phase function."""
-            return x*sm.sqrt(k1**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
+            return x*sm.sqrt(k**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
 
         try:
             (result,
@@ -298,14 +299,14 @@ def main(args):
              imag_tol) = complex_dblquad(lambda k_y, k_z:
                                          f(k_y, k_z) * \
                                          np.exp(1j*phase(k_y, k_z, x, r.y, r.z)),
-                                         -k1, k1, -k1, k1)
+                                         -k, k, -k, k)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()
 
         return result
 
-    def psi_spherical(r, f, x):
+    def psi_spherical(r, f, x, k=k1):
         """Field amplitude function.
 
         Integration in spherical coordinates.
@@ -322,7 +323,7 @@ def main(args):
             sin_theta, sin_phi = math.sin(theta), math.sin(phi)
             cos_theta, cos_phi = math.cos(theta), math.cos(phi)
 
-            return k1*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
+            return k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
 
         try:
             (result,
@@ -336,8 +337,8 @@ def main(args):
             print(type(e).__name__ + ":", e)
             sys.exit()
 
-        return k1**2 * result
-
+        return k**2 * result
+    
     # --------------------------------------------------------------------------
     # some test outputs (uncomment if needed)
     # --------------------------------------------------------------------------
@@ -349,9 +350,9 @@ def main(args):
         print("phi:", phi(k_y, k_z))
         print()
         print("psi            (cartesian):",
-              psi_cartesian(r, f_Laguerre_Gauss_cartesian, x))
+              psi_cartesian(r, f_Laguerre_Gauss_cartesian, x, k1))
         print("psi            (spherical):",
-              psi_spherical(r, f_Laguerre_Gauss_spherical, x))
+              psi_spherical(r, f_Laguerre_Gauss_spherical, x, k1))
         print("psi       (origin, simple):", Gauss(r))
         sys.exit()
 
