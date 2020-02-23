@@ -7,11 +7,16 @@ version: 1.5-beta
 release date: xx.xx.2020
 creation date: 22.02.2020
 """
+import cython
 import math
 import numpy as np
 import sys
 
 from scipy.integrate import dblquad
+
+if not cython.compiled:
+    print("Please consider compiling `beamprofile.py` via Cython:\n\n"
+          "     `$ cythonize -3 -i beamprofile.py`")
 
 def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
     """Integrate real and imaginary part of the given function."""
@@ -60,6 +65,10 @@ def psi_spherical(r, f, x, k):
             print("Calculating inital field configuration. "
                   "This will take some time...")
 
+        #@cython.cfunc
+        #@cython.returns(cython.double)
+        #@cython.locals(x=cython.double, y=cython.double, z=cython.double,
+        #               theta=cython.double, phi=cython.double)
         def phase(theta, phi, x, y, z):
             """Phase function."""
             sin_theta, sin_phi = math.sin(theta), math.sin(phi)
