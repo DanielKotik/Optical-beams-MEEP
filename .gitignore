@@ -8,6 +8,10 @@ Gauss_2d/convex/*
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
+### Cython ###
+Laguerre_Gauss_3d/beamprofile.c
+Laguerre_Gauss_3d/beamprofile.html
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
