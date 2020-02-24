@@ -25,18 +25,11 @@ def complex_dblquad(func, a, b, gfun, hfun):
 
     def imag_func(x, y):
         return np.imag(func(x, y))
+    
+    real, real_tol = dblquad(real_func, a, b, gfun, hfun)
+    imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun)
 
-    def real_integral():
-        return dblquad(real_func, a, b, gfun, hfun)
-
-    def imag_integral():
-        return dblquad(imag_func, a, b, gfun, hfun)
-
-    result = real_integral()[0] + 1j * imag_integral()[0]
-    real_tol = real_integral()[1]
-    imag_tol = imag_integral()[1]
-
-    return result, real_tol, imag_tol
+    return real + 1j*imag, real_tol, imag_tol
 
 def f_Gauss_spherical(sin_theta, theta, phi, W_y, k):
     """2d-Gaussian spectrum amplitude.
