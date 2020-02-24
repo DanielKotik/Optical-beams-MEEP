@@ -75,15 +75,17 @@ def psi_spherical(r, f, x, k):
             cos_theta, cos_phi = math.cos(theta), math.cos(phi)
 
             return k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
+        
+        def integrand(theta, phi):
+            """..."""
+            return math.sin(theta) * math.cos(theta) * \
+                f(math.sin(theta), theta, phi) * \
+                np.exp(1j*phase(theta, phi, x, r.y, r.z))
 
         try:
             (result,
              real_tol,
-             imag_tol) = complex_dblquad(lambda theta, phi:
-                                         math.sin(theta) * math.cos(theta) * \
-                                         f(math.sin(theta), theta, phi) * \
-                                         np.exp(1j*phase(theta, phi, x, r.y, r.z)),
-                                         0, 2*math.pi, 0, math.pi/2)
+             imag_tol) = complex_dblquad(integrand, 0, 2*math.pi, 0, math.pi/2)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()
