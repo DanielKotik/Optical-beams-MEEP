@@ -18,7 +18,7 @@ if not cython.compiled:
     print("Please consider compiling `beamprofile.py` via Cython:\n\n"
           "     `$ cythonize -3 -i beamprofile.py`")
 
-def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
+def complex_dblquad(func, a, b, gfun, hfun):
     """Integrate real and imaginary part of the given function."""
     def real_func(x, y):
         return np.real(func(x, y))
@@ -27,10 +27,10 @@ def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
         return np.imag(func(x, y))
 
     def real_integral():
-        return dblquad(real_func, a, b, gfun, hfun, **kwargs)
+        return dblquad(real_func, a, b, gfun, hfun)
 
     def imag_integral():
-        return dblquad(imag_func, a, b, gfun, hfun, **kwargs)
+        return dblquad(imag_func, a, b, gfun, hfun)
 
     result = real_integral()[0] + 1j * imag_integral()[0]
     real_tol = real_integral()[1]
