@@ -12,7 +12,11 @@ import cython
 # function type declaration for spectrum amplitudes
 ctypedef double complex (*f_spectrum_type)(double theta, double phi)
 
-#def (double complex, double, double) complex_dblquad(f_spectrum_type func, double a, double b, double gfun, double hfun)
+# function prototypes
+cdef double real_func(double x, double y, func)
+cdef double imag_func(double x, double y, func)
+
+cdef (double complex, double, double) complex_dblquad(func, double a, double b, double gfun, double hfun)
 
 cdef double f_Gauss_spherical(double sin_theta, double theta, double phi, 
                               double W_y, double k)

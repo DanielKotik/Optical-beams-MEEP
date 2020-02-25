@@ -18,16 +18,18 @@ if not cython.compiled:
     print("Please consider compiling `beamprofile.py` via Cython:\n\n"
           "     `$ cythonize -3 -i beamprofile.py`")
 
+
+def real_func(x, y, func):
+    return func(x, y).real
+    
+def imag_func(x, y, func):
+    return func(x, y).imag    
+
 def complex_dblquad(func, a, b, gfun, hfun):
     """Integrate real and imaginary part of the given function."""
-    def real_func(x, y):
-        return func(x, y).real
-
-    def imag_func(x, y):
-        return func(x, y).imag
     
-    real, real_tol = dblquad(real_func, a, b, gfun, hfun)
-    imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun)
+    real, real_tol = dblquad(real_func, a, b, gfun, hfun, (func,))
+    imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun, (func,))
 
     return real + 1j*imag, real_tol, imag_tol
 
@@ -58,10 +60,6 @@ def psi_spherical(r, f, x, k):
             print("Calculating inital field configuration. "
                   "This will take some time...")
 
-        #@cython.cfunc
-        #@cython.returns(cython.double)
-        #@cython.locals(x=cython.double, y=cython.double, z=cython.double,
-        #               theta=cython.double, phi=cython.double)
         def phase(theta, phi, x, y, z):
             """Phase function."""
             sin_theta, sin_phi = math.sin(theta), math.sin(phi)
