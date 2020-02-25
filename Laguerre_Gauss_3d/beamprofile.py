@@ -7,9 +7,9 @@ version: 1.5-beta
 release date: xx.xx.2020
 creation date: 22.02.2020
 """
+import cmath
 import cython
 import math
-import numpy as np
 import sys
 
 from scipy.integrate import dblquad
@@ -21,10 +21,10 @@ if not cython.compiled:
 def complex_dblquad(func, a, b, gfun, hfun):
     """Integrate real and imaginary part of the given function."""
     def real_func(x, y):
-        return np.real(func(x, y))
+        return func(x, y).real
 
     def imag_func(x, y):
-        return np.imag(func(x, y))
+        return func(x, y).imag
     
     real, real_tol = dblquad(real_func, a, b, gfun, hfun)
     imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun)
@@ -44,7 +44,7 @@ def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, m, k):
     Impementation for spherical coordinates.
     """
     return f_Gauss_spherical(sin_theta, theta, phi, W_y, k) * theta**abs(m) * \
-        np.exp(1j*m*phi)
+        cmath.exp(1j*m*phi)
 
 def psi_spherical(r, f, x, k):
         """Field amplitude function.
@@ -73,7 +73,7 @@ def psi_spherical(r, f, x, k):
             """..."""
             return math.sin(theta) * math.cos(theta) * \
                 f(math.sin(theta), theta, phi) * \
-                np.exp(1j*phase(theta, phi, x, r.y, r.z))
+                cmath.exp(1j*phase(theta, phi, x, r.y, r.z))
 
         try:
             (result,
