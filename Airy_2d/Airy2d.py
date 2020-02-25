@@ -41,9 +41,9 @@ exmple use:
 
 """
 import argparse
+import cmath
 import math
 import meep as mp
-import numpy as np
 import sys
 
 from datetime import datetime
@@ -54,17 +54,16 @@ print("Meep version:", mp.__version__)
 
 def complex_quad(func, a, b, **kwargs):
     """Integrate real and imaginary part of the given function."""
-    def real_integral():
-        return quad(lambda x: np.real(func(x)), a, b, **kwargs)
+    def real_func(x):
+        return func(x).real
 
-    def imag_integral():
-        return quad(lambda x: np.imag(func(x)), a, b, **kwargs)
+    def imag_func(x):
+        return func(x).imag
 
-    result = real_integral()[0] + 1j * imag_integral()[0]
-    real_tol = real_integral()[1]
-    imag_tol = imag_integral()[1]
+    real, real_tol = quad(real_func, a, b, **kwargs)
+    imag, imag_tol = quad(imag_func, a, b, **kwargs)
 
-    return result, real_tol, imag_tol
+    return real + 1j*imag, real_tol, imag_tol
 
 
 def Critical(n1, n2):
@@ -182,7 +181,7 @@ def main(args):
         (result,
          real_tol,
          imag_tol) = complex_quad(lambda xi:
-                                  np.exp(1.0j*(-(xi**3)/3 + (xi * r.y/W_y))),
+                                  cmath.exp(1.0j*(-(xi**3)/3 + (xi * r.y/W_y))),
                                   M-W, M+W)
         return result
 
@@ -203,7 +202,7 @@ def main(args):
 
     def f_Airy(k_y, W_y=w_0, M=M, W=W):
         """Airy spectrum amplitude."""
-        return W_y*np.exp(1.0j*(-1/3)*(k_y*W_y)**3) \
+        return W_y*cmath.exp(1.0j*(-1/3)*(k_y*W_y)**3) \
             * Heaviside(W_y*k_y - (M-W)) * Heaviside((M+W) - (W_y*k_y))
 
     if test_output:
@@ -231,7 +230,7 @@ def main(args):
             (result,
              real_tol,
              imag_tol) = complex_quad(lambda k_y:
-                                      f(k_y) * np.exp(1j*phase(k_y, x, r.y)),
+                                      f(k_y) * cmath.exp(1j*phase(k_y, x, r.y)),
                                       -k1, k1, limit=100)
         except Exception as e:
             print(type(e).__name__ + ":", e)

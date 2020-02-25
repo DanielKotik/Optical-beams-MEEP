@@ -38,9 +38,9 @@ Parenthesis show options for overlaying the dielectric function HDF5FILE_1.
 
 """
 import argparse
+import cmath
 import math
 import meep as mp
-import numpy as np
 import sys
 
 from datetime import datetime
@@ -63,17 +63,16 @@ def interfaceType(string):
 
 def complex_quad(func, a, b, **kwargs):
     """Integrate real and imaginary part of the given function."""
-    def real_integral():
-        return quad(lambda x: np.real(func(x)), a, b, **kwargs)
+    def real_func(x):
+        return func(x).real
 
-    def imag_integral():
-        return quad(lambda x: np.imag(func(x)), a, b, **kwargs)
+    def imag_func(x):
+        return func(x).imag
 
-    result = real_integral()[0] + 1j * imag_integral()[0]
-    real_tol = real_integral()[1]
-    imag_tol = imag_integral()[1]
+    real, real_tol = quad(real_func, a, b, **kwargs)
+    imag, imag_tol = quad(imag_func, a, b, **kwargs)
 
-    return result, real_tol, imag_tol
+    return real + 1j*imag, real_tol, imag_tol
 
 
 def Critical(n1, n2):
@@ -236,7 +235,7 @@ def main(args):
             (result,
              real_tol,
              imag_tol) = complex_quad(lambda k_y:
-                                      f(k_y) * np.exp(1j*phase(k_y, x, r.y)),
+                                      f(k_y) * cmath.exp(1j*phase(k_y, x, r.y)),
                                       -k1, k1)
         except Exception as e:
             print(type(e).__name__ + ":", e)

@@ -49,10 +49,9 @@ of the complex electric field) obtained by
 
 """
 import argparse
+import cmath
 import math
 import meep as mp
-import numpy.lib.scimath as sm
-import numpy as np
 import sys
 
 from datetime import datetime
@@ -65,22 +64,15 @@ print("Meep version:", mp.__version__)
 def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
     """Integrate real and imaginary part of the given function."""
     def real_func(x, y):
-        return np.real(func(x, y))
+        return func(x, y).real
 
     def imag_func(x, y):
-        return np.imag(func(x, y))
+        return func(x, y).imag
 
-    def real_integral():
-        return dblquad(real_func, a, b, gfun, hfun, **kwargs)
+    real, real_tol = dblquad(real_func, a, b, gfun, hfun, **kwargs)
+    imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun, **kwargs)
 
-    def imag_integral():
-        return dblquad(imag_func, a, b, gfun, hfun, **kwargs)
-
-    result = real_integral()[0] + 1j * imag_integral()[0]
-    real_tol = real_integral()[1]
-    imag_tol = imag_integral()[1]
-
-    return result, real_tol, imag_tol
+    return real + 1j*imag, real_tol, imag_tol
 
 
 def Critical(n1, n2):
@@ -219,7 +211,7 @@ def main(args):
 
         Part of coordinate transformation from k-space to (theta, phi)-space.
         """
-        return math.acos(sm.sqrt(k**2 - k_y**2 - k_z**2).real / k)
+        return math.acos(cmath.sqrt(k**2 - k_y**2 - k_z**2).real / k)
 
     def f_Gauss_cartesian(k_y, k_z, W_y=w_0):
         """2d-Gaussian spectrum amplitude.
@@ -234,7 +226,7 @@ def main(args):
         Impementation for Cartesian coordinates.
         """
         return f_Gauss_cartesian(k_y, k_z, W_y) * \
-            np.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k)**abs(m)
+            cmath.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k)**abs(m)
 
     # spherical coordinates --------------------------------------------
     def f_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, k=k1):
@@ -250,7 +242,7 @@ def main(args):
         Impementation for spherical coordinates.
         """
         return f_Gauss_spherical(sin_theta, theta, phi, W_y, k) * theta**abs(m) * \
-            np.exp(1j*m*phi)
+            cmath.exp(1j*m*phi)
 
     # --------------------------------------------------------------------------
     # some test outputs
@@ -291,14 +283,14 @@ def main(args):
 
         def phase(k_y, k_z, x, y, z):
             """Phase function."""
-            return x*sm.sqrt(k**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
+            return x*cmath.sqrt(k**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
 
         try:
             (result,
              real_tol,
              imag_tol) = complex_dblquad(lambda k_y, k_z:
                                          f(k_y, k_z) * \
-                                         np.exp(1j*phase(k_y, k_z, x, r.y, r.z)),
+                                         cmath.exp(1j*phase(k_y, k_z, x, r.y, r.z)),
                                          -k, k, -k, k)
         except Exception as e:
             print(type(e).__name__ + ":", e)
@@ -331,14 +323,14 @@ def main(args):
              imag_tol) = complex_dblquad(lambda theta, phi:
                                          math.sin(theta) * math.cos(theta) * \
                                          f(math.sin(theta), theta, phi) * \
-                                         np.exp(1j*phase(theta, phi, x, r.y, r.z)),
+                                         cmath.exp(1j*phase(theta, phi, x, r.y, r.z)),
                                          0, 2*math.pi, 0, math.pi/2)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()
 
         return k**2 * result
-    
+
     # --------------------------------------------------------------------------
     # some test outputs (uncomment if needed)
     # --------------------------------------------------------------------------
