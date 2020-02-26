@@ -5,8 +5,8 @@ file:    Airy2d.py
 brief:   Python configuration input file for the FDTD solver Meep simulating the
          scattering of an incomplete Airy beam at a planar dielectric interface
 author:  Daniel Kotik
-version: 1.4.0
-release date: 12.02.2020
+version: 1.4.1
+release date: 26.02.2020
 creation date: 30.11.2019
 
 
