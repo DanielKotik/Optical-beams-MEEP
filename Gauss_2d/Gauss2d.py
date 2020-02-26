@@ -213,7 +213,6 @@ def main(args):
 
     if test_output:
         print("Gauss spectrum:", f_Gauss(0.2, w_0))
-        sys.exit()
 
     # --------------------------------------------------------------------------
     # plane wave decomposition
@@ -244,6 +243,17 @@ def main(args):
             sys.exit()
 
         return result
+
+    # --------------------------------------------------------------------------
+    # some test outputs (uncomment if needed)
+    # --------------------------------------------------------------------------
+    if test_output:
+        x, y, z = -2.15, 0.3, 0.5
+        r = mp.Vector3(0, y, z)
+
+        print()
+        print("psi :", psi(r, f_Gauss, x))
+        sys.exit()
 
     # --------------------------------------------------------------------------
     # display values of physical variables
