@@ -28,7 +28,7 @@ The provided files (and features) are:
 Originally, these files have been used in studying optical beam shifts providing independent numerical simulations. With regards to their scriptability, together with the ease and widespread use of the powerful [Meep](https://github.com/stevengj/meep) tool, these scripts can easily be adapted to other and possibly more complicated beam/interface setups.
 
 ## Installation
-We highly recommmend to install the parallel version of PyMeep via Conda:
+We highly recommend to install the parallel version of PyMeep via Conda:
 
 ```shell
 $ conda create -n pmp -c conda-forge pymeep=*=mpi_mpich_*
