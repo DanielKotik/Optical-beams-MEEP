@@ -143,6 +143,8 @@ def main(args):
     shift = source_shift + r_w
     chi_rad = math.radians(chi_deg)
 
+    params = dict(W_y=w_0, k=k1)
+
     # --------------------------------------------------------------------------
     # placement of the dielectric interface within the computational cell
     # --------------------------------------------------------------------------
@@ -199,26 +201,30 @@ def main(args):
     # --------------------------------------------------------------------------
     # beam profile distribution (field amplitude) at the waist of the beam
     # --------------------------------------------------------------------------
-    def Gauss(r, W_y=w_0):
+    def Gauss(r, params):
         """Gauss profile."""
+        W_y = params['W_y']
+
         return math.exp(-(r.y / W_y)**2)
 
     # --------------------------------------------------------------------------
     # spectrum amplitude distribution
     # --------------------------------------------------------------------------
-    def f_Gauss(k_y, W_y=w_0):
+    def f_Gauss(k_y, params):
         """Gaussian spectrum amplitude."""
+        W_y = params['W_y']
+
         return math.exp(-(k_y*W_y/2)**2)
 
     if test_output:
-        print("Gauss spectrum:", f_Gauss(0.2, w_0))
+        print("Gauss spectrum:", f_Gauss(0.2, params))
 
     # --------------------------------------------------------------------------
     # plane wave decomposition
     # (purpose: calculate field amplitude at light source position if not
     #           coinciding with beam waist)
     # --------------------------------------------------------------------------
-    def psi(r, f, x):
+    def psi(r, x, params):
         """Field amplitude function."""
         try:
             getattr(psi, "called")
@@ -235,7 +241,8 @@ def main(args):
             (result,
              real_tol,
              imag_tol) = complex_quad(lambda k_y:
-                                      f(k_y) * cmath.exp(1j*phase(k_y, x, r.y)),
+                                      f_Gauss(k_y, params) *
+                                      cmath.exp(1j*phase(k_y, x, r.y)),
                                       -k1, k1)
         except Exception as e:
             print(type(e).__name__ + ":", e)
@@ -251,7 +258,7 @@ def main(args):
         r = mp.Vector3(0, y, z)
 
         print()
-        print("psi :", psi(r, f_Gauss, x))
+        print("psi :", psi(r, x, params))
         sys.exit()
 
     # --------------------------------------------------------------------------
@@ -283,8 +290,8 @@ def main(args):
                          component=mp.Ez if s_pol else mp.Ey,
                          size=mp.Vector3(0, 2, 0),
                          center=mp.Vector3(source_shift, 0, 0),
-                         #amp_func=lambda r: Gauss(r, w_0)
-                         amp_func=lambda r: psi(r, lambda k_y: f_Gauss(k_y, w_0), shift)
+                         #amp_func=lambda r: Gauss(r, params)
+                         amp_func=lambda r: psi(r, shift, params)
                          )
                ]
 
