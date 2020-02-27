@@ -15,6 +15,7 @@ import sys
 from scipy.integrate import dblquad
 
 if not cython.compiled:
+    from math import sin, cos, exp
     print("Please consider compiling `beamprofile.py` via Cython:\n\n"
           "     `$ cythonize -3 -i beamprofile.py`")
 
@@ -37,28 +38,39 @@ def complex_dblquad(func, a, b, gfun, hfun):
     return real + 1j*imag, real_tol, imag_tol
 
 
-def f_Gauss_spherical(sin_theta, theta, phi, W_y, k):
+def f_Gauss_spherical(sin_theta, theta, phi, params):
     """2d-Gaussian spectrum amplitude.
 
     Impementation for spherical coordinates.
     """
-    return math.exp(-(k*W_y*sin_theta/2)**2)
+    W_y, k = params['W_y'], params['k']
+
+    return exp(-(k*W_y*sin_theta/2)**2)
 
 
-def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, m, k):
+def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, params):
     """Laguerre-Gaussian spectrum amplitude.
 
     Impementation for spherical coordinates.
     """
-    return f_Gauss_spherical(sin_theta, theta, phi, W_y, k) * theta**abs(m) * \
+    m = params['m']
+
+    return f_Gauss_spherical(sin_theta, theta, phi, params) * theta**abs(m) * \
         cmath.exp(1j*m*phi)
 
 
-def psi_spherical(r, f, x, k):
+def psi_spherical(r, x, params):
     """Field amplitude function.
 
     Integration in spherical coordinates.
     """
+    k, m = params['k'], params['m']
+
+    if m == 0:
+        f = f_Gauss_spherical
+    else:
+        f = f_Laguerre_Gauss_spherical
+
     try:
         getattr(psi_spherical, "called")
     except AttributeError:
@@ -68,15 +80,15 @@ def psi_spherical(r, f, x, k):
 
     def phase(theta, phi, x, y, z):
         """Phase function."""
-        sin_theta, sin_phi = math.sin(theta), math.sin(phi)
-        cos_theta, cos_phi = math.cos(theta), math.cos(phi)
+        sin_theta, sin_phi = sin(theta), sin(phi)
+        cos_theta, cos_phi = cos(theta), cos(phi)
 
         return k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
 
     def integrand(theta, phi):
         """..."""
-        return math.sin(theta) * math.cos(theta) * \
-            f(math.sin(theta), theta, phi) * \
+        return sin(theta) * cos(theta) * \
+            f(sin(theta), theta, phi, params) * \
             cmath.exp(1j*phase(theta, phi, x, r.y, r.z))
 
     try:
@@ -101,9 +113,9 @@ def main():
     w_0 = 0.25464790894703254
     m_charge = 2
 
-    f = lambda sin_theta, theta, phi: f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, m=m_charge, k=k1)
+    params = dict(W_y=w_0, m=m_charge, k=k1)
 
-    return lambda: psi_spherical(r, f, x, k1)
+    return lambda: psi_spherical(r, x, params)
 
 
 if __name__ == '__main__':
