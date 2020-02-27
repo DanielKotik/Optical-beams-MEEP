@@ -146,6 +146,8 @@ def main(args):
     s_pol = True if (e_z == 1 and e_y == 0) else False
     p_pol = True if (e_z == 0 and e_y == 1) else False
 
+    params = dict(W_y=w_0, m=m_charge, k=k1)
+
     # --------------------------------------------------------------------------
     # placement of the dielectric interface within the computational cell
     # --------------------------------------------------------------------------
@@ -183,15 +185,16 @@ def main(args):
     # --------------------------------------------------------------------------
     # 2d-beam profile distribution (field amplitude) at the waist of the beam
     # --------------------------------------------------------------------------
-    def Gauss(r, W_y=w_0):
+    def Gauss(r, params):
         """Gauss profile."""
+        W_y = params['W_y']
         return math.exp(-((r.y**2 + r.z**2) / W_y**2))
 
     # --------------------------------------------------------------------------
     # some test outputs
     # --------------------------------------------------------------------------
     if test_output:
-        print("Gauss 2d beam profile:", Gauss(mp.Vector3(0, 0.5, 0.2), w_0))
+        print("Gauss 2d beam profile:", Gauss(mp.Vector3(0, 0.5, 0.2), params))
         print()
 
     # --------------------------------------------------------------------------
@@ -213,35 +216,43 @@ def main(args):
         """
         return math.acos(cmath.sqrt(k**2 - k_y**2 - k_z**2).real / k)
 
-    def f_Gauss_cartesian(k_y, k_z, W_y=w_0):
+    def f_Gauss_cartesian(k_y, k_z, params):
         """2d-Gaussian spectrum amplitude.
 
         Impementation for Cartesian coordinates.
         """
+        W_y = params['W_y']
+
         return math.exp(-W_y**2 * (k_y**2 + k_z**2)/4)
 
-    def f_Laguerre_Gauss_cartesian(k_y, k_z, W_y=w_0, m=m_charge, k=k1):
+    def f_Laguerre_Gauss_cartesian(k_y, k_z, params):
         """Laguerre-Gaussian spectrum amplitude.
 
         Impementation for Cartesian coordinates.
         """
-        return f_Gauss_cartesian(k_y, k_z, W_y) * \
+        m, k = params['m'], params['k']
+
+        return f_Gauss_cartesian(k_y, k_z, params) * \
             cmath.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k)**abs(m)
 
     # spherical coordinates --------------------------------------------
-    def f_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, k=k1):
+    def f_Gauss_spherical(sin_theta, theta, phi, params):
         """2d-Gaussian spectrum amplitude.
 
         Impementation for spherical coordinates.
         """
+        W_y, k = params['W_y'], params['k']
+
         return math.exp(-(k*W_y*sin_theta/2)**2)
 
-    def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, m=m_charge, k=k1):
+    def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, params):
         """Laguerre-Gaussian spectrum amplitude.
 
         Impementation for spherical coordinates.
         """
-        return f_Gauss_spherical(sin_theta, theta, phi, W_y, k) * theta**abs(m) * \
+        m = params['m']
+
+        return f_Gauss_spherical(sin_theta, theta, phi, params) * theta**abs(m) * \
             cmath.exp(1j*m*phi)
 
     # --------------------------------------------------------------------------
@@ -253,15 +264,14 @@ def main(args):
         phi_ = phi(k_y, k_z)
 
         print("Gauss spectrum (cartesian):",
-              f_Gauss_cartesian(k_y, k_z, w_0))
+              f_Gauss_cartesian(k_y, k_z, params))
         print("Gauss spectrum (spherical):",
-              f_Gauss_spherical(math.sin(theta_), theta_, phi_, w_0, k1))
+              f_Gauss_spherical(math.sin(theta_), theta_, phi_, params))
         print()
         print("L-G spectrum   (cartesian):",
-              f_Laguerre_Gauss_cartesian(k_y, k_z, w_0, m_charge, k1))
+              f_Laguerre_Gauss_cartesian(k_y, k_z, params))
         print("L-G spectrum   (spherical):",
-              f_Laguerre_Gauss_spherical(math.sin(theta_), theta_, phi_, w_0,
-                                         m_charge, k1))
+              f_Laguerre_Gauss_spherical(math.sin(theta_), theta_, phi_, params))
         print()
 
     # --------------------------------------------------------------------------
@@ -269,11 +279,13 @@ def main(args):
     # (purpose: calculate field amplitude at light source position if not
     #           coinciding with beam waist)
     # --------------------------------------------------------------------------
-    def psi_cartesian(r, f, x, k=k1):
+    def psi_cartesian(r, f, x, params):
         """Field amplitude function.
 
         Integration in Cartesian coordinates.
         """
+        k = params['k']
+
         try:
             getattr(psi_cartesian, "called")
         except AttributeError:
@@ -289,7 +301,7 @@ def main(args):
             (result,
              real_tol,
              imag_tol) = complex_dblquad(lambda k_y, k_z:
-                                         f(k_y, k_z) * \
+                                         f(k_y, k_z, params) * \
                                          cmath.exp(1j*phase(k_y, k_z, x, r.y, r.z)),
                                          -k, k, -k, k)
         except Exception as e:
@@ -298,11 +310,13 @@ def main(args):
 
         return result
 
-    def psi_spherical(r, f, x, k=k1):
+    def psi_spherical(r, f, x, params):
         """Field amplitude function.
 
         Integration in spherical coordinates.
         """
+        k = params['k']
+
         try:
             getattr(psi_spherical, "called")
         except AttributeError:
@@ -322,7 +336,7 @@ def main(args):
              real_tol,
              imag_tol) = complex_dblquad(lambda theta, phi:
                                          math.sin(theta) * math.cos(theta) * \
-                                         f(math.sin(theta), theta, phi) * \
+                                         f(math.sin(theta), theta, phi, params) * \
                                          cmath.exp(1j*phase(theta, phi, x, r.y, r.z)),
                                          0, 2*math.pi, 0, math.pi/2)
         except Exception as e:
@@ -342,10 +356,10 @@ def main(args):
         print("phi:", phi(k_y, k_z))
         print()
         print("psi            (cartesian):",
-              psi_cartesian(r, f_Laguerre_Gauss_cartesian, x, k1))
+              psi_cartesian(r, f_Laguerre_Gauss_cartesian, x, params))
         print("psi            (spherical):",
-              psi_spherical(r, f_Laguerre_Gauss_spherical, x, k1))
-        print("psi       (origin, simple):", Gauss(r))
+              psi_spherical(r, f_Laguerre_Gauss_spherical, x, params))
+        print("psi       (origin, simple):", Gauss(r, params))
         sys.exit()
 
     # --------------------------------------------------------------------------
@@ -409,8 +423,8 @@ def main(args):
                               center=mp.Vector3(source_shift, 0, 0),
                               #amp_func=lambda r: Gauss(r, w_0)
                               #amp_func=lambda r: psi_cartesian(r, f_Laguerre_Gauss_cartesian, shift)
-                              amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
-                                                 psi_spherical(r, f_Laguerre_Gauss_spherical, shift)
+                              amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift, params) if m_charge == 0 else
+                                                 psi_spherical(r, f_Laguerre_Gauss_spherical, shift, params)
                               )
         sources.append(source_Ez)
 
@@ -422,8 +436,8 @@ def main(args):
                               center=mp.Vector3(source_shift, 0, 0),
                               #amp_func=lambda r: Gauss(r, w_0)
                               #amp_func=lambda r: psi_cartesian(r, f_Laguerre_Gauss_cartesian, shift)
-                              amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift) if m_charge == 0 else
-                                                 psi_spherical(r, f_Laguerre_Gauss_spherical, shift)
+                              amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift, params) if m_charge == 0 else
+                                                 psi_spherical(r, f_Laguerre_Gauss_spherical, shift, params)
                               )
         sources.append(source_Ey)
 
