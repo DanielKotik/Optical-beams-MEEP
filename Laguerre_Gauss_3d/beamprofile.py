@@ -20,18 +20,22 @@ if not cython.compiled:
 
 
 def real_func(x, y, func):
+    """Return real part of function."""
     return func(x, y).real
-    
+
+
 def imag_func(x, y, func):
-    return func(x, y).imag    
+    """Return imag part of function."""
+    return func(x, y).imag
+
 
 def complex_dblquad(func, a, b, gfun, hfun):
     """Integrate real and imaginary part of the given function."""
-    
     real, real_tol = dblquad(real_func, a, b, gfun, hfun, (func,))
     imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun, (func,))
 
     return real + 1j*imag, real_tol, imag_tol
+
 
 def f_Gauss_spherical(sin_theta, theta, phi, W_y, k):
     """2d-Gaussian spectrum amplitude.
@@ -39,6 +43,7 @@ def f_Gauss_spherical(sin_theta, theta, phi, W_y, k):
     Impementation for spherical coordinates.
     """
     return math.exp(-(k*W_y*sin_theta/2)**2)
+
 
 def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, m, k):
     """Laguerre-Gaussian spectrum amplitude.
@@ -48,58 +53,58 @@ def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, m, k):
     return f_Gauss_spherical(sin_theta, theta, phi, W_y, k) * theta**abs(m) * \
         cmath.exp(1j*m*phi)
 
+
 def psi_spherical(r, f, x, k):
-        """Field amplitude function.
+    """Field amplitude function.
 
-        Integration in spherical coordinates.
-        """
-        try:
-            getattr(psi_spherical, "called")
-        except AttributeError:
-            psi_spherical.called = True
-            print("Calculating inital field configuration. "
-                  "This will take some time...")
+    Integration in spherical coordinates.
+    """
+    try:
+        getattr(psi_spherical, "called")
+    except AttributeError:
+        psi_spherical.called = True
+        print("Calculating inital field configuration. "
+              "This will take some time...")
 
-        def phase(theta, phi, x, y, z):
-            """Phase function."""
-            sin_theta, sin_phi = math.sin(theta), math.sin(phi)
-            cos_theta, cos_phi = math.cos(theta), math.cos(phi)
+    def phase(theta, phi, x, y, z):
+        """Phase function."""
+        sin_theta, sin_phi = math.sin(theta), math.sin(phi)
+        cos_theta, cos_phi = math.cos(theta), math.cos(phi)
 
-            return k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
-        
-        def integrand(theta, phi):
-            """..."""
-            return math.sin(theta) * math.cos(theta) * \
-                f(math.sin(theta), theta, phi) * \
-                cmath.exp(1j*phase(theta, phi, x, r.y, r.z))
+        return k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
 
-        try:
-            (result,
-             real_tol,
-             imag_tol) = complex_dblquad(integrand, 0, 2*math.pi, 0, math.pi/2)
-        except Exception as e:
-            print(type(e).__name__ + ":", e)
-            sys.exit()
+    def integrand(theta, phi):
+        """..."""
+        return math.sin(theta) * math.cos(theta) * \
+            f(math.sin(theta), theta, phi) * \
+            cmath.exp(1j*phase(theta, phi, x, r.y, r.z))
 
-        return k**2 * result
-    
+    try:
+        (result,
+         real_tol,
+         imag_tol) = complex_dblquad(integrand, 0, 2*math.pi, 0, math.pi/2)
+    except Exception as e:
+        print(type(e).__name__ + ":", e)
+        sys.exit()
+
+    return k**2 * result
+
+
 def main():
-    
+
     import meep as mp
-    
-    k_y, k_z = 1.0, 5.2
+
     x, y, z = -2.15, 0.3, 0.5
     r = mp.Vector3(0, y, z)
-    
+
     k1 = 31.41592653589793
     w_0 = 0.25464790894703254
     m_charge = 2
-    
+
     f = lambda sin_theta, theta, phi: f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y=w_0, m=m_charge, k=k1)
-    
+
     return lambda: psi_spherical(r, f, x, k1)
-    
-    
+
+
 if __name__ == '__main__':
     main()
-    
