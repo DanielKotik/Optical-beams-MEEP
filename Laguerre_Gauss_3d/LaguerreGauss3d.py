@@ -6,8 +6,8 @@ brief:   Python configuration input file for the FDTD solver Meep simulating the
          scattering of a polarised Laguerre-Gaussian beam at a planar dielectric
          interface (3d)
 author:  Daniel Kotik
-version: 1.4.1
-release date: 26.02.2020
+version: 1.4.2
+release date: 27.02.2020
 creation date: 10.01.2020
 
 
