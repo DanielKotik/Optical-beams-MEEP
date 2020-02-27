@@ -188,6 +188,7 @@ def main(args):
     def Gauss(r, params):
         """Gauss profile."""
         W_y = params['W_y']
+
         return math.exp(-((r.y**2 + r.z**2) / W_y**2))
 
     # --------------------------------------------------------------------------
@@ -279,12 +280,12 @@ def main(args):
     # (purpose: calculate field amplitude at light source position if not
     #           coinciding with beam waist)
     # --------------------------------------------------------------------------
-    def psi_cartesian(r, f, x, params):
+    def psi_cartesian(r, x, params):
         """Field amplitude function.
 
         Integration in Cartesian coordinates.
         """
-        k = params['k']
+        k, m = params['k'], params['m']
 
         try:
             getattr(psi_cartesian, "called")
@@ -297,11 +298,13 @@ def main(args):
             """Phase function."""
             return x*cmath.sqrt(k**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
 
+        f = (f_Gauss_cartesian if m == 0 else f_Laguerre_Gauss_cartesian)
+
         try:
             (result,
              real_tol,
              imag_tol) = complex_dblquad(lambda k_y, k_z:
-                                         f(k_y, k_z, params) * \
+                                         f(k_y, k_z, params) *
                                          cmath.exp(1j*phase(k_y, k_z, x, r.y, r.z)),
                                          -k, k, -k, k)
         except Exception as e:
@@ -310,12 +313,12 @@ def main(args):
 
         return result
 
-    def psi_spherical(r, f, x, params):
+    def psi_spherical(r, x, params):
         """Field amplitude function.
 
         Integration in spherical coordinates.
         """
-        k = params['k']
+        k, m = params['k'], params['m']
 
         try:
             getattr(psi_spherical, "called")
@@ -331,12 +334,14 @@ def main(args):
 
             return k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
 
+        f = (f_Gauss_spherical if m == 0 else f_Laguerre_Gauss_spherical)
+
         try:
             (result,
              real_tol,
              imag_tol) = complex_dblquad(lambda theta, phi:
-                                         math.sin(theta) * math.cos(theta) * \
-                                         f(math.sin(theta), theta, phi, params) * \
+                                         math.sin(theta) * math.cos(theta) *
+                                         f(math.sin(theta), theta, phi, params) *
                                          cmath.exp(1j*phase(theta, phi, x, r.y, r.z)),
                                          0, 2*math.pi, 0, math.pi/2)
         except Exception as e:
@@ -421,10 +426,9 @@ def main(args):
                               amplitude=e_z,
                               size=mp.Vector3(0, 3, 3),
                               center=mp.Vector3(source_shift, 0, 0),
-                              #amp_func=lambda r: Gauss(r, w_0)
-                              #amp_func=lambda r: psi_cartesian(r, f_Laguerre_Gauss_cartesian, shift)
-                              amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift, params) if m_charge == 0 else
-                                                 psi_spherical(r, f_Laguerre_Gauss_spherical, shift, params)
+                              #amp_func=lambda r: Gauss(r, params)
+                              #amp_func=lambda r: psi_cartesian(r, shift, params)
+                              amp_func=lambda r: psi_spherical(r, shift, params)
                               )
         sources.append(source_Ez)
 
@@ -434,10 +438,9 @@ def main(args):
                               amplitude=e_y,
                               size=mp.Vector3(0, 3, 3),
                               center=mp.Vector3(source_shift, 0, 0),
-                              #amp_func=lambda r: Gauss(r, w_0)
-                              #amp_func=lambda r: psi_cartesian(r, f_Laguerre_Gauss_cartesian, shift)
-                              amp_func=lambda r: psi_spherical(r, f_Gauss_spherical, shift, params) if m_charge == 0 else
-                                                 psi_spherical(r, f_Laguerre_Gauss_spherical, shift, params)
+                              #amp_func=lambda r: Gauss(r, params)
+                              #amp_func=lambda r: psi_cartesian(r, shift, params)
+                              amp_func=lambda r: psi_spherical(r, shift, params)
                               )
         sources.append(source_Ey)
 
