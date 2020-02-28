@@ -59,12 +59,17 @@ def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, params):
         cexp(1j*m*phi)
 
 
-def psi_spherical(r, x, params):
-    """Field amplitude function.
+class PsiSpherical:
+    """Field amplitude class.
 
     Integration in spherical coordinates.
     """
-    k, m = params['k'], params['m']
+
+    def __init__(self, r, x, params):
+        self.r = r
+        self.x = x
+        self.k = params['k']
+        self.m = params['m']
 
     if m == 0:
         f = f_Gauss_spherical
