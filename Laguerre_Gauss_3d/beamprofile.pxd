@@ -9,14 +9,17 @@ creation date: 22.02.2020
 """
 import cython
 
-# declare a C function as "cpdef" to export it to the module
+# declare C functions as "cpdef" to export them to the module
+cdef extern from "stdlib.h":
+    cpdef int abs (int n)
+
 cdef extern from "math.h":
     cpdef double sin(double x)
     cpdef double cos(double x)
     cpdef double exp(double x)
 
-#cdef extern from "complex.h":
-#    cpdef double complex exp(double complex)
+cdef extern from "complex.h":
+    cpdef double complex cexp(double complex z)
 
 # function type declaration for spectrum amplitudes
 ctypedef double complex (*f_spectrum_type)(double theta, double phi)

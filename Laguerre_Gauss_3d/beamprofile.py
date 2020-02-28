@@ -7,7 +7,6 @@ version: 1.5-beta
 release date: xx.xx.2020
 creation date: 22.02.2020
 """
-import cmath
 import cython
 import math
 import sys
@@ -16,6 +15,7 @@ from scipy.integrate import dblquad
 
 if not cython.compiled:
     from math import sin, cos, exp
+    from cmath import exp as cexp
     print("Please consider compiling `beamprofile.py` via Cython:\n\n"
           "     `$ cythonize -3 -i beamprofile.py`")
 
@@ -56,7 +56,7 @@ def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, params):
     m = params['m']
 
     return f_Gauss_spherical(sin_theta, theta, phi, params) * theta**abs(m) * \
-        cmath.exp(1j*m*phi)
+        cexp(1j*m*phi)
 
 
 def psi_spherical(r, x, params):
@@ -89,7 +89,7 @@ def psi_spherical(r, x, params):
         """..."""
         return sin(theta) * cos(theta) * \
             f(sin(theta), theta, phi, params) * \
-            cmath.exp(1j*phase(theta, phi, x, r.y, r.z))
+            cexp(1j*phase(theta, phi, x, r.y, r.z))
 
     try:
         (result,
