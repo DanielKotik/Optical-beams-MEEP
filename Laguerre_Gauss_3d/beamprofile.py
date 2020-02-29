@@ -20,20 +20,20 @@ if not cython.compiled:
           "     `$ cythonize -3 -i beamprofile.py`")
 
 
-def real_func(x, y, func):
+def real_func(x, y, func, r):
     """Return real part of function."""
-    return func(x, y).real
+    return func(x, y, r).real
 
 
-def imag_func(x, y, func):
+def imag_func(x, y, func, r):
     """Return imag part of function."""
-    return func(x, y).imag
+    return func(x, y, r).imag
 
 
-def complex_dblquad(func, a, b, gfun, hfun):
+def complex_dblquad(func, a, b, gfun, hfun, r):
     """Integrate real and imaginary part of the given function."""
-    real, real_tol = dblquad(real_func, a, b, gfun, hfun, (func,))
-    imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun, (func,))
+    real, real_tol = dblquad(real_func, a, b, gfun, hfun, (func, r))
+    imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun, (func, r))
 
     return real + 1j*imag, real_tol, imag_tol
 
@@ -70,7 +70,9 @@ class PsiSpherical:
     """
 
     def __init__(self, x, params):
+        """..."""
         self.x = x
+        self.params = params
         self.k = params['k']
         self.m = params['m']
 
@@ -80,8 +82,30 @@ class PsiSpherical:
             self.f = f_Laguerre_Gauss_spherical
 
     def __call__(self, r):
-        pass
+        """..."""
+        try:
+            (result,
+             real_tol,
+             imag_tol) = complex_dblquad(self.integrand,
+                                         0, 2*math.pi, 0, math.pi/2, r)
+        except Exception as e:
+            print(type(e).__name__ + ":", e)
+            sys.exit()
 
+        return self.k**2 * result
+
+    def phase(self, theta, phi, x, y, z):
+        """Phase function."""
+        sin_theta, sin_phi = sin(theta), sin(phi)
+        cos_theta, cos_phi = cos(theta), cos(phi)
+
+        return self.k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
+
+    def integrand(self, theta, phi, r):
+        """..."""
+        return sin(theta) * cos(theta) * \
+            self.f(sin(theta), theta, phi, self.params) * \
+            cexp(1j*self.phase(theta, phi, self.x, r.y, r.z))
 
     #try:
     #    getattr(psi_spherical, "called")
@@ -89,29 +113,6 @@ class PsiSpherical:
     #    psi_spherical.called = True
     #    print("Calculating inital field configuration. "
     #          "This will take some time...")
-
-    def phase(theta, phi, x, y, z):
-        """Phase function."""
-        sin_theta, sin_phi = sin(theta), sin(phi)
-        cos_theta, cos_phi = cos(theta), cos(phi)
-
-        return k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
-
-    def integrand(theta, phi):
-        """..."""
-        return sin(theta) * cos(theta) * \
-            f(sin(theta), theta, phi, params) * \
-            cexp(1j*phase(theta, phi, x, r.y, r.z))
-
-    try:
-        (result,
-         real_tol,
-         imag_tol) = complex_dblquad(integrand, 0, 2*math.pi, 0, math.pi/2)
-    except Exception as e:
-        print(type(e).__name__ + ":", e)
-        sys.exit()
-
-    return k**2 * result
 
 
 def main():
