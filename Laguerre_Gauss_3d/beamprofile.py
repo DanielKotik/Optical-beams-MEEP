@@ -20,20 +20,20 @@ if not cython.compiled:
           "     `$ cythonize -3 -i beamprofile.py`")
 
 
-def real_func(x, y, func, r):
+def real_func(x, y, func, ry, rz):
     """Return real part of function."""
-    return func(x, y, r).real
+    return func(x, y, ry, rz).real
 
 
-def imag_func(x, y, func, r):
+def imag_func(x, y, func, ry, rz):
     """Return imag part of function."""
-    return func(x, y, r).imag
+    return func(x, y, ry, rz).imag
 
 
-def complex_dblquad(func, a, b, gfun, hfun, r):
+def complex_dblquad(func, a, b, gfun, hfun, ry, rz):
     """Integrate real and imaginary part of the given function."""
-    real, real_tol = dblquad(real_func, a, b, gfun, hfun, (func, r))
-    imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun, (func, r))
+    real, real_tol = dblquad(real_func, a, b, gfun, hfun, (func, ry, rz))
+    imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun, (func, ry, rz))
 
     return real + 1j*imag, real_tol, imag_tol
 
@@ -87,7 +87,8 @@ class PsiSpherical:
             (result,
              real_tol,
              imag_tol) = complex_dblquad(self.integrand,
-                                         0, 2*math.pi, 0, math.pi/2, r)
+                                         0, 2*math.pi, 0, math.pi/2,
+                                         r.y, r.z)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()
@@ -101,11 +102,11 @@ class PsiSpherical:
 
         return self.k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
 
-    def integrand(self, theta, phi, r):
+    def integrand(self, theta, phi, ry, rz):
         """..."""
         return sin(theta) * cos(theta) * \
             self.f(sin(theta), theta, phi, self.params) * \
-            cexp(1j*self.phase(theta, phi, self.x, r.y, r.z))
+            cexp(1j*self.phase(theta, phi, self.x, ry, rz))
 
     #try:
     #    getattr(psi_spherical, "called")
