@@ -63,25 +63,32 @@ class PsiSpherical:
     """Field amplitude class.
 
     Integration in spherical coordinates.
+
+    Usage:
+     psi_spherical = PsiSpherical(x=shift, params=params)
+     psi_spherical(r)
     """
 
-    def __init__(self, r, x, params):
-        self.r = r
+    def __init__(self, x, params):
         self.x = x
         self.k = params['k']
         self.m = params['m']
 
-    if m == 0:
-        f = f_Gauss_spherical
-    else:
-        f = f_Laguerre_Gauss_spherical
+        if self.m == 0:
+            self.f = f_Gauss_spherical
+        else:
+            self.f = f_Laguerre_Gauss_spherical
 
-    try:
-        getattr(psi_spherical, "called")
-    except AttributeError:
-        psi_spherical.called = True
-        print("Calculating inital field configuration. "
-              "This will take some time...")
+    def __call__(self, r):
+        pass
+
+
+    #try:
+    #    getattr(psi_spherical, "called")
+    #except AttributeError:
+    #    psi_spherical.called = True
+    #    print("Calculating inital field configuration. "
+    #          "This will take some time...")
 
     def phase(theta, phi, x, y, z):
         """Phase function."""
@@ -120,7 +127,9 @@ def main():
 
     params = dict(W_y=w_0, m=m_charge, k=k1)
 
-    return lambda: psi_spherical(r, x, params)
+    psi_spherical = PsiSpherical(x=x, params=params)
+
+    return lambda: psi_spherical(r)
 
 
 if __name__ == '__main__':
