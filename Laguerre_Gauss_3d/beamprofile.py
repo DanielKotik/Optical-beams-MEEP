@@ -20,24 +20,6 @@ if not cython.compiled:
           "     `$ cythonize -3 -i beamprofile.py`")
 
 
-def real_func(x, y, func, ry, rz):
-    """Return real part of function."""
-    return func(x, y, ry, rz).real
-
-
-def imag_func(x, y, func, ry, rz):
-    """Return imag part of function."""
-    return func(x, y, ry, rz).imag
-
-
-def complex_dblquad(func, a, b, gfun, hfun, ry, rz):
-    """Integrate real and imaginary part of the given function."""
-    real, real_tol = dblquad(real_func, a, b, gfun, hfun, (func, ry, rz))
-    imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun, (func, ry, rz))
-
-    return real + 1j*imag, real_tol, imag_tol
-
-
 def f_Gauss_spherical(sin_theta, theta, phi, params):
     """2d-Gaussian spectrum amplitude.
 
@@ -83,12 +65,14 @@ class PsiSpherical:
 
     def __call__(self, r):
         """..."""
+        self.ry = r.y
+        self.rz = r.z
         try:
             (result,
              real_tol,
-             imag_tol) = complex_dblquad(self.integrand,
+             imag_tol) = self.complex_dblquad(
                                          0, 2*math.pi, 0, math.pi/2,
-                                         r.y, r.z)
+                                         self.ry, self.rz)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()
@@ -102,12 +86,27 @@ class PsiSpherical:
 
         return self.k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
 
-    def integrand(self, theta, phi, ry, rz):
+    def integrand(self, theta, phi):
         """..."""
         return sin(theta) * cos(theta) * \
             self.f(sin(theta), theta, phi, self.params) * \
-            cexp(1j*self.phase(theta, phi, self.x, ry, rz))
+            cexp(1j*self.phase(theta, phi, self.x, self.ry, self.rz))
 
+    def real_func(self, x, y):
+        """Return real part of function."""
+        return self.integrand(x, y).real
+
+    def imag_func(self, x, y):
+        """Return imag part of function."""
+        return self.integrand(x, y).imag
+
+    def complex_dblquad(self, a, b, gfun, hfun, ry, rz):
+        """Integrate real and imaginary part of the given function."""
+        real, real_tol = dblquad(self.real_func, a, b, gfun, hfun)
+        imag, imag_tol = dblquad(self.imag_func, a, b, gfun, hfun)
+
+        return real + 1j*imag, real_tol, imag_tol
+    
     #try:
     #    getattr(psi_spherical, "called")
     #except AttributeError:

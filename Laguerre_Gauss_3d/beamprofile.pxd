@@ -26,11 +26,11 @@ ctypedef double complex (*f_spectrum_type)(double sin_theta, double theta, doubl
 ctypedef double complex (*integrand_type)(double theta, double phi, double ry, double rz)
 
 # function prototypes
-cdef double real_func(double x, double y, func, double ry, double rz)
-cdef double imag_func(double x, double y, func, double ry, double rz)
+#cdef double real_func(double x, double y, func, double ry, double rz)
+#cdef double imag_func(double x, double y, func, double ry, double rz)
 
-@cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double, imag_tol=cython.double)
-cdef (double complex, double, double) complex_dblquad(func, double a, double b, double gfun, double hfun, double ry, double rz)
+#@cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double, imag_tol=cython.double)
+#cdef (double complex, double, double) complex_dblquad(func, double a, double b, double gfun, double hfun, double ry, double rz)
 
 @cython.locals(W_y=cython.double, k=cython.double)
 cdef double complex f_Gauss_spherical(double sin_theta, double theta, double phi,
@@ -44,7 +44,13 @@ cdef class PsiSpherical:
     cdef public int m
     cdef public double x, k
     cdef public dict params
+    cdef public double ry, rz
     cdef f_spectrum_type f
 
     cdef double phase(self, double theta, double phi, double x, double y, double z)
-    cpdef double complex integrand(self, double theta, double phi, double ry, double rz)
+    cdef double complex integrand(self, double theta, double phi)
+    cpdef double real_func(self, double x, double y)
+    cpdef double imag_func(self, double x, double y)
+    @cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double, imag_tol=cython.double)
+    cdef (double complex, double, double) complex_dblquad(self, double a, double b, double gfun, double hfun, double ry, double rz)
+
