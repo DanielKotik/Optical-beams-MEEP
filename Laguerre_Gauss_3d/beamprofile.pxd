@@ -23,6 +23,7 @@ cdef extern from "complex.h":
 
 # function type declaration for spectrum amplitudes
 ctypedef double complex (*f_spectrum_type)(double sin_theta, double theta, double phi, dict params)
+ctypedef double complex (*integrand_type)(double theta, double phi, double ry, double rz)
 
 # function prototypes
 cdef double real_func(double x, double y, func, double ry, double rz)
@@ -46,4 +47,4 @@ cdef class PsiSpherical:
     cdef f_spectrum_type f
 
     cdef double phase(self, double theta, double phi, double x, double y, double z)
-    cpdef integrand(self, double theta, double phi, double ry, double rz)
+    cpdef double complex integrand(self, double theta, double phi, double ry, double rz)
