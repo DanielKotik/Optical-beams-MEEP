@@ -23,18 +23,18 @@ cdef extern from "complex.h":
 
 # function type declaration for spectrum amplitudes
 ctypedef double complex (*f_spectrum_type)(double sin_theta, double theta, double phi, dict params)
-ctypedef double complex (*integrand_type)(double theta, double phi, double ry, double rz)
+ctypedef double complex (*integrand_type)(double theta, double phi)
 
 # function prototypes
-cdef double real_func(double x, double y, func, double ry, double rz)
-cdef double imag_func(double x, double y, func, double ry, double rz)
+cdef double real_func(double x, double y, func)
+cdef double imag_func(double x, double y, func)
 
 @cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double, imag_tol=cython.double)
-cdef (double complex, double, double) complex_dblquad(func, double a, double b, double gfun, double hfun, double ry, double rz)
+cdef (double complex, double, double) complex_dblquad(func, double a, double b, double gfun, double hfun)
 
 @cython.locals(W_y=cython.double, k=cython.double)
 cdef double complex f_Gauss_spherical(double sin_theta, double theta, double phi,
-                              dict params)
+                                      dict params)
 
 @cython.locals(m=cython.int)
 cdef double complex f_Laguerre_Gauss_spherical(double sin_theta, double theta,
@@ -45,6 +45,7 @@ cdef class PsiSpherical:
     cdef public double x, k
     cdef public dict params
     cdef f_spectrum_type f
-
+    cdef double ry, rz
+    
     cdef double phase(self, double theta, double phi, double x, double y, double z)
-    cpdef double complex integrand(self, double theta, double phi, double ry, double rz)
+    cpdef double complex integrand(self, double theta, double phi)
