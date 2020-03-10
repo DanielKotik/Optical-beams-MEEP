@@ -41,7 +41,7 @@ def complex_dblquad(func, a, b, gfun, hfun):
 def f_Gauss_spherical(sin_theta, theta, phi, params):
     """2d-Gaussian spectrum amplitude.
 
-    Impementation for spherical coordinates.
+    Implementation for spherical coordinates.
     """
     W_y, k = params['W_y'], params['k']
 
@@ -51,7 +51,7 @@ def f_Gauss_spherical(sin_theta, theta, phi, params):
 def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, params):
     """Laguerre-Gaussian spectrum amplitude.
 
-    Impementation for spherical coordinates.
+    Implementation for spherical coordinates.
     """
     m = params['m']
 
