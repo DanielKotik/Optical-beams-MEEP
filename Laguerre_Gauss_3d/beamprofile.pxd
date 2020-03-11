@@ -7,7 +7,8 @@ version: 1.5-beta
 release date: xx.xx.2020
 creation date: 22.02.2020
 """
-import cython
+cimport cython
+from cpython.pycapsule cimport PyCapsule_New
 
 # declare C functions as "cpdef" to export them to the module
 cdef extern from "stdlib.h":
@@ -28,6 +29,7 @@ ctypedef double complex (*integrand_type)(double theta, double phi)
 # function prototypes
 cdef double _real_func(double x, double y, func)
 cdef double _imag_func(double x, double y, func)
+cdef double __imag_func(double x, double y, void *func_ptr)
 
 @cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double, imag_tol=cython.double)
 cdef (double complex, double, double) _complex_dblquad(func, double a, double b, double gfun, double hfun)

@@ -13,11 +13,14 @@ import sys
 
 from scipy.integrate import dblquad
 
+
 if not cython.compiled:
     from math import sin, cos, exp
     from cmath import exp as cexp
     print("Please consider compiling `beamprofile.py` via Cython:\n\n"
           "     `$ cythonize -3 -i beamprofile.py`")
+else:
+    from scipy import LowLevelCallable
 
 
 def _real_func(x, y, func):
@@ -30,10 +33,38 @@ def _imag_func(x, y, func):
     return func(x, y).imag
 
 
+#cdef double _imag_func(double x, double y, void *func_ptr):
+#    """Return imag part of function."""
+#    return (<object>func_ptr)(x, y).imag
+
+def __imag_func(x, y, func_ptr):
+    """Return imag part of function."""   
+    func = cython.cast(object, func_ptr)
+    return func(x, y).imag
+
+
 def _complex_dblquad(func, a, b, gfun, hfun):
     """Integrate real and imaginary part of the given function."""
-    real, real_tol = dblquad(_real_func, a, b, gfun, hfun, (func,))
-    imag, imag_tol = dblquad(_imag_func, a, b, gfun, hfun, (func,))
+    
+    if cython.compiled:
+        # pure python formulation of: cdef void *f_ptr = <void*>func
+        f_ptr = cython.declare(cython.p_void, cython.cast(cython.p_void, func))
+        
+        func_capsule = PyCapsule_New(f_ptr, cython.NULL, cython.NULL)
+        
+        current_module = sys.modules[__name__]
+
+        #ll_real_func = LowLevelCallable.from_cython(current_module, '_real_func', func_capsule)
+        ll_imag_func = LowLevelCallable.from_cython(current_module, '__imag_func', func_capsule)
+        
+        #real, real_tol = dblquad(ll_real_func, a, b, gfun, hfun)
+        #imag, imag_tol = dblquad(ll_imag_func, a, b, gfun, hfun)
+        
+        real, real_tol = dblquad(_real_func, a, b, gfun, hfun, (func,))
+        imag, imag_tol = dblquad(_imag_func, a, b, gfun, hfun, (func,))
+    else:
+        real, real_tol = dblquad(_real_func, a, b, gfun, hfun, (func,))
+        imag, imag_tol = dblquad(_imag_func, a, b, gfun, hfun, (func,))
 
     return real + 1j*imag, real_tol, imag_tol
 
