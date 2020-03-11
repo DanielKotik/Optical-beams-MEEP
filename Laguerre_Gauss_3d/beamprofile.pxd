@@ -29,7 +29,8 @@ ctypedef double complex (*integrand_type)(double theta, double phi)
 # function prototypes
 cdef double _real_func(double x, double y, func)
 cdef double _imag_func(double x, double y, func)
-cdef double __imag_func(double x, double y, void *func_ptr)
+cdef double __imag_func(int n, double *arr, void *func_ptr)
+cdef double __real_func(int n, double *arr, void *func_ptr)
 
 @cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double, imag_tol=cython.double)
 cdef (double complex, double, double) _complex_dblquad(func, double a, double b, double gfun, double hfun)
