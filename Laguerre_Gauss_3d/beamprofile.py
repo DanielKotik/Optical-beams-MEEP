@@ -104,7 +104,7 @@ class PsiSpherical:
         return self.k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
 
     def integrand(self, theta, phi):
-        """..."""
+        """Integrand function."""
         return sin(theta) * cos(theta) * \
             self.f(sin(theta), theta, phi, self.params) * \
             cexp(1j*self.phase(theta, phi, self.x, self.ry, self.rz))
