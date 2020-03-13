@@ -33,20 +33,16 @@ def _imag_func(x, y, func):
     return func(x, y).imag
 
 
-#cdef double _imag_func(double x, double y, void *func_ptr):
-#    """Return imag part of function."""
-#    return (<object>func_ptr)(x, y).imag
-
 def __imag_func(n, arr, func_ptr):
     """Return imag part of function."""   
-    func = cython.cast(object, func_ptr)
-    return func(arr[0], arr[1]).imag
+    #return (<object>func_ptr)(arr[0], arr[1]).imag
+    return cython.cast(object, func_ptr)(arr[0], arr[1]).imag
 
 
 def __real_func(n, arr, func_ptr):
-    """Return imag part of function."""   
-    func = cython.cast(object, func_ptr)
-    return func(arr[0], arr[1]).real
+    """Return real part of function."""
+    #return (<object>func_ptr)(arr[0], arr[1]).real
+    return cython.cast(object, func_ptr)(arr[0], arr[1]).real
 
 
 def _complex_dblquad(func, a, b, gfun, hfun):
@@ -60,20 +56,16 @@ def _complex_dblquad(func, a, b, gfun, hfun):
         
         current_module = sys.modules[__name__]
 
-        ll_real_func = LowLevelCallable.from_cython(current_module, '__real_func', func_capsule)
-        ll_imag_func = LowLevelCallable.from_cython(current_module, '__imag_func', func_capsule)
+        ll_real_func = LowLevelCallable.from_cython(current_module, 
+                                                    '__real_func', func_capsule)
+        ll_imag_func = LowLevelCallable.from_cython(current_module, 
+                                                    '__imag_func', func_capsule)
         
         real, real_tol = dblquad(ll_real_func, a, b, gfun, hfun)
-        imag, imag_tol = dblquad(ll_imag_func, a, b, gfun, hfun)
-        
-        #real, real_tol = dblquad(_real_func, a, b, gfun, hfun, (func,))
-        #imag, imag_tol = dblquad(_imag_func, a, b, gfun, hfun, (func,))
-        #imag, imag_tol = 0,0
-        
+        imag, imag_tol = dblquad(ll_imag_func, a, b, gfun, hfun)       
     else:
         real, real_tol = dblquad(_real_func, a, b, gfun, hfun, (func,))
         imag, imag_tol = dblquad(_imag_func, a, b, gfun, hfun, (func,))
-        #imag, imag_tol = 0,0
 
     return real + 1j*imag, real_tol, imag_tol
 
