@@ -11,7 +11,7 @@ import cython
 import math
 import sys
 
-from scipy.integrate import dblquad, nquad, quad
+from scipy.integrate import dblquad
 
 
 if not cython.compiled:
@@ -124,25 +124,28 @@ class PsiSpherical:
             (result,
              real_tol,
              imag_tol) = _complex_dblquad(self if cython.compiled else self.integrand, 
-                                              0, 2*math.pi, 0, math.pi/2)
+                                          0, 2*math.pi, 0, math.pi/2)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()
 
         return self.k**2 * result
 
-    def phase(self, theta, phi, x, y, z):
+    def phase(self, sin_theta, cos_theta, phi, x, y, z):
         """Phase function."""
-        sin_theta, sin_phi = sin(theta), sin(phi)
-        cos_theta, cos_phi = cos(theta), cos(phi)
+        sin_phi = sin(phi)
+        cos_phi = cos(phi)
 
         return self.k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
 
     def integrand(self, theta, phi):
         """Integrand function."""
-        return sin(theta) * cos(theta) * \
-            self.f(sin(theta), theta, phi, self.params) * \
-            cexp(1j*self.phase(theta, phi, self.x, self.ry, self.rz))
+        sin_theta = sin(theta)
+        cos_theta = cos(theta)
+        
+        return sin_theta * cos_theta * \
+            self.f(sin_theta, theta, phi, self.params) * \
+            cexp(1j*self.phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
 
     #try:
     #    getattr(psi_spherical, "called")
