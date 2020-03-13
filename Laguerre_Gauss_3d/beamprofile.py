@@ -36,13 +36,16 @@ def _imag_func(x, y, func):
 def __imag_func(n, arr, func_ptr):
     """Return imag part of function."""   
     #return (<object>func_ptr)(arr[0], arr[1]).imag
-    return cython.cast(object, func_ptr)(arr[0], arr[1]).imag
+    #return cython.cast(object, func_ptr)(arr[0], arr[1]).imag
+    return cython.cast(PsiSpherical, func_ptr).integrand(arr[0], arr[1]).imag
+
 
 
 def __real_func(n, arr, func_ptr):
     """Return real part of function."""
     #return (<object>func_ptr)(arr[0], arr[1]).real
-    return cython.cast(object, func_ptr)(arr[0], arr[1]).real
+    #return cython.cast(object, func_ptr)(arr[0], arr[1]).real
+    return cython.cast(PsiSpherical, func_ptr).integrand(arr[0], arr[1]).real
 
 
 def _complex_dblquad(func, a, b, gfun, hfun):
@@ -60,7 +63,6 @@ def _complex_dblquad(func, a, b, gfun, hfun):
                                                     '__real_func', func_capsule)
         ll_imag_func = LowLevelCallable.from_cython(current_module, 
                                                     '__imag_func', func_capsule)
-        
         real, real_tol = dblquad(ll_real_func, a, b, gfun, hfun)
         imag, imag_tol = dblquad(ll_imag_func, a, b, gfun, hfun)       
     else:
@@ -121,7 +123,8 @@ class PsiSpherical:
         try:
             (result,
              real_tol,
-             imag_tol) = _complex_dblquad(self.integrand, 0, 2*math.pi, 0, math.pi/2)
+             imag_tol) = _complex_dblquad(self if cython.compiled else self.integrand, 
+                                              0, 2*math.pi, 0, math.pi/2)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()

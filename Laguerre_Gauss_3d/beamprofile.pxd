@@ -12,15 +12,15 @@ from cpython.pycapsule cimport PyCapsule_New
 
 # declare C functions as "cpdef" to export them to the module
 cdef extern from "stdlib.h":
-    cpdef int abs (int n)
+    cpdef int abs (int n) nogil
 
 cdef extern from "math.h":
-    cpdef double sin(double x)
-    cpdef double cos(double x)
-    cpdef double exp(double x)
+    cpdef double sin(double x) nogil
+    cpdef double cos(double x) nogil
+    cpdef double exp(double x) nogil
 
 cdef extern from "complex.h":
-    cpdef double complex cexp(double complex z)
+    cpdef double complex cexp(double complex z) nogil
 
 # function type declaration for spectrum amplitudes
 ctypedef double complex (*f_spectrum_type)(double sin_theta, double theta, double phi, dict params)
@@ -33,7 +33,7 @@ cdef double __imag_func(int n, double *arr, void *func_ptr)
 cdef double __real_func(int n, double *arr, void *func_ptr)
 
 @cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double, imag_tol=cython.double)
-cdef (double complex, double, double) _complex_dblquad(func, double a, double b, double gfun, double hfun)
+cdef (double complex, double, double) _complex_dblquad(PsiSpherical func, double a, double b, double gfun, double hfun)
 
 @cython.locals(W_y=cython.double, k=cython.double)
 cdef double complex f_Gauss_spherical(double sin_theta, double theta, double phi,
@@ -50,5 +50,5 @@ cdef class PsiSpherical:
     cdef f_spectrum_type f
     cdef double ry, rz
     
-    cdef double phase(self, double theta, double phi, double x, double y, double z)
+    cdef double phase(self, double theta, double phi, double x, double y, double z) nogil
     cpdef double complex integrand(self, double theta, double phi)
