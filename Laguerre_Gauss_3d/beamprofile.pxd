@@ -23,7 +23,8 @@ cdef extern from "complex.h":
     cpdef double complex cexp(double complex z) nogil
 
 # function type declaration for spectrum amplitudes
-ctypedef double complex (*f_spectrum_type)(double sin_theta, double theta, double phi, dict params)
+ctypedef double complex (*f_spectrum_type)(double sin_theta, double theta, 
+                                           double phi, dict params)
 ctypedef double complex (*integrand_type)(double theta, double phi)
 
 # function prototypes
@@ -32,8 +33,11 @@ cdef double _imag_func(double x, double y, func)
 cdef double __imag_func(int n, double *arr, void *func_ptr)
 cdef double __real_func(int n, double *arr, void *func_ptr)
 
-@cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double, imag_tol=cython.double)
-cdef (double complex, double, double) _complex_dblquad(PsiSpherical func, double a, double b, double gfun, double hfun)
+@cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double, 
+               imag_tol=cython.double)
+cdef (double complex, double, double) _complex_dblquad(PsiSpherical func, 
+                                                       double a, double b, 
+                                                       double gfun, double hfun)
 
 @cython.locals(W_y=cython.double, k=cython.double)
 cdef double complex f_Gauss_spherical(double sin_theta, double theta, double phi,
@@ -50,5 +54,6 @@ cdef class PsiSpherical:
     cdef f_spectrum_type f
     cdef double ry, rz
     
-    cdef double phase(self, double theta, double phi, double x, double y, double z) nogil
+    cdef double phase(self, double sin_theta, double cos_theta, double phi, 
+                      double x, double y, double z) nogil
     cpdef double complex integrand(self, double theta, double phi)

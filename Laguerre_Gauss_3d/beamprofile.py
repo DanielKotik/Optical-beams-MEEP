@@ -40,7 +40,6 @@ def __imag_func(n, arr, func_ptr):
     return cython.cast(PsiSpherical, func_ptr).integrand(arr[0], arr[1]).imag
 
 
-
 def __real_func(n, arr, func_ptr):
     """Return real part of function."""
     #return (<object>func_ptr)(arr[0], arr[1]).real
