@@ -35,21 +35,20 @@ def _imag_func(x, y, func):
 
 def __imag_func(n, arr, func_ptr):
     """Return imag part of function."""   
-    #return (<object>func_ptr)(arr[0], arr[1]).imag
-    #return cython.cast(object, func_ptr)(arr[0], arr[1]).imag
+    # pure python formulation of: 
+    # return (<PsiSpherical>func_ptr)(arr[0], arr[1]).imag
     return cython.cast(PsiSpherical, func_ptr).integrand(arr[0], arr[1]).imag
 
 
 def __real_func(n, arr, func_ptr):
     """Return real part of function."""
-    #return (<object>func_ptr)(arr[0], arr[1]).real
-    #return cython.cast(object, func_ptr)(arr[0], arr[1]).real
+    # pure python formulation of: 
+    # return (<PsiSpherical>func_ptr)(arr[0], arr[1]).real
     return cython.cast(PsiSpherical, func_ptr).integrand(arr[0], arr[1]).real
 
 
 def _complex_dblquad(func, a, b, gfun, hfun):
     """Integrate real and imaginary part of the given function."""
-    
     if cython.compiled:
         # pure python formulation of: cdef void *f_ptr = <void*>func
         f_ptr = cython.declare(cython.p_void, cython.cast(cython.p_void, func))
