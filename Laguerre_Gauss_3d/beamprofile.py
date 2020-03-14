@@ -109,9 +109,9 @@ class PsiSpherical:
         self.m = params['m']
 
         if self.m == 0:
-            self.f = f_Gauss_spherical
+            self.f_spectrum = f_Gauss_spherical
         else:
-            self.f = f_Laguerre_Gauss_spherical
+            self.f_spectrum = f_Laguerre_Gauss_spherical
 
     def __call__(self, r):
         """..."""
@@ -142,7 +142,7 @@ class PsiSpherical:
         cos_theta = cos(theta)
         
         return sin_theta * cos_theta * \
-            self.f(sin_theta, theta, phi, self.params) * \
+            self.f_spectrum(sin_theta, theta, phi, self.params) * \
             cexp(1j*self.phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
 
     #try:

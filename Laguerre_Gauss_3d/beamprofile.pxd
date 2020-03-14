@@ -48,12 +48,12 @@ cdef double complex f_Laguerre_Gauss_spherical(double sin_theta, double theta,
                                                double phi, dict params)
 
 cdef class PsiSpherical:
-    cdef public int m
-    cdef public double x, k
-    cdef public dict params
-    cdef f_spectrum_type f
+    cdef int m
+    cdef double x, k
+    cdef readonly dict params
+    cdef f_spectrum_type f_spectrum
     cdef double ry, rz
     
     cdef double phase(self, double sin_theta, double cos_theta, double phi, 
                       double x, double y, double z) nogil
-    cpdef double complex integrand(self, double theta, double phi)
+    cdef double complex integrand(self, double theta, double phi)
