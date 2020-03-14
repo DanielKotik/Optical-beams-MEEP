@@ -15,8 +15,11 @@ from scipy.integrate import dblquad
 
 
 if not cython.compiled:
-    from math import sin, cos, exp
-    from cmath import exp as cexp
+    from math import (sin as _sin,
+                      cos as _cos,
+                      exp as _exp)
+    from cmath import exp as _cexp
+    from builtins import abs as _abs
     print("Please consider compiling `beamprofile.py` via Cython:\n\n"
           "     `$ cythonize -3 -i beamprofile.py`")
 else:
@@ -77,7 +80,7 @@ def f_Gauss_spherical(sin_theta, theta, phi, params):
     """
     W_y, k = params['W_y'], params['k']
 
-    return exp(-(k*W_y*sin_theta/2)**2)
+    return _exp(-(k*W_y*sin_theta/2)**2)
 
 
 def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, params):
@@ -87,8 +90,8 @@ def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, params):
     """
     m = params['m']
 
-    return f_Gauss_spherical(sin_theta, theta, phi, params) * theta**abs(m) * \
-        cexp(1j*m*phi)
+    return f_Gauss_spherical(sin_theta, theta, phi, params) * theta**_abs(m) * \
+        _cexp(1j*m*phi)
 
 
 class PsiSpherical:
@@ -131,19 +134,19 @@ class PsiSpherical:
 
     def phase(self, sin_theta, cos_theta, phi, x, y, z):
         """Phase function."""
-        sin_phi = sin(phi)
-        cos_phi = cos(phi)
+        sin_phi = _sin(phi)
+        cos_phi = _cos(phi)
 
         return self.k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
 
     def integrand(self, theta, phi):
         """Integrand function."""
-        sin_theta = sin(theta)
-        cos_theta = cos(theta)
+        sin_theta = _sin(theta)
+        cos_theta = _cos(theta)
         
         return sin_theta * cos_theta * \
             self.f_spectrum(sin_theta, theta, phi, self.params) * \
-            cexp(1j*self.phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
+            _cexp(1j*self.phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
 
     #try:
     #    getattr(psi_spherical, "called")

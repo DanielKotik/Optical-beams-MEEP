@@ -12,15 +12,15 @@ from cpython.pycapsule cimport PyCapsule_New
 
 # declare C functions as "cpdef" to export them to the module
 cdef extern from "stdlib.h":
-    cpdef int abs (int n) nogil
+    cpdef int _abs "abs" (int n) nogil
 
 cdef extern from "math.h":
-    cpdef double sin(double x) nogil
-    cpdef double cos(double x) nogil
-    cpdef double exp(double x) nogil
+    cpdef double _sin "sin" (double x) nogil
+    cpdef double _cos "cos" (double x) nogil
+    cpdef double _exp "exp" (double x) nogil
 
 cdef extern from "complex.h":
-    cpdef double complex cexp(double complex z) nogil
+    cpdef double complex _cexp "cexp" (double complex z) nogil
 
 # function type declaration for spectrum amplitudes
 ctypedef double complex (*f_spectrum_type)(double sin_theta, double theta, 
