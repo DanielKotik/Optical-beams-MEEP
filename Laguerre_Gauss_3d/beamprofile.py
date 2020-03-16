@@ -73,24 +73,20 @@ def _complex_dblquad(func, a, b, gfun, hfun):
     return real + 1j*imag, real_tol, imag_tol
 
 
-def f_Gauss_spherical(sin_theta, theta, phi, params):
+def f_Gauss_spherical(sin_theta, W_y, k):
     """2d-Gaussian spectrum amplitude.
 
     Implementation for spherical coordinates.
     """
-    W_y, k = params['W_y'], params['k']
-
     return _exp(-(k*W_y*sin_theta/2)**2)
 
 
-def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, params):
+def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, k, m):
     """Laguerre-Gaussian spectrum amplitude.
 
     Implementation for spherical coordinates.
     """
-    m = params['m']
-
-    return f_Gauss_spherical(sin_theta, theta, phi, params) * theta**_abs(m) * \
+    return f_Gauss_spherical(sin_theta, W_y, k) * theta**_abs(m) * \
         _cexp(1j*m*phi)
 
 
@@ -107,14 +103,10 @@ class PsiSpherical:
     def __init__(self, x, params):
         """..."""
         self.x = x
-        self.params = params
+        self.W_y = params['W_y']
         self.k = params['k']
         self.m = params['m']
-
-        if self.m == 0:
-            self.f_spectrum = f_Gauss_spherical
-        else:
-            self.f_spectrum = f_Laguerre_Gauss_spherical
+        
 
     def __call__(self, r):
         """..."""
@@ -138,14 +130,22 @@ class PsiSpherical:
         cos_phi = _cos(phi)
 
         return self.k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
+    
+    
+    def f_spectrum(self, sin_theta, theta, phi):
+        """Spectrum amplitude function."""
+        if self.m == 0:
+            return f_Gauss_spherical(sin_theta, self.W_y, self.k)
+        else:
+            return f_Laguerre_Gauss_spherical(sin_theta, theta, phi, 
+                                              self.W_y, self.k, self.m)
 
     def integrand(self, theta, phi):
         """Integrand function."""
         sin_theta = _sin(theta)
         cos_theta = _cos(theta)
-        
-        return sin_theta * cos_theta * \
-            self.f_spectrum(sin_theta, theta, phi, self.params) * \
+
+        return sin_theta * cos_theta * self.f_spectrum(sin_theta, theta, phi) * \
             _cexp(1j*self.phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
 
     #try:

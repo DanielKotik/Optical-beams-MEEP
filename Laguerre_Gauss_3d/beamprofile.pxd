@@ -23,8 +23,6 @@ cdef extern from "complex.h":
     cpdef double complex _cexp "cexp" (double complex z) nogil
 
 # function type declaration for spectrum amplitudes
-ctypedef double complex (*f_spectrum_type)(double sin_theta, double theta, 
-                                           double phi, dict params)
 ctypedef double complex (*integrand_type)(double theta, double phi)
 
 # function prototypes
@@ -40,20 +38,18 @@ cdef (double complex, double, double) _complex_dblquad(PsiSpherical func,
                                                        double gfun, double hfun)
 
 @cython.locals(W_y=cython.double, k=cython.double)
-cdef double complex f_Gauss_spherical(double sin_theta, double theta, double phi,
-                                      dict params)
+cdef double complex f_Gauss_spherical(double sin_theta, double W_y, double k) nogil
 
 @cython.locals(m=cython.int)
 cdef double complex f_Laguerre_Gauss_spherical(double sin_theta, double theta,
-                                               double phi, dict params)
+                                               double phi, double W_y, double k, int m) nogil
 
 cdef class PsiSpherical:
     cdef int m
-    cdef double x, k
-    cdef readonly dict params
-    cdef f_spectrum_type f_spectrum
+    cdef double x, k, W_y
     cdef double ry, rz
     
     cdef double phase(self, double sin_theta, double cos_theta, double phi, 
                       double x, double y, double z) nogil
     cdef double complex integrand(self, double theta, double phi)
+    cdef double complex f_spectrum(self, double sin_theta, double theta, double phi) nogil
