@@ -9,6 +9,7 @@ creation date: 22.02.2020
 """
 cimport cython
 from cpython.pycapsule cimport PyCapsule_New
+from cpython cimport bool
 
 # declare C functions as "cpdef" to export them to the module
 cdef extern from "stdlib.h":
@@ -48,6 +49,7 @@ cdef class PsiSpherical:
     cdef int m
     cdef double x, k, W_y
     cdef double ry, rz
+    cdef bool called
     
     cdef double phase(self, double sin_theta, double cos_theta, double phi, 
                       double x, double y, double z) nogil

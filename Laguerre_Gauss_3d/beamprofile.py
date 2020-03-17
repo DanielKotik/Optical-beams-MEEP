@@ -100,19 +100,25 @@ class PsiSpherical:
      psi_spherical(r)
     """
 
-    def __init__(self, x, params):
+    def __init__(self, x, params, called=False):
         """..."""
         self.x = x
         self.W_y = params['W_y']
         self.k = params['k']
         self.m = params['m']
+        self.called = called
         
 
     def __call__(self, r):
         """..."""
         self.ry = r.y
         self.rz = r.z
-        
+            
+        if not self.called:
+            print("Calculating inital field configuration. "
+                  "This will take some time...")
+            self.called = True
+            
         try:
             (result,
              real_tol,
@@ -148,12 +154,6 @@ class PsiSpherical:
         return sin_theta * cos_theta * self.f_spectrum(sin_theta, theta, phi) * \
             _cexp(1j*self.phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
 
-    #try:
-    #    getattr(psi_spherical, "called")
-    #except AttributeError:
-    #    psi_spherical.called = True
-    #    print("Calculating inital field configuration. "
-    #          "This will take some time...")
 
 
 def main():
