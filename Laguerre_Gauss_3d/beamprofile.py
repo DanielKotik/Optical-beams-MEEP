@@ -20,8 +20,8 @@ if not cython.compiled:
                       exp as _exp)
     from cmath import exp as _cexp
     from builtins import abs as _abs
-    print("Please consider compiling `beamprofile.py` via Cython:\n\n"
-          "     `$ cythonize -3 -i beamprofile.py`")
+    print("Please consider compiling `%s.py` via Cython:\n\n"
+          "     `$ cythonize -3 -i %s.py`" % (__name__, __name__))
 else:
     from scipy import LowLevelCallable
 
