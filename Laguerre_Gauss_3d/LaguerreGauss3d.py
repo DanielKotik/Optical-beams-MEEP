@@ -56,8 +56,9 @@ import sys
 
 from datetime import datetime
 
-from beamprofile import psi_spherical, f_Gauss_spherical, f_Laguerre_Gauss_spherical
-from beamprofile import complex_dblquad
+#from beamprofile import psi_spherical, f_Gauss_spherical, f_Laguerre_Gauss_spherical
+#from beamprofile import complex_dblquad
+from beamprofile import PsiSpherical
 
 
 print("Meep version:", mp.__version__)
@@ -353,6 +354,9 @@ def main(args):
     eps_averaging = True                  # default: True
 
     sources = []
+    
+    # define beam profile function
+    psi_spherical = PsiSpherical(x=shift, params=params)
 
     if e_z != 0:
         source_Ez = mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
@@ -362,7 +366,8 @@ def main(args):
                               center=mp.Vector3(source_shift, 0, 0),
                               #amp_func=lambda r: Gauss(r, params)
                               #amp_func=lambda r: psi_cartesian(r, shift, params)
-                              amp_func=lambda r: psi_spherical(r, shift, params)
+                              #amp_func=lambda r: psi_spherical(r)#, shift, params)
+                              amp_func=psi_spherical
                               )
         sources.append(source_Ez)
 
@@ -374,7 +379,8 @@ def main(args):
                               center=mp.Vector3(source_shift, 0, 0),
                               #amp_func=lambda r: Gauss(r, params)
                               #amp_func=lambda r: psi_cartesian(r, shift, params)
-                              amp_func=lambda r: psi_spherical(r, shift, params)
+                              #amp_func=lambda r: psi_spherical(r)#, shift, params)
+                              amp_func=psi_spherical
                               )
         sources.append(source_Ey)
 
