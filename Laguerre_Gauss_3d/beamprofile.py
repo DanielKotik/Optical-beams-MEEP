@@ -64,6 +64,7 @@ def _complex_dblquad(func, a, b, gfun, hfun):
                                                     '__real_func', func_capsule)
         ll_imag_func = LowLevelCallable.from_cython(current_module, 
                                                     '__imag_func', func_capsule)
+        
         real, real_tol = dblquad(ll_real_func, a, b, gfun, hfun)
         imag, imag_tol = dblquad(ll_imag_func, a, b, gfun, hfun)       
     else:
