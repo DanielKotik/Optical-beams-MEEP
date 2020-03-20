@@ -105,7 +105,7 @@ class PsiSpherical:
 
     Usage:
      psi_spherical = PsiSpherical(x=shift, params=params)
-     psi_spherical(r)
+     psi_spherical(r)  # r...vector-like object with scalar y and z attributes
     """
 
     def __init__(self, x, params, called=False):
