@@ -58,7 +58,7 @@ from datetime import datetime
 
 from optbeam import PsiSpherical
 from optbeam2 import PsiCartesian
-# TODO: change in future versions to PsiLaguerreGauss, PsiAiry etc.
+# TODO: change in future versions to LaguerreGauss3d, Airy3d etc.
 
 
 print("Meep version:", mp.__version__)
@@ -192,38 +192,7 @@ def main(args):
     # --------------------------------------------------------------------------
 
     # cartesian coordinates (not recommmended) -------------------------
-    def phi(k_y, k_z):
-        """Azimuthal angle.
 
-        Part of coordinate transformation from k-space to (theta, phi)-space.
-        """
-        return math.atan2(k_y, -k_z)
-
-    def theta(k_y, k_z, k):
-        """Polar angle.
-
-        Part of coordinate transformation from k-space to (theta, phi)-space.
-        """
-        return math.acos(cmath.sqrt(k**2 - k_y**2 - k_z**2).real / k)
-
-    def f_Gauss_cartesian(k_y, k_z, params):
-        """2d-Gaussian spectrum amplitude.
-
-        Impementation for Cartesian coordinates.
-        """
-        W_y = params['W_y']
-
-        return math.exp(-W_y**2 * (k_y**2 + k_z**2)/4)
-
-    def f_Laguerre_Gauss_cartesian(k_y, k_z, params):
-        """Laguerre-Gaussian spectrum amplitude.
-
-        Impementation for Cartesian coordinates.
-        """
-        m, k = params['m'], params['k']
-
-        return f_Gauss_cartesian(k_y, k_z, params) * \
-            cmath.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k)**abs(m)
 
     # spherical coordinates --------------------------------------------
 
@@ -357,7 +326,8 @@ def main(args):
 
     # define beam profile function
     psi_spherical = PsiSpherical(x=shift, params=params)
-    # TODO: change to psi_LaguerreGauss = PsiLaguerreGauss(...) in future versions
+    # TODO: change to psi_LaguerreGauss = LaguerreGauss3d.psi(...) in future versions
+    #                 f_Laguerre_Gauss = LaguerreGauss3d.f_spectrum(...)
 
     if e_z != 0:
         source_Ez = mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
