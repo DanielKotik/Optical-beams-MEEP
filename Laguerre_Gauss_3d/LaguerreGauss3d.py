@@ -56,9 +56,9 @@ import sys
 
 from datetime import datetime
 
-#from beamprofile import psi_spherical, f_Gauss_spherical, f_Laguerre_Gauss_spherical
-#from beamprofile import complex_dblquad
 from optbeam import PsiSpherical
+from optbeam2 import PsiCartesian
+# TODO: change in future versions to PsiLaguerreGauss, PsiAiry etc.
 
 
 print("Meep version:", mp.__version__)
@@ -357,6 +357,7 @@ def main(args):
 
     # define beam profile function
     psi_spherical = PsiSpherical(x=shift, params=params)
+    # TODO: change to psi_LaguerreGauss = PsiLaguerreGauss(...) in future versions
 
     if e_z != 0:
         source_Ez = mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
