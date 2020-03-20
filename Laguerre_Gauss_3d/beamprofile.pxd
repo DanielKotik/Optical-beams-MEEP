@@ -23,17 +23,15 @@ cdef extern from "math.h":
 cdef extern from "complex.h":
     cpdef double complex _cexp "cexp" (double complex z) nogil
 
-# function type declaration for spectrum amplitudes
-ctypedef double complex (*integrand_type)(double theta, double phi)
 
 # function prototypes
 cdef double _imag_2d_func_c(int n, double *arr, void *func_ptr)
 cdef double _real_2d_func_c(int n, double *arr, void *func_ptr)
 
-@cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double, 
+@cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double,
                imag_tol=cython.double)
-cdef (double complex, double, double) _complex_dblquad(PsiSpherical func, 
-                                                       double a, double b, 
+cdef (double complex, double, double) _complex_dblquad(PsiSpherical func,
+                                                       double a, double b,
                                                        double gfun, double hfun)
 
 @cython.locals(W_y=cython.double, k=cython.double)
@@ -49,8 +47,8 @@ cdef class PsiSpherical:
         double x, k, W_y
         double ry, rz
         bool called
-    
-    cdef double phase(self, double sin_theta, double cos_theta, double phi, 
+
+    cdef double phase(self, double sin_theta, double cos_theta, double phi,
                       double x, double y, double z) nogil
-    cdef double complex integrand(self, double theta, double phi)
+    cdef double complex integrand(self, double theta, double phi) nogil
     cdef double complex f_spectrum(self, double sin_theta, double theta, double phi) nogil

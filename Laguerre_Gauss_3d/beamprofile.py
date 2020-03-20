@@ -27,31 +27,31 @@ else:
 
 
 def _real_2d_func(x, y, func):
-    """Return real part of 2d function."""
+    """Return real part of a 2d function."""
     return func(x, y).real
 
 
 def _imag_2d_func(x, y, func):
-    """Return imag part of 2d function."""
+    """Return imag part of a 2d function."""
     return func(x, y).imag
 
 
 def _imag_2d_func_c(n, arr, func_ptr):
-    """Return imag part of 2d function.
-    
+    """Return imag part of a 2d function.
+
     Cython implementation.
-    """   
-    # pure python formulation of: 
+    """
+    # pure python formulation of:
     # return (<PsiSpherical>func_ptr)(arr[0], arr[1]).imag
     return cython.cast(PsiSpherical, func_ptr).integrand(arr[0], arr[1]).imag
 
 
 def _real_2d_func_c(n, arr, func_ptr):
-    """Return real part of 2d function.
-    
+    """Return real part of a 2d function.
+
     Cython implementation.
     """
-    # pure python formulation of: 
+    # pure python formulation of:
     # return (<PsiSpherical>func_ptr)(arr[0], arr[1]).real
     return cython.cast(PsiSpherical, func_ptr).integrand(arr[0], arr[1]).real
 
@@ -61,18 +61,19 @@ def _complex_dblquad(func, a, b, gfun, hfun):
     if cython.compiled:
         # pure python formulation of: cdef void *f_ptr = <void*>func
         f_ptr = cython.declare(cython.p_void, cython.cast(cython.p_void, func))
-        
+
         func_capsule = PyCapsule_New(f_ptr, cython.NULL, cython.NULL)
-        
+
         current_module = sys.modules[__name__]
 
-        ll_real_2d_func_c = LowLevelCallable.from_cython(current_module, 
-                                                    '_real_2d_func_c', func_capsule)
-        ll_imag_2d_func_c = LowLevelCallable.from_cython(current_module, 
-                                                    '_imag_2d_func_c', func_capsule)
-        
+        ll_real_2d_func_c = LowLevelCallable.from_cython(current_module,
+                                                         '_real_2d_func_c',
+                                                         func_capsule)
+        ll_imag_2d_func_c = LowLevelCallable.from_cython(current_module,
+                                                         '_imag_2d_func_c',
+                                                         func_capsule)
         real, real_tol = dblquad(ll_real_2d_func_c, a, b, gfun, hfun)
-        imag, imag_tol = dblquad(ll_imag_2d_func_c, a, b, gfun, hfun)       
+        imag, imag_tol = dblquad(ll_imag_2d_func_c, a, b, gfun, hfun)
     else:
         real, real_tol = dblquad(_real_2d_func, a, b, gfun, hfun, (func,))
         imag, imag_tol = dblquad(_imag_2d_func, a, b, gfun, hfun, (func,))
@@ -114,22 +115,21 @@ class PsiSpherical:
         self.k = params['k']
         self.m = params['m']
         self.called = called
-        
 
     def __call__(self, r):
         """..."""
         self.ry = r.y
         self.rz = r.z
-            
+
         if not self.called:
             print("Calculating inital field configuration. "
                   "This will take some time...")
             self.called = True
-            
+
         try:
             (result,
              real_tol,
-             imag_tol) = _complex_dblquad(self if cython.compiled else self.integrand, 
+             imag_tol) = _complex_dblquad(self if cython.compiled else self.integrand,
                                           0, 2*math.pi, 0, math.pi/2)
         except Exception as e:
             print(type(e).__name__ + ":", e)
@@ -137,21 +137,19 @@ class PsiSpherical:
 
         return self.k**2 * result
 
-    
     def phase(self, sin_theta, cos_theta, phi, x, y, z):
         """Phase function."""
         sin_phi = _sin(phi)
         cos_phi = _cos(phi)
 
         return self.k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
-    
-    
+
     def f_spectrum(self, sin_theta, theta, phi):
         """Spectrum amplitude function."""
         if self.m == 0:
             return f_Gauss_spherical(sin_theta, self.W_y, self.k)
         else:
-            return f_Laguerre_Gauss_spherical(sin_theta, theta, phi, 
+            return f_Laguerre_Gauss_spherical(sin_theta, theta, phi,
                                               self.W_y, self.k, self.m)
 
     def integrand(self, theta, phi):
@@ -161,7 +159,6 @@ class PsiSpherical:
 
         return sin_theta * cos_theta * self.f_spectrum(sin_theta, theta, phi) * \
             _cexp(1j*self.phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
-
 
 
 def main():
