@@ -58,7 +58,7 @@ from datetime import datetime
 
 #from beamprofile import psi_spherical, f_Gauss_spherical, f_Laguerre_Gauss_spherical
 #from beamprofile import complex_dblquad
-from beamprofile import PsiSpherical
+from optbeam import PsiSpherical
 
 
 print("Meep version:", mp.__version__)
@@ -354,7 +354,7 @@ def main(args):
     eps_averaging = True                  # default: True
 
     sources = []
-    
+
     # define beam profile function
     psi_spherical = PsiSpherical(x=shift, params=params)
 

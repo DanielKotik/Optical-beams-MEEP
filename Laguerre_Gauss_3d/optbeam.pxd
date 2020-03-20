@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-file:    beamprofile.pxd
+file:    optbeam.pxd
 brief:   ...
 author:  Daniel Kotik
 version: 1.5-beta

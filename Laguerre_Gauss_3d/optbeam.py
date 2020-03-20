@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-file:    beamprofile.py
+file:    optbeam.py
 brief:   ...
 author:  Daniel Kotik
 version: 1.5-beta
