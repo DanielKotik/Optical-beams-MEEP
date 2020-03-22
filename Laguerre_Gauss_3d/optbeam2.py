@@ -84,23 +84,6 @@ def _complex_dblquad(func, a, b, gfun, hfun):
     return real + 1j*imag, real_tol, imag_tol
 
 
-def f_Gauss_spherical(sin_theta, W_y, k):
-    """2d-Gaussian spectrum amplitude.
-
-    Implementation for spherical coordinates.
-    """
-    return _exp(-(k*W_y*sin_theta/2)**2)
-
-
-def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, k, m):
-    """Laguerre-Gaussian spectrum amplitude.
-
-    Implementation for spherical coordinates.
-    """
-    return f_Gauss_spherical(sin_theta, W_y, k) * theta**_abs(m) * \
-        _cexp(1j*m*phi)
-
-
 def _phi(k_y, k_z):
     """Azimuthal angle.
 
@@ -173,12 +156,9 @@ class PsiCartesian:
 
         return self.k**2 * result
 
-    def phase(self, sin_theta, cos_theta, phi, x, y, z):
+    def phase(k, k_y, k_z, x, y, z):
         """Phase function."""
-        sin_phi = _sin(phi)
-        cos_phi = _cos(phi)
-
-        return self.k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
+        return x*_csqrt(k**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
 
     def f_spectrum(self, sin_theta, theta, phi):
         """Spectrum amplitude function."""
