@@ -118,7 +118,7 @@ class PsiSpherical:
         self.called = called
 
     def __call__(self, r):
-        """..."""
+        """Beam profile function."""
         self.ry = r.y
         self.rz = r.z
 
