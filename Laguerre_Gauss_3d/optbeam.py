@@ -111,6 +111,7 @@ class PsiSpherical:
     def __init__(self, x, params, called=False):
         """..."""
         self.x = x
+        self.params = params
         self.W_y = params['W_y']
         self.k = params['k']
         self.m = params['m']

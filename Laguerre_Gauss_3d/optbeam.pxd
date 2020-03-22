@@ -43,6 +43,7 @@ cdef double complex f_Laguerre_Gauss_spherical(double sin_theta, double theta,
 
 cdef class PsiSpherical:
     cdef:
+        readonly dict params
         int m
         double x, k, W_y
         double ry, rz
