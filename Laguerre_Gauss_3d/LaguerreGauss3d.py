@@ -221,38 +221,7 @@ def main(args):
     # (purpose: calculate field amplitude at light source position if not
     #           coinciding with beam waist)
     # --------------------------------------------------------------------------
-    def psi_cartesian(r, x, params):
-        """Field amplitude function.
 
-        Integration in Cartesian coordinates.
-        """
-        k, m = params['k'], params['m']
-
-        try:
-            getattr(psi_cartesian, "called")
-        except AttributeError:
-            psi_cartesian.called = True
-            print("Calculating inital field configuration. "
-                  "This will take some time...")
-
-        def phase(k_y, k_z, x, y, z):
-            """Phase function."""
-            return x*cmath.sqrt(k**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
-
-        f = (f_Gauss_cartesian if m == 0 else f_Laguerre_Gauss_cartesian)
-
-        try:
-            (result,
-             real_tol,
-             imag_tol) = complex_dblquad(lambda k_y, k_z:
-                                         f(k_y, k_z, params) *
-                                         cmath.exp(1j*phase(k_y, k_z, x, r.y, r.z)),
-                                         -k, k, -k, k)
-        except Exception as e:
-            print(type(e).__name__ + ":", e)
-            sys.exit()
-
-        return result
 
     # --------------------------------------------------------------------------
     # some test outputs (uncomment if needed)
