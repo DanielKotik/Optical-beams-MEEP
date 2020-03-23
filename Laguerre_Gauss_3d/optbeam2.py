@@ -130,13 +130,14 @@ class PsiCartesian:
     def __init__(self, x, params, called=False):
         """..."""
         self.x = x
+        self.params = params
         self.W_y = params['W_y']
         self.k = params['k']
         self.m = params['m']
         self.called = called
 
     def __call__(self, r):
-        """..."""
+        """Beam profile function."""
         self.ry = r.y
         self.rz = r.z
 
@@ -149,32 +150,28 @@ class PsiCartesian:
             (result,
              real_tol,
              imag_tol) = _complex_dblquad(self if cython.compiled else self.integrand,
-                                          0, 2*math.pi, 0, math.pi/2)
+                                          -self.k, self.k, -self.k, self.k)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()
 
-        return self.k**2 * result
+        return result
 
-    def phase(k, k_y, k_z, x, y, z):
+    def phase(self, k_y, k_z, x, y, z):
         """Phase function."""
-        return x*_csqrt(k**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
+        return x*_csqrt(self.k**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
 
-    def f_spectrum(self, sin_theta, theta, phi):
+    def f_spectrum(self, k_y, k_z):
         """Spectrum amplitude function."""
         if self.m == 0:
-            return f_Gauss_spherical(sin_theta, self.W_y, self.k)
+            return f_Gauss_cartesian(k_y, k_z, self.W_y, self.k)
         else:
-            return f_Laguerre_Gauss_spherical(sin_theta, theta, phi,
-                                              self.W_y, self.k, self.m)
+            return f_Laguerre_Gauss_cartesian(k_y, k_z, self.W_y, self.k, self.m)
 
-    def integrand(self, theta, phi):
+    def integrand(self, k_y, k_z):
         """Integrand function."""
-        sin_theta = _sin(theta)
-        cos_theta = _cos(theta)
-
-        return sin_theta * cos_theta * self.f_spectrum(sin_theta, theta, phi) * \
-            _cexp(1j*self.phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
+        return self.f_spectrum(k_y, k_z) * \
+            _cexp(1j*self.phase(k_y, k_z, self.x, self.ry, self.rz))
 
 
 def main():
