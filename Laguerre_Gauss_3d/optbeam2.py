@@ -164,7 +164,7 @@ class PsiCartesian:
     def f_spectrum(self, k_y, k_z):
         """Spectrum amplitude function."""
         if self.m == 0:
-            return f_Gauss_cartesian(k_y, k_z, self.W_y, self.k)
+            return f_Gauss_cartesian(k_y, k_z, self.W_y)
         else:
             return f_Laguerre_Gauss_cartesian(k_y, k_z, self.W_y, self.k, self.m)
 
