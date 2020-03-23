@@ -24,13 +24,13 @@ cdef extern from "complex.h":
     cpdef double complex _cexp "cexp" (double complex z) nogil
 
 
-# function prototypes
+# function declarations
 cdef double _imag_2d_func_c(int n, double *arr, void *func_ptr)
 cdef double _real_2d_func_c(int n, double *arr, void *func_ptr)
 
 @cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double,
                imag_tol=cython.double)
-cdef (double complex, double, double) _complex_dblquad(PsiSpherical func,
+cdef (double complex, double, double) _complex_dblquad(Beam3d func,
                                                        double a, double b,
                                                        double gfun, double hfun)
 
@@ -41,7 +41,14 @@ cdef double complex f_Gauss_spherical(double sin_theta, double W_y, double k) no
 cdef double complex f_Laguerre_Gauss_spherical(double sin_theta, double theta,
                                                double phi, double W_y, double k, int m) nogil
 
-cdef class PsiSpherical:
+# class declarations
+cdef class Beam3d:
+    cdef double phase(self, double sin_theta, double cos_theta, double phi,
+                      double x, double y, double z) nogil
+    cdef double complex integrand(self, double theta, double phi) nogil
+    cdef double complex f_spectrum(self, double sin_theta, double theta, double phi) nogil
+
+cdef class PsiSpherical(Beam3d):
     cdef:
         readonly dict params
         int m

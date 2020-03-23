@@ -42,8 +42,8 @@ def _imag_2d_func_c(n, arr, func_ptr):
     Cython implementation.
     """
     # pure python formulation of:
-    # return (<PsiSpherical>func_ptr)(arr[0], arr[1]).imag
-    return cython.cast(PsiSpherical, func_ptr).integrand(arr[0], arr[1]).imag
+    # return (<Beam3d>func_ptr)(arr[0], arr[1]).imag
+    return cython.cast(Beam3d, func_ptr).integrand(arr[0], arr[1]).imag
 
 
 def _real_2d_func_c(n, arr, func_ptr):
@@ -52,8 +52,8 @@ def _real_2d_func_c(n, arr, func_ptr):
     Cython implementation.
     """
     # pure python formulation of:
-    # return (<PsiSpherical>func_ptr)(arr[0], arr[1]).real
-    return cython.cast(PsiSpherical, func_ptr).integrand(arr[0], arr[1]).real
+    # return (<Beam3d>func_ptr)(arr[0], arr[1]).real
+    return cython.cast(Beam3d, func_ptr).integrand(arr[0], arr[1]).real
 
 
 def _complex_dblquad(func, a, b, gfun, hfun):
@@ -98,7 +98,18 @@ def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, k, m):
         _cexp(1j*m*phi)
 
 
-class PsiSpherical:
+class Beam3d:
+    def phase(self, sin_theta, cos_theta, phi, x, y, z):
+        pass
+
+    def f_spectrum(self, sin_theta, theta, phi):
+        pass
+
+    def integrand(self, theta, phi):
+        pass
+
+
+class PsiSpherical(Beam3d):
     """Field amplitude class.
 
     Integration in spherical coordinates.
