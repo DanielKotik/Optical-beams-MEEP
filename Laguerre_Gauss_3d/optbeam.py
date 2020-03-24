@@ -115,6 +115,7 @@ class PsiSpherical(Beam3d):
 
     def __init__(self, x, params, called=False):
         """..."""
+        # TODO: rename x to x_shift
         self.x = x
         self.params = params
         self.W_y = params['W_y']
@@ -124,6 +125,7 @@ class PsiSpherical(Beam3d):
 
     def __call__(self, r):
         """Beam profile function."""
+        # TODO: rename __call__(self, r) to profile(self, r)
         self.ry = r.y
         self.rz = r.z
 
@@ -170,6 +172,7 @@ class PsiSpherical(Beam3d):
 def main():
 
     import meep as mp
+    # TODO: remove meep dependency
 
     x, y, z = -2.15, 0.3, 0.5
     r = mp.Vector3(0, y, z)
