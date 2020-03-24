@@ -169,8 +169,7 @@ class PsiSpherical(Beam3d):
             _cexp(1j*self.phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
 
 
-def main():
-
+if __name__ == '__main__':
     import meep as mp
     # TODO: remove meep dependency
 
@@ -184,9 +183,3 @@ def main():
     params = dict(W_y=w_0, m=m_charge, k=k1)
 
     psi_spherical = PsiSpherical(x=x, params=params)
-
-    return lambda: psi_spherical(r)
-
-
-if __name__ == '__main__':
-    main()
