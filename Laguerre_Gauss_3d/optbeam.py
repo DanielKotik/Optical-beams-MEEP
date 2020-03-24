@@ -99,13 +99,7 @@ def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, k, m):
 
 
 class Beam3d:
-    def phase(self, sin_theta, cos_theta, phi, x, y, z):
-        pass
-
-    def f_spectrum(self, sin_theta, theta, phi):
-        pass
-
-    def integrand(self, theta, phi):
+    def integrand(self, x, y):
         pass
 
 

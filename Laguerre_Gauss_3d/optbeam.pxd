@@ -43,10 +43,7 @@ cdef double complex f_Laguerre_Gauss_spherical(double sin_theta, double theta,
 
 # class declarations
 cdef class Beam3d:
-    cdef double phase(self, double sin_theta, double cos_theta, double phi,
-                      double x, double y, double z) nogil
-    cdef double complex integrand(self, double theta, double phi) nogil
-    cdef double complex f_spectrum(self, double sin_theta, double theta, double phi) nogil
+    cdef double complex integrand(self, double x, double y) nogil
 
 cdef class PsiSpherical(Beam3d):
     cdef:
