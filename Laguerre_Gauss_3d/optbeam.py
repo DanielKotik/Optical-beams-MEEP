@@ -17,8 +17,11 @@ from scipy.integrate import dblquad
 if not cython.compiled:
     from math import (sin as _sin,
                       cos as _cos,
-                      exp as _exp)
-    from cmath import exp as _cexp
+                      exp as _exp,
+                      acos as _acos,
+                      atan2 as _atan2)
+    from cmath import (exp as _cexp,
+                       sqrt as _csqrt)
     from builtins import abs as _abs
     print("\nPlease consider compiling `%s.py` via Cython: "
           "`$ cythonize -3 -i %s.py`\n" % (__name__, __name__))
@@ -169,6 +172,96 @@ class PsiSpherical(Beam3d):
             _cexp(1j*self.phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
 
 
+def _phi(k_y, k_z):
+    """Azimuthal angle.
+
+    Part of coordinate transformation from k-space to (theta, phi)-space.
+    """
+    return _atan2(k_y, -k_z)
+
+
+def _theta(k_y, k_z, k):
+    """Polar angle.
+
+    Part of coordinate transformation from k-space to (theta, phi)-space.
+    """
+    return _acos(_csqrt(k**2 - k_y**2 - k_z**2).real / k)
+
+
+def f_Gauss_cartesian(k_y, k_z, W_y):
+    """2d-Gaussian spectrum amplitude.
+
+    Impementation for Cartesian coordinates.
+    """
+    return _exp(-W_y**2 * (k_y**2 + k_z**2)/4)
+
+
+def f_Laguerre_Gauss_cartesian(k_y, k_z, W_y, k, m):
+    """Laguerre-Gaussian spectrum amplitude.
+
+    Impementation for Cartesian coordinates.
+    """
+    return f_Gauss_cartesian(k_y, k_z, W_y) * \
+        _cexp(1j*m*_phi(k_y, k_z)) * _theta(k_y, k_z, k)**_abs(m)
+
+
+class PsiCartesian:
+    """Field amplitude class.
+
+    Integration in cartesian coordinates.
+
+    Usage:
+     psi_cartesian = PsiCartesian(x=shift, params=params)
+     psi_cartesian(r)  # r...vector-like object with scalar y and z attributes
+    """
+
+    def __init__(self, x, params, called=False):
+        """..."""
+        self.x = x
+        self.params = params
+        self.W_y = params['W_y']
+        self.k = params['k']
+        self.m = params['m']
+        self.called = called
+
+    def __call__(self, r):
+        """Beam profile function."""
+        self.ry = r.y
+        self.rz = r.z
+
+        if not self.called:
+            print("Calculating inital field configuration. "
+                  "This will take some time...")
+            self.called = True
+
+        try:
+            (result,
+             real_tol,
+             imag_tol) = _complex_dblquad(self if cython.compiled else self.integrand,
+                                          -self.k, self.k, -self.k, self.k)
+        except Exception as e:
+            print(type(e).__name__ + ":", e)
+            sys.exit()
+
+        return result
+
+    def phase(self, k_y, k_z, x, y, z):
+        """Phase function."""
+        return x*_csqrt(self.k**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
+
+    def f_spectrum(self, k_y, k_z):
+        """Spectrum amplitude function."""
+        if self.m == 0:
+            return f_Gauss_cartesian(k_y, k_z, self.W_y)
+        else:
+            return f_Laguerre_Gauss_cartesian(k_y, k_z, self.W_y, self.k, self.m)
+
+    def integrand(self, k_y, k_z):
+        """Integrand function."""
+        return self.f_spectrum(k_y, k_z) * \
+            _cexp(1j*self.phase(k_y, k_z, self.x, self.ry, self.rz))
+
+
 if __name__ == '__main__':
     import meep as mp
     # TODO: remove meep dependency
@@ -183,3 +276,4 @@ if __name__ == '__main__':
     params = dict(W_y=w_0, m=m_charge, k=k1)
 
     psi_spherical = PsiSpherical(x=x, params=params)
+    psi_cartesian = PsiCartesian(x=x, params=params)
