@@ -263,11 +263,17 @@ class PsiCartesian:
 
 
 if __name__ == '__main__':
-    import meep as mp
-    # TODO: remove meep dependency
+    class Vector3:
+        """Simple vector class."""
+
+        def __init__(self, x, y, z):
+            self.x = x
+            self.y = y
+            self.z = z
 
     x, y, z = -2.15, 0.3, 0.5
-    r = mp.Vector3(0, y, z)
+    # import meep; r = meep.Vector3(0, y, z)
+    r = Vector3(0, y, z)
 
     k1 = 31.41592653589793
     w_0 = 0.25464790894703254
