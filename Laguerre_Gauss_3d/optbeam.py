@@ -262,7 +262,7 @@ class PsiCartesian:
             _cexp(1j*self.phase(k_y, k_z, self.x, self.ry, self.rz))
 
 
-if __name__ == '__main__':
+def main():
     class Vector3:
         """Simple vector class."""
 
@@ -272,6 +272,7 @@ if __name__ == '__main__':
             self.z = z
 
     x, y, z = -2.15, 0.3, 0.5
+
     # import meep; r = meep.Vector3(0, y, z)
     r = Vector3(0, y, z)
 
@@ -283,3 +284,9 @@ if __name__ == '__main__':
 
     psi_spherical = PsiSpherical(x=x, params=params)
     psi_cartesian = PsiCartesian(x=x, params=params)
+
+    return (psi_spherical, psi_cartesian, r)
+
+
+if __name__ == '__main__':
+    main()
