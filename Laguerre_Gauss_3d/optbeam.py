@@ -102,6 +102,13 @@ def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, k, m):
 
 
 class Beam3d:
+    """Abstract base class."""
+
+    def __init__(self, x, params, called=False):
+        self.x = x   # TODO: rename x to x_shift
+        self.params = params
+        self.called = called
+
     def integrand(self, x, y):
         pass
 
@@ -118,13 +125,10 @@ class PsiSpherical(Beam3d):
 
     def __init__(self, x, params, called=False):
         """..."""
-        # TODO: rename x to x_shift
-        self.x = x
-        self.params = params
+        super().__init__(x, params, called)
         self.W_y = params['W_y']
         self.k = params['k']
         self.m = params['m']
-        self.called = called
 
     def __call__(self, r):
         """Beam profile function."""
@@ -217,12 +221,10 @@ class PsiCartesian:
 
     def __init__(self, x, params, called=False):
         """..."""
-        self.x = x
-        self.params = params
+        super().__init__(x, params, called)
         self.W_y = params['W_y']
         self.k = params['k']
         self.m = params['m']
-        self.called = called
 
     def __call__(self, r):
         """Beam profile function."""
