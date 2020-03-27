@@ -210,7 +210,7 @@ def f_Laguerre_Gauss_cartesian(k_y, k_z, W_y, k, m):
         _cexp(1j*m*_phi(k_y, k_z)) * _theta(k_y, k_z, k)**_abs(m)
 
 
-class PsiCartesian:
+class PsiCartesian(Beam3d):
     """Field amplitude class.
 
     Integration in cartesian coordinates.
