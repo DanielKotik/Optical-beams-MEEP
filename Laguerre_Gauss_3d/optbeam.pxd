@@ -50,15 +50,18 @@ cdef double complex f_Laguerre_Gauss_cartesian(double k_y, double k_z,
 
 # class declarations
 cdef class Beam3d:
+    cdef:
+        readonly dict params
+        double x
+        bool called
+
     cdef double complex integrand(self, double x, double y) nogil
 
 cdef class PsiSpherical(Beam3d):
     cdef:
-        readonly dict params
         int m
-        double x, k, W_y
+        double k, W_y
         double ry, rz
-        bool called
 
     cdef double phase(self, double sin_theta, double cos_theta, double phi,
                       double x, double y, double z) nogil
@@ -67,11 +70,9 @@ cdef class PsiSpherical(Beam3d):
 
 cdef class PsiCartesian(Beam3d):
     cdef:
-        readonly dict params
         int m
-        double x, k, W_y
+        double k, W_y
         double ry, rz
-        bool called
 
     cdef double phase(self, double k_y, double k_z, double x, double y, double z) nogil
     cdef double complex integrand(self, double k_y, double k_z) nogil
