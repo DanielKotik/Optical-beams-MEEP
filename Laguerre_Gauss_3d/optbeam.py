@@ -132,6 +132,7 @@ class PsiSpherical(Beam3d):
 
     def __call__(self, r):
         """Beam profile function."""
+        # TODO: Consider calling simple Gauss for special case x=0
         # TODO: rename __call__(self, r) to profile(self, r)
         self.ry = r.y
         self.rz = r.z
