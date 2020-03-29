@@ -95,7 +95,7 @@ class Beam3d:
 
     def integrand(self, x, y):
         """Integrand function over two coordinates x and y."""
-        pass
+        raise NotImplementedError
 
 
 class Beam3dSpherical(Beam3d):
@@ -133,7 +133,7 @@ class Beam3dSpherical(Beam3d):
 
     def spectrum(self, sin_theta, theta, phi):
         """Spectrum amplitude function, f."""
-        pass
+        raise NotImplementedError
 
     def integrand(self, theta, phi):
         """Integrand function."""
