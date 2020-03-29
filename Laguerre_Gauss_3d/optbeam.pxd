@@ -66,6 +66,21 @@ cdef class Beam3dSpherical(Beam3d):
     cdef double complex spectrum(self, double sin_theta, double theta, double phi) nogil
     cdef double complex integrand(self, double theta, double phi) nogil
 
+cdef class LaguerreGauss3d(Beam3dSpherical):
+    cdef:
+      int m
+      double W_y
+
+    #@classmethod
+    #@cython.binding(True)
+    cdef double complex _f_Gauss_spherical(self, double sin_theta, double W_y, double k) nogil
+    cdef double complex _f_Laguerre_Gauss_spherical(self, double sin_theta, double theta, double phi,
+                                                    double W_y, double k, int m) nogil
+    cdef double complex spectrum(self, double sin_theta, double theta, double phi) nogil
+
+
+
+
 """
 cdef class PsiSpherical(Beam3d):
     cdef:
