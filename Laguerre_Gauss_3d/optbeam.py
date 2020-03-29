@@ -84,35 +84,107 @@ def _complex_dblquad(func, a, b, gfun, hfun):
     return real + 1j*imag, real_tol, imag_tol
 
 
-def f_Gauss_spherical(sin_theta, W_y, k):
-    """2d-Gaussian spectrum amplitude.
-
-    Implementation for spherical coordinates.
-    """
-    return _exp(-(k*W_y*sin_theta/2)**2)
-
-
-def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, W_y, k, m):
-    """Laguerre-Gaussian spectrum amplitude.
-
-    Implementation for spherical coordinates.
-    """
-    return f_Gauss_spherical(sin_theta, W_y, k) * theta**_abs(m) * \
-        _cexp(1j*m*phi)
-
-
 class Beam3d:
     """Abstract base class."""
 
     def __init__(self, x, params, called=False):
         self.x = x   # TODO: rename x to x_shift
+        self.k = params['k']
         self.params = params
         self.called = called
 
     def integrand(self, x, y):
+        """Integrand function over two coordinates x and y."""
         pass
 
 
+class Beam3dSpherical(Beam3d):
+    """Implementaion of a 3d beam in spherical coordinates."""
+
+    def profile(self, r):
+        """Beam profile function, psi."""
+        # TODO: Consider calling simple Gauss for special case x=0
+        # TODO: rename __call__(self, r) to profile(self, r)
+        self.ry = r.y
+        self.rz = r.z
+
+        if not self.called:
+            print("Calculating inital field configuration. "
+                  "This will take some time...")
+            self.called = True
+
+        try:
+            (result,
+             real_tol,
+             imag_tol) = _complex_dblquad(self if cython.compiled else self.integrand,
+                                          0, 2*math.pi, 0, math.pi/2)
+        except Exception as e:
+            print(type(e).__name__ + ":", e)
+            sys.exit()
+
+        return self.k**2 * result
+
+    def phase(self, sin_theta, cos_theta, phi, x, y, z):
+        """Phase function."""
+        sin_phi = _sin(phi)
+        cos_phi = _cos(phi)
+
+        return self.k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
+
+    def spectrum(self, sin_theta, theta, phi):
+        """Spectrum amplitude function, f."""
+        pass
+
+    def integrand(self, theta, phi):
+        """Integrand function."""
+        sin_theta = _sin(theta)
+        cos_theta = _cos(theta)
+
+        return sin_theta * cos_theta * self.spectrum(sin_theta, theta, phi) * \
+            _cexp(1j*self.phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
+
+
+class LaguerreGauss3d(Beam3dSpherical):
+    """3d Laguerre-Gauss beam.
+
+    Usage:
+     LGbeam = LaguerreGauss3d(x=x, params=params)
+     LGbeam.profile(r)
+     LGbeam.spectrum(sin_theta, theta, phi)
+    """
+
+    def __init__(self, x, params, called=False):
+        """Specific paramters for Laguerre-Gauss beam."""
+        super().__init__(x, params, called)
+        self.W_y = params['W_y']
+        self.m = params['m']
+
+    @classmethod
+    def _f_Gauss_spherical(cls, sin_theta, W_y, k):
+        """2d-Gaussian spectrum amplitude.
+
+        Implementation for spherical coordinates.
+        """
+        return _exp(-(k*W_y*sin_theta/2)**2)
+
+    @classmethod
+    def _f_Laguerre_Gauss_spherical(cls, sin_theta, theta, phi, W_y, k, m):
+        """Laguerre-Gaussian spectrum amplitude.
+
+        Implementation for spherical coordinates.
+        """
+        return cls._f_Gauss_spherical(sin_theta, W_y, k) * theta**_abs(m) * \
+            _cexp(1j*m*phi)
+
+    def spectrum(self, sin_theta, theta, phi):
+        """Spectrum amplitude function, f."""
+        if self.m == 0:
+            return type(self)._f_Gauss_spherical(sin_theta, self.W_y, self.k)
+        else:
+            return type(self)._f_Laguerre_Gauss_spherical(sin_theta, theta, phi,
+                                                          self.W_y, self.k, self.m)
+
+'''
 class PsiSpherical(Beam3d):
     """Field amplitude class.
 
@@ -127,7 +199,6 @@ class PsiSpherical(Beam3d):
         """..."""
         super().__init__(x, params, called)
         self.W_y = params['W_y']
-        self.k = params['k']
         self.m = params['m']
 
     def __call__(self, r):
@@ -224,7 +295,6 @@ class PsiCartesian(Beam3d):
         """..."""
         super().__init__(x, params, called)
         self.W_y = params['W_y']
-        self.k = params['k']
         self.m = params['m']
 
     def __call__(self, r):
@@ -264,7 +334,7 @@ class PsiCartesian(Beam3d):
         return self.f_spectrum(k_y, k_z) * \
             _cexp(1j*self.phase(k_y, k_z, self.x, self.ry, self.rz))
 
-
+'''
 def main():
     class Vector3:
         """Simple vector class."""
@@ -285,10 +355,14 @@ def main():
 
     params = dict(W_y=w_0, m=m_charge, k=k1)
 
-    psi_spherical = PsiSpherical(x=x, params=params)
-    psi_cartesian = PsiCartesian(x=x, params=params)
+    #psi_spherical = PsiSpherical(x=x, params=params)
+    #psi_cartesian = PsiCartesian(x=x, params=params)
 
-    return (psi_spherical, psi_cartesian, r)
+    #return (psi_spherical, psi_cartesian, r)
+
+    LGbeam = LaguerreGauss3d(x=x, params=params)
+
+    return (LGbeam, r)
 
 
 if __name__ == '__main__':
