@@ -37,17 +37,6 @@ cdef (double complex, double, double) _complex_dblquad(Beam3d func,
                                                        double a, double b,
                                                        double gfun, double hfun)
 
-#cdef double _phi(double k_y, double k_z) nogil
-#cdef double _theta(double k_y, double k_z, double k) nogil  # TODO: allow cdivison
-
-#cdef double complex f_Gauss_spherical(double sin_theta, double W_y, double k) nogil
-#cdef double complex f_Gauss_cartesian(double k_y, double k_z, double W_y) nogil
-
-#cdef double complex f_Laguerre_Gauss_spherical(double sin_theta, double theta, double phi,
-#                                               double W_y, double k, int m) nogil
-#cdef double complex f_Laguerre_Gauss_cartesian(double k_y, double k_z,
-#                                               double W_y, double k, int m) nogil
-
 # class declarations
 cdef class Beam3d:
     cdef:
@@ -66,6 +55,14 @@ cdef class Beam3dSpherical(Beam3d):
     cdef double complex spectrum(self, double sin_theta, double theta, double phi) nogil
     cdef double complex integrand(self, double theta, double phi) nogil
 
+cdef class Beam3dCartesian(Beam3d):
+    cdef:
+        double ry, rz
+
+    cdef double phase(self, double k_y, double k_z, double x, double y, double z) nogil
+    cdef double complex spectrum(self, double k_y, double k_z) nogil
+    cdef double complex integrand(self, double k_y, double k_z) nogil
+
 cdef class LaguerreGauss3d(Beam3dSpherical):
     cdef:
       int m
@@ -78,28 +75,14 @@ cdef class LaguerreGauss3d(Beam3dSpherical):
                                                     double W_y, double k, int m) nogil
     cdef double complex spectrum(self, double sin_theta, double theta, double phi) nogil
 
-
-
-
-"""
-cdef class PsiSpherical(Beam3d):
+cdef class LaguerreGauss3d_(Beam3dCartesian):
     cdef:
-        int m
-        double k, W_y
-        double ry, rz
+      int m
+      double W_y
 
-    cdef double phase(self, double sin_theta, double cos_theta, double phi,
-                      double x, double y, double z) nogil
-    cdef double complex integrand(self, double theta, double phi) nogil
-    cdef double complex f_spectrum(self, double sin_theta, double theta, double phi) nogil
-
-cdef class PsiCartesian(Beam3d):
-    cdef:
-        int m
-        double k, W_y
-        double ry, rz
-
-    cdef double phase(self, double k_y, double k_z, double x, double y, double z) nogil
-    cdef double complex integrand(self, double k_y, double k_z) nogil
-    cdef double complex f_spectrum(self, double k_y, double k_z) nogil
-"""
+    cdef double _phi(self, double k_y, double k_z) nogil
+    cdef double _theta(self, double k_y, double k_z, double k) nogil
+    cdef double complex _f_Gauss_cartesian(self, double k_y, double k_z, double W_y) nogil
+    cdef double complex _f_Laguerre_Gauss_cartesian(self, double k_y, double k_z,
+                                                    double W_y, double k, int m) nogil
+    cdef double complex spectrum(self, double k_y, double k_z) nogil
