@@ -123,16 +123,16 @@ class Beam3dSpherical(Beam3d):
 
         return self.k**2 * result
 
+    def spectrum(self, sin_theta, theta, phi):
+            """Spectrum amplitude function, f."""
+            raise NotImplementedError
+
     def phase(self, sin_theta, cos_theta, phi, x, y, z):
         """Phase function."""
         sin_phi = _sin(phi)
         cos_phi = _cos(phi)
 
         return self.k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
-
-    def spectrum(self, sin_theta, theta, phi):
-        """Spectrum amplitude function, f."""
-        raise NotImplementedError
 
     def integrand(self, theta, phi):
         """Integrand function."""
@@ -153,35 +153,37 @@ class LaguerreGauss3d(Beam3dSpherical):
     """
 
     def __init__(self, x, params, called=False):
-        """Specific paramters for Laguerre-Gauss beam."""
+        """Laguerre-Gauss beam specifc parameters."""
         super().__init__(x, params, called)
         self.W_y = params['W_y']
         self.m = params['m']
 
-    @classmethod
-    def _f_Gauss_spherical(cls, sin_theta, W_y, k):
+    #@classmethod
+    #@cython.binding(True)
+    def _f_Gauss_spherical(self, sin_theta, W_y, k):
         """2d-Gaussian spectrum amplitude.
 
         Implementation for spherical coordinates.
         """
         return _exp(-(k*W_y*sin_theta/2)**2)
 
-    @classmethod
-    def _f_Laguerre_Gauss_spherical(cls, sin_theta, theta, phi, W_y, k, m):
+    #@classmethod
+    #@cython.binding(True)
+    def _f_Laguerre_Gauss_spherical(self, sin_theta, theta, phi, W_y, k, m):
         """Laguerre-Gaussian spectrum amplitude.
 
         Implementation for spherical coordinates.
         """
-        return cls._f_Gauss_spherical(sin_theta, W_y, k) * theta**_abs(m) * \
+        return self._f_Gauss_spherical(sin_theta, W_y, k) * theta**_abs(m) * \
             _cexp(1j*m*phi)
 
     def spectrum(self, sin_theta, theta, phi):
         """Spectrum amplitude function, f."""
         if self.m == 0:
-            return type(self)._f_Gauss_spherical(sin_theta, self.W_y, self.k)
+            return self._f_Gauss_spherical(sin_theta, self.W_y, self.k)
         else:
-            return type(self)._f_Laguerre_Gauss_spherical(sin_theta, theta, phi,
-                                                          self.W_y, self.k, self.m)
+            return self._f_Laguerre_Gauss_spherical(sin_theta, theta, phi,
+                                                    self.W_y, self.k, self.m)
 
 '''
 class PsiSpherical(Beam3d):
