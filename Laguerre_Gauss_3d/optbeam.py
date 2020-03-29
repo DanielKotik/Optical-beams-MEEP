@@ -103,7 +103,6 @@ class Beam3dSpherical(Beam3d):
 
     def profile(self, r):
         """Beam profile function, psi."""
-        # TODO: Consider calling simple Gauss for special case x=0
         self.ry = r.y
         self.rz = r.z
 
@@ -167,7 +166,7 @@ class Beam3dCartesian(Beam3d):
 
         return result
 
-    def spectrum(self, sin_theta, theta, phi):
+    def spectrum(self, k_y, k_z):
             """Spectrum amplitude function, f."""
             raise NotImplementedError
 
@@ -182,7 +181,7 @@ class Beam3dCartesian(Beam3d):
 
 
 class LaguerreGauss3d_(Beam3dCartesian):
-    """This class serves only as an example for a Cartesian implementaions and
+    """This class serves only as an example for a Cartesian implementaion and
     will be removed in future versions.
     """
 
@@ -191,6 +190,14 @@ class LaguerreGauss3d_(Beam3dCartesian):
         super().__init__(x, params, called)
         self.W_y = params['W_y']
         self.m = params['m']
+
+    def profile(self, r):
+        """..."""
+        if self.x == 0:
+            # TODO: Consider calling simple Gauss for special case x=0
+            return NotImplemented
+        else:
+            return super().profile(r)
 
     def spectrum(self, k_y, k_z):
         """Spectrum amplitude function, f."""
@@ -243,6 +250,14 @@ class LaguerreGauss3d(Beam3dSpherical):
         super().__init__(x, params, called)
         self.W_y = params['W_y']
         self.m = params['m']
+
+    def profile(self, r):
+        """..."""
+        if self.x == 0:
+            # TODO: Consider calling simple Gauss for special case x=0
+            return NotImplemented
+        else:
+            return super().profile(r)
 
     def spectrum(self, sin_theta, theta, phi):
         """Spectrum amplitude function, f."""
