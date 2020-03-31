@@ -46,7 +46,7 @@ def _imag_2d_func_c(n, arr, func_ptr):
     """
     # pure python formulation of:
     # return (<Beam3d>func_ptr)(arr[0], arr[1]).imag
-    return cython.cast(Beam3d, func_ptr).integrand(arr[0], arr[1]).imag
+    return cython.cast(Beam3d, func_ptr)._integrand(arr[0], arr[1]).imag
 
 
 def _real_2d_func_c(n, arr, func_ptr):
@@ -56,7 +56,7 @@ def _real_2d_func_c(n, arr, func_ptr):
     """
     # pure python formulation of:
     # return (<Beam3d>func_ptr)(arr[0], arr[1]).real
-    return cython.cast(Beam3d, func_ptr).integrand(arr[0], arr[1]).real
+    return cython.cast(Beam3d, func_ptr)._integrand(arr[0], arr[1]).real
 
 
 def _complex_dblquad(func, a, b, gfun, hfun):
@@ -93,7 +93,7 @@ class Beam3d:
         self.params = params
         self.called = called
 
-    def integrand(self, x, y):
+    def _integrand(self, x, y):
         """Integrand function over two coordinates x and y."""
         raise NotImplementedError
 
@@ -114,7 +114,7 @@ class Beam3dSpherical(Beam3d):
         try:
             (result,
              real_tol,
-             imag_tol) = _complex_dblquad(self if cython.compiled else self.integrand,
+             imag_tol) = _complex_dblquad(self if cython.compiled else self._integrand,
                                           0, 2*math.pi, 0, math.pi/2)
         except Exception as e:
             print(type(e).__name__ + ":", e)
@@ -133,7 +133,7 @@ class Beam3dSpherical(Beam3d):
 
         return self.k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
 
-    def integrand(self, theta, phi):
+    def _integrand(self, theta, phi):
         """Integrand function."""
         sin_theta = _sin(theta)
         cos_theta = _cos(theta)
@@ -158,7 +158,7 @@ class Beam3dCartesian(Beam3d):
         try:
             (result,
              real_tol,
-             imag_tol) = _complex_dblquad(self if cython.compiled else self.integrand,
+             imag_tol) = _complex_dblquad(self if cython.compiled else self._integrand,
                                           -self.k, self.k, -self.k, self.k)
         except Exception as e:
             print(type(e).__name__ + ":", e)
@@ -174,7 +174,7 @@ class Beam3dCartesian(Beam3d):
         """Phase function."""
         return x*_csqrt(self.k**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
 
-    def integrand(self, k_y, k_z):
+    def _integrand(self, k_y, k_z):
         """Integrand function."""
         return self.spectrum(k_y, k_z) * \
             _cexp(1j*self.phase(k_y, k_z, self.x, self.ry, self.rz))

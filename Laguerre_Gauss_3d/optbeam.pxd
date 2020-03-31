@@ -44,7 +44,7 @@ cdef class Beam3d:
         double x, k
         bool called
 
-    cdef double complex integrand(self, double x, double y) nogil
+    cdef double complex _integrand(self, double x, double y) nogil
 
 cdef class Beam3dSpherical(Beam3d):
     cdef:
@@ -53,7 +53,7 @@ cdef class Beam3dSpherical(Beam3d):
     cdef double phase(self, double sin_theta, double cos_theta, double phi,
                       double x, double y, double z) nogil
     cdef double complex spectrum(self, double sin_theta, double theta, double phi) nogil
-    cdef double complex integrand(self, double theta, double phi) nogil
+    cdef double complex _integrand(self, double theta, double phi) nogil
 
 cdef class Beam3dCartesian(Beam3d):
     cdef:
@@ -61,7 +61,7 @@ cdef class Beam3dCartesian(Beam3d):
 
     cdef double phase(self, double k_y, double k_z, double x, double y, double z) nogil
     cdef double complex spectrum(self, double k_y, double k_z) nogil
-    cdef double complex integrand(self, double k_y, double k_z) nogil
+    cdef double complex _integrand(self, double k_y, double k_z) nogil
 
 cdef class LaguerreGauss3d(Beam3dSpherical):
     cdef:
