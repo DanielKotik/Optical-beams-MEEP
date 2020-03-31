@@ -123,8 +123,8 @@ class Beam3dSpherical(Beam3d):
         return self.k**2 * result
 
     def spectrum(self, sin_theta, theta, phi):
-            """Spectrum amplitude function, f."""
-            raise NotImplementedError
+        """Spectrum amplitude function, f."""
+        raise NotImplementedError
 
     def phase(self, sin_theta, cos_theta, phi, x, y, z):
         """Phase function."""
@@ -167,8 +167,8 @@ class Beam3dCartesian(Beam3d):
         return result
 
     def spectrum(self, k_y, k_z):
-            """Spectrum amplitude function, f."""
-            raise NotImplementedError
+        """Spectrum amplitude function, f."""
+        raise NotImplementedError
 
     def phase(self, k_y, k_z, x, y, z):
         """Phase function."""
