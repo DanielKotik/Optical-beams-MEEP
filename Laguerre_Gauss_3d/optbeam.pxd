@@ -50,7 +50,7 @@ cdef class Beam3dSpherical(Beam3d):
     cdef:
         double ry, rz
 
-    cdef double phase(self, double sin_theta, double cos_theta, double phi,
+    cdef double _phase(self, double sin_theta, double cos_theta, double phi,
                       double x, double y, double z) nogil
     cdef double complex spectrum(self, double sin_theta, double theta, double phi) nogil
     cdef double complex _integrand(self, double theta, double phi) nogil
@@ -59,7 +59,7 @@ cdef class Beam3dCartesian(Beam3d):
     cdef:
         double ry, rz
 
-    cdef double phase(self, double k_y, double k_z, double x, double y, double z) nogil
+    cdef double _phase(self, double k_y, double k_z, double x, double y, double z) nogil
     cdef double complex spectrum(self, double k_y, double k_z) nogil
     cdef double complex _integrand(self, double k_y, double k_z) nogil
 

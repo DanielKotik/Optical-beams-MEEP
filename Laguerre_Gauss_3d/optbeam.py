@@ -126,7 +126,7 @@ class Beam3dSpherical(Beam3d):
         """Spectrum amplitude function, f."""
         raise NotImplementedError
 
-    def phase(self, sin_theta, cos_theta, phi, x, y, z):
+    def _phase(self, sin_theta, cos_theta, phi, x, y, z):
         """Phase function."""
         sin_phi = _sin(phi)
         cos_phi = _cos(phi)
@@ -139,7 +139,7 @@ class Beam3dSpherical(Beam3d):
         cos_theta = _cos(theta)
 
         return sin_theta * cos_theta * self.spectrum(sin_theta, theta, phi) * \
-            _cexp(1j*self.phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
+            _cexp(1j*self._phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
 
 
 class Beam3dCartesian(Beam3d):
@@ -170,14 +170,14 @@ class Beam3dCartesian(Beam3d):
         """Spectrum amplitude function, f."""
         raise NotImplementedError
 
-    def phase(self, k_y, k_z, x, y, z):
+    def _phase(self, k_y, k_z, x, y, z):
         """Phase function."""
         return x*_csqrt(self.k**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
 
     def _integrand(self, k_y, k_z):
         """Integrand function."""
         return self.spectrum(k_y, k_z) * \
-            _cexp(1j*self.phase(k_y, k_z, self.x, self.ry, self.rz))
+            _cexp(1j*self._phase(k_y, k_z, self.x, self.ry, self.rz))
 
 
 class LaguerreGauss3d_(Beam3dCartesian):
