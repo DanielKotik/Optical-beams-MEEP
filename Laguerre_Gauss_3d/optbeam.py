@@ -195,23 +195,23 @@ class LaguerreGauss3dCartesian(Beam3dCartesian):
     def __init__(self, x, params, called=False):
         """Laguerre-Gauss beam specifc parameters."""
         super().__init__(x, params, called)
-        self.W_y = params['W_y']
+        self._W_y = params['W_y']
         self._m = params['m']
 
     def profile(self, r):
         """..."""
         if self.x == 0 and self._m == 0:
-            return _exp(-((r.y**2 + r.z**2) / self.W_y**2)) * 2*math.pi*self.k
+            return _exp(-((r.y**2 + r.z**2) / self._W_y**2)) * 2*math.pi*self.k
         else:
             return super().profile(r)
 
     def spectrum(self, k_y, k_z):
         """Spectrum amplitude function, f."""
         if self._m == 0:
-            return self._f_Gauss_cartesian(k_y, k_z, self.W_y)
+            return self._f_Gauss_cartesian(k_y, k_z, self._W_y)
         else:
             return self._f_Laguerre_Gauss_cartesian(k_y, k_z,
-                                                    self.W_y, self.k, self._m)
+                                                    self._W_y, self.k, self._m)
 
     def _phi(self, k_y, k_z):
         """Azimuthal angle.
@@ -255,23 +255,23 @@ class LaguerreGauss3d(Beam3dSpherical):
     def __init__(self, x, params, called=False):
         """Laguerre-Gauss beam specifc parameters."""
         super().__init__(x, params, called)
-        self.W_y = params['W_y']
+        self._W_y = params['W_y']
         self._m = params['m']
 
     def profile(self, r):
         """..."""
         if self.x == 0 and self._m == 0:
-            return _exp(-((r.y**2 + r.z**2) / self.W_y**2)) * 2*math.pi*self.k
+            return _exp(-((r.y**2 + r.z**2) / self._W_y**2)) * 2*math.pi*self.k
         else:
             return super().profile(r)
 
     def spectrum(self, sin_theta, theta, phi):
         """Spectrum amplitude function, f."""
         if self._m == 0:
-            return self._f_Gauss_spherical(sin_theta, self.W_y, self.k)
+            return self._f_Gauss_spherical(sin_theta, self._W_y, self.k)
         else:
             return self._f_Laguerre_Gauss_spherical(sin_theta, theta, phi,
-                                                    self.W_y, self.k, self._m)
+                                                    self._W_y, self.k, self._m)
 
     def _f_Gauss_spherical(self, sin_theta, W_y, k):
         """2d-Gaussian spectrum amplitude.
