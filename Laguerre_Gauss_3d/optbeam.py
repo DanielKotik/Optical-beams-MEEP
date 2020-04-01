@@ -88,6 +88,7 @@ class Beam3d:
     """Abstract base class."""
 
     def __init__(self, x, params, called=False):
+        """..."""
         self.x = x   # TODO: rename x to x_shift
         self.k = params['k']
         self.params = params
@@ -180,9 +181,15 @@ class Beam3dCartesian(Beam3d):
             _cexp(1j*self._phase(k_y, k_z, self.x, self._ry, self._rz))
 
 
-class LaguerreGauss3d_(Beam3dCartesian):
-    """This class serves only as an example for a Cartesian implementaion and
-    will be removed in future versions.
+# -----------------------------------------------------------------------------
+# specific beam implementations based on Beam3dSpherical or Beam3dCartesian
+# base classes depending on the choice of a suitable coordinate system
+# -----------------------------------------------------------------------------
+class LaguerreGauss3dCartesian(Beam3dCartesian):
+    """Cartesian implementaion of a 3d Laguerre-Gauss beam.
+
+    This class serves only as an example for a will be removed in future
+    versions.
     """
 
     def __init__(self, x, params, called=False):
@@ -194,7 +201,7 @@ class LaguerreGauss3d_(Beam3dCartesian):
     def profile(self, r):
         """..."""
         if self.x == 0 and self.m == 0:
-            return _exp(-((r.y**2 + r.z**2) / self.W_y**2)) * (2*math.pi*self.k)
+            return _exp(-((r.y**2 + r.z**2) / self.W_y**2)) * 2*math.pi*self.k
         else:
             return super().profile(r)
 
@@ -203,7 +210,8 @@ class LaguerreGauss3d_(Beam3dCartesian):
         if self.m == 0:
             return self._f_Gauss_cartesian(k_y, k_z, self.W_y)
         else:
-            return self._f_Laguerre_Gauss_cartesian(k_y, k_z, self.W_y, self.k, self.m)
+            return self._f_Laguerre_Gauss_cartesian(k_y, k_z,
+                                                    self.W_y, self.k, self.m)
 
     def _phi(self, k_y, k_z):
         """Azimuthal angle.
@@ -253,7 +261,7 @@ class LaguerreGauss3d(Beam3dSpherical):
     def profile(self, r):
         """..."""
         if self.x == 0 and self.m == 0:
-            return _exp(-((r.y**2 + r.z**2) / self.W_y**2)) * (2*math.pi*self.k)
+            return _exp(-((r.y**2 + r.z**2) / self.W_y**2)) * 2*math.pi*self.k
         else:
             return super().profile(r)
 
@@ -292,8 +300,9 @@ def main():
 
     x, y, z = -2.15, 0.3, 0.5
 
-    # import meep; r = meep.Vector3(0, y, z)
     r = Vector3(0, y, z)
+    # alternative:
+    # import meep; r = meep.Vector3(0, y, z)
 
     k1 = 31.41592653589793
     w_0 = 0.25464790894703254
@@ -301,15 +310,10 @@ def main():
 
     params = dict(W_y=w_0, m=m_charge, k=k1)
 
-    #psi_spherical = PsiSpherical(x=x, params=params)
-    #psi_cartesian = PsiCartesian(x=x, params=params)
-
-    #return (psi_spherical, psi_cartesian, r)
-
     LGbeam = LaguerreGauss3d(x=x, params=params)
-    LGbeam_ = LaguerreGauss3d_(x=x, params=params)
+    LGbeamCartesian = LaguerreGauss3dCartesian(x=x, params=params)
 
-    return (LGbeam, LGbeam_, r)
+    return (LGbeam, LGbeamCartesian, r)
 
 
 if __name__ == '__main__':

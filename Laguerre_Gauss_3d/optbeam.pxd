@@ -11,7 +11,9 @@ cimport cython
 from cpython.pycapsule cimport PyCapsule_New
 from cpython cimport bool
 
+# -----------------------------------------------------------------------------
 # declare C functions as "cpdef" to export them to the module
+# -----------------------------------------------------------------------------
 cdef extern from "stdlib.h":
     cpdef int _abs "abs" (int n) nogil
 
@@ -26,8 +28,9 @@ cdef extern from "complex.h":
     cpdef double complex _cexp "cexp" (double complex z) nogil
     cpdef double complex _csqrt "csqrt" (double complex z) nogil
 
-
+# -----------------------------------------------------------------------------
 # function declarations
+# -----------------------------------------------------------------------------
 cdef double _imag_2d_func_c(int n, double *arr, void *func_ptr)
 cdef double _real_2d_func_c(int n, double *arr, void *func_ptr)
 
@@ -37,7 +40,9 @@ cdef (double complex, double, double) _complex_dblquad(Beam3d func,
                                                        double a, double b,
                                                        double gfun, double hfun)
 
+# -----------------------------------------------------------------------------
 # class declarations
+# -----------------------------------------------------------------------------
 cdef class Beam3d:
     cdef:
         readonly dict params
@@ -68,14 +73,12 @@ cdef class LaguerreGauss3d(Beam3dSpherical):
       int m
       double W_y
 
-    #@classmethod
-    #@cython.binding(True)
     cdef double complex _f_Gauss_spherical(self, double sin_theta, double W_y, double k) nogil
     cdef double complex _f_Laguerre_Gauss_spherical(self, double sin_theta, double theta, double phi,
                                                     double W_y, double k, int m) nogil
     cdef double complex spectrum(self, double sin_theta, double theta, double phi) nogil
 
-cdef class LaguerreGauss3d_(Beam3dCartesian):
+cdef class LaguerreGauss3dCartesian(Beam3dCartesian):
     cdef:
       int m
       double W_y
