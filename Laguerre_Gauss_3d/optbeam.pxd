@@ -70,22 +70,22 @@ cdef class Beam3dCartesian(Beam3d):
 
 cdef class LaguerreGauss3d(Beam3dSpherical):
     cdef:
-      int m
+      int _m
       double W_y
 
     cdef double complex _f_Gauss_spherical(self, double sin_theta, double W_y, double k) nogil
     cdef double complex _f_Laguerre_Gauss_spherical(self, double sin_theta, double theta, double phi,
-                                                    double W_y, double k, int m) nogil
+                                                    double W_y, double k, int _m) nogil
     cdef double complex spectrum(self, double sin_theta, double theta, double phi) nogil
 
 cdef class LaguerreGauss3dCartesian(Beam3dCartesian):
     cdef:
-      int m
+      int _m
       double W_y
 
     cdef double _phi(self, double k_y, double k_z) nogil
     cdef double _theta(self, double k_y, double k_z, double k) nogil
     cdef double complex _f_Gauss_cartesian(self, double k_y, double k_z, double W_y) nogil
     cdef double complex _f_Laguerre_Gauss_cartesian(self, double k_y, double k_z,
-                                                    double W_y, double k, int m) nogil
+                                                    double W_y, double k, int _m) nogil
     cdef double complex spectrum(self, double k_y, double k_z) nogil
