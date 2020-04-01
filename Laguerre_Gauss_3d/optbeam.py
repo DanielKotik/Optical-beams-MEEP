@@ -193,9 +193,8 @@ class LaguerreGauss3d_(Beam3dCartesian):
 
     def profile(self, r):
         """..."""
-        if self.x == 0:
-            # TODO: Consider calling simple Gauss for special case x=0
-            return NotImplemented
+        if self.x == 0 and self.m == 0:
+            return _exp(-((r.y**2 + r.z**2) / self.W_y**2)) * (2*math.pi*self.k)
         else:
             return super().profile(r)
 
@@ -253,9 +252,8 @@ class LaguerreGauss3d(Beam3dSpherical):
 
     def profile(self, r):
         """..."""
-        if self.x == 0:
-            # TODO: Consider calling simple Gauss for special case x=0
-            return NotImplemented
+        if self.x == 0 and self.m == 0:
+            return _exp(-((r.y**2 + r.z**2) / self.W_y**2)) * (2*math.pi*self.k)
         else:
             return super().profile(r)
 
@@ -267,8 +265,6 @@ class LaguerreGauss3d(Beam3dSpherical):
             return self._f_Laguerre_Gauss_spherical(sin_theta, theta, phi,
                                                     self.W_y, self.k, self.m)
 
-    #@classmethod
-    #@cython.binding(True)
     def _f_Gauss_spherical(self, sin_theta, W_y, k):
         """2d-Gaussian spectrum amplitude.
 
@@ -276,8 +272,6 @@ class LaguerreGauss3d(Beam3dSpherical):
         """
         return _exp(-(k*W_y*sin_theta/2)**2)
 
-    #@classmethod
-    #@cython.binding(True)
     def _f_Laguerre_Gauss_spherical(self, sin_theta, theta, phi, W_y, k, m):
         """Laguerre-Gaussian spectrum amplitude.
 
