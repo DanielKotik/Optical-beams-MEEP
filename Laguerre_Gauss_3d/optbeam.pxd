@@ -42,13 +42,13 @@ cdef class Beam3d:
     cdef:
         readonly dict params
         double x, k
-        bool called
+        public bool called
 
     cdef double complex _integrand(self, double x, double y) nogil
 
 cdef class Beam3dSpherical(Beam3d):
     cdef:
-        double ry, rz
+        double _ry, _rz
 
     cdef double _phase(self, double sin_theta, double cos_theta, double phi,
                       double x, double y, double z) nogil
@@ -57,7 +57,7 @@ cdef class Beam3dSpherical(Beam3d):
 
 cdef class Beam3dCartesian(Beam3d):
     cdef:
-        double ry, rz
+        double _ry, _rz
 
     cdef double _phase(self, double k_y, double k_z, double x, double y, double z) nogil
     cdef double complex spectrum(self, double k_y, double k_z) nogil

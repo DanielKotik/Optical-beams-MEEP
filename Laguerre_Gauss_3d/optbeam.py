@@ -103,8 +103,8 @@ class Beam3dSpherical(Beam3d):
 
     def profile(self, r):
         """Beam profile function, psi."""
-        self.ry = r.y
-        self.rz = r.z
+        self._ry = r.y
+        self._rz = r.z
 
         if not self.called:
             print("Calculating inital field configuration. "
@@ -139,7 +139,7 @@ class Beam3dSpherical(Beam3d):
         cos_theta = _cos(theta)
 
         return sin_theta * cos_theta * self.spectrum(sin_theta, theta, phi) * \
-            _cexp(1j*self._phase(sin_theta, cos_theta, phi, self.x, self.ry, self.rz))
+            _cexp(1j*self._phase(sin_theta, cos_theta, phi, self.x, self._ry, self._rz))
 
 
 class Beam3dCartesian(Beam3d):
@@ -147,8 +147,8 @@ class Beam3dCartesian(Beam3d):
 
     def profile(self, r):
         """Beam profile function, psi."""
-        self.ry = r.y
-        self.rz = r.z
+        self._ry = r.y
+        self._rz = r.z
 
         if not self.called:
             print("Calculating inital field configuration. "
@@ -177,7 +177,7 @@ class Beam3dCartesian(Beam3d):
     def _integrand(self, k_y, k_z):
         """Integrand function."""
         return self.spectrum(k_y, k_z) * \
-            _cexp(1j*self._phase(k_y, k_z, self.x, self.ry, self.rz))
+            _cexp(1j*self._phase(k_y, k_z, self.x, self._ry, self._rz))
 
 
 class LaguerreGauss3d_(Beam3dCartesian):
