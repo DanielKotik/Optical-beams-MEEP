@@ -46,7 +46,7 @@ cdef (double complex, double, double) _complex_dblquad(Beam3d func,
 cdef class Beam3d:
     cdef:
         readonly dict params
-        double x, k
+        double x, _k
         public bool called
 
     cdef double complex _integrand(self, double x, double y) nogil
