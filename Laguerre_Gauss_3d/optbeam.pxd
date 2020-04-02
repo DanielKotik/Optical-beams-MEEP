@@ -56,7 +56,7 @@ cdef class Beam3dSpherical(Beam3d):
         double _ry, _rz
 
     cdef double _phase(self, double sin_theta, double cos_theta, double phi,
-                      double x, double y, double z) nogil
+                       double x, double y, double z) nogil
     cdef double complex spectrum(self, double sin_theta, double theta, double phi) nogil
     cdef double complex _integrand(self, double theta, double phi) nogil
 
