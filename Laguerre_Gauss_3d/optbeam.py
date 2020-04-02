@@ -210,7 +210,7 @@ class LaguerreGauss3dCartesian(Beam3dCartesian):
     def profile(self, r):
         """..."""
         if self.x == 0 and self._m == 0:
-            return _exp(-((r.y**2 + r.z**2) / self._W_y**2)) * 2*math.pi*self._k
+            return 2*math.pi*self._k * _exp(-((r.y**2 + r.z**2) / self._W_y**2))
         else:
             return super().profile(r)
 
@@ -270,7 +270,7 @@ class LaguerreGauss3d(Beam3dSpherical):
     def profile(self, r):
         """..."""
         if self.x == 0 and self._m == 0:
-            return _exp(-((r.y**2 + r.z**2) / self._W_y**2)) * 2*math.pi*self._k
+            return 2*math.pi*self._k * _exp(-((r.y**2 + r.z**2) / self._W_y**2))
         else:
             return super().profile(r)
 
