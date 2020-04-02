@@ -92,8 +92,16 @@ class Beam3d:
         """..."""
         self.x = x   # TODO: rename x to x_shift
         self._k = params['k']
-        self.params = MappingProxyType(params)  # read-only view of a dict
+        self._params = MappingProxyType(params)  # read-only view of a dict
         self.called = called
+
+    @property
+    def params(self):
+        """Beam specific parameters.
+
+        This is a read-only property.
+        """
+        return self._params
 
     def _integrand(self, x, y):
         """Integrand function over two coordinates x and y."""
