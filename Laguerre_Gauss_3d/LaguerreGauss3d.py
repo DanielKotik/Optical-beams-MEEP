@@ -51,11 +51,9 @@ of the complex electric field) obtained by
 import argparse
 import math
 import meep as mp
-import sys
+import optbeam as op
 
 from datetime import datetime
-from optbeam import LaguerreGauss3d, critical, brewster
-
 
 print("Meep version:", mp.__version__)
 
@@ -81,10 +79,8 @@ def main(args):
 
     # angle of incidence
     chi_deg = args.chi_deg
-    #chi_deg = 1.0*Critical(n1, n2)
-    #chi_deg = 0.95*brewster(n1, n2)
-
-    test_output = args.test_output
+    #chi_deg = 1.0*op.critical(n1, n2)
+    #chi_deg = 0.95*op.brewster(n1, n2)
 
     # --------------------------------------------------------------------------
     # specific Meep parameters (may need to be adjusted)
@@ -157,75 +153,6 @@ def main(args):
     Courant = (n1 if n1 < n2 else n2) / 3
 
     # --------------------------------------------------------------------------
-    # 2d-beam profile distribution (field amplitude) at the waist of the beam
-    # --------------------------------------------------------------------------
-    def Gauss(r, params):
-        """Gauss profile."""
-        W_y = params['W_y']
-
-        return math.exp(-((r.y**2 + r.z**2) / W_y**2))
-
-    # --------------------------------------------------------------------------
-    # some test outputs
-    # --------------------------------------------------------------------------
-    if test_output:
-        print("Gauss 2d beam profile:", Gauss(mp.Vector3(0, 0.5, 0.2), params))
-        print()
-
-    # --------------------------------------------------------------------------
-    # spectrum amplitude distribution(s)
-    # --------------------------------------------------------------------------
-
-    # cartesian coordinates (not recommmended) -------------------------
-
-
-    # spherical coordinates --------------------------------------------
-
-
-    # --------------------------------------------------------------------------
-    # some test outputs
-    # --------------------------------------------------------------------------
-    if test_output:
-        k_y, k_z = 1.0, 5.2
-        theta_ = theta(k_y, k_z, k1)
-        phi_ = phi(k_y, k_z)
-
-        print("Gauss spectrum (cartesian):",
-              f_Gauss_cartesian(k_y, k_z, params))
-        print("Gauss spectrum (spherical):",
-              f_Gauss_spherical(math.sin(theta_), theta_, phi_, params))
-        print()
-        print("L-G spectrum   (cartesian):",
-              f_Laguerre_Gauss_cartesian(k_y, k_z, params))
-        print("L-G spectrum   (spherical):",
-              f_Laguerre_Gauss_spherical(math.sin(theta_), theta_, phi_, params))
-        print()
-
-    # --------------------------------------------------------------------------
-    # plane wave decomposition
-    # (purpose: calculate field amplitude at light source position if not
-    #           coinciding with beam waist)
-    # --------------------------------------------------------------------------
-
-
-    # --------------------------------------------------------------------------
-    # some test outputs (uncomment if needed)
-    # --------------------------------------------------------------------------
-    if test_output:
-        k_y, k_z = 1.0, 5.2
-        x, y, z = -2.15, 0.3, 0.5
-        r = mp.Vector3(0, y, z)
-
-        print("phi:", phi(k_y, k_z))
-        print()
-        print("psi            (cartesian):",
-              psi_cartesian(r, f_Laguerre_Gauss_cartesian, x, params))
-        print("psi            (spherical):",
-              psi_spherical(r, lambda st, t, p: f_Laguerre_Gauss_spherical(st, t, p, W_y=w_0, m=m_charge, k=k1), x, k1))
-        print("psi       (origin, simple):", Gauss(r))
-        sys.exit()
-
-    # --------------------------------------------------------------------------
     # display values of physical variables
     # --------------------------------------------------------------------------
     print()
@@ -278,10 +205,8 @@ def main(args):
 
     sources = []
 
-    # define beam profile function
-    psi_spherical = PsiSpherical(x=shift, params=params)
-    # TODO: change to psi_LaguerreGauss = LaguerreGauss3d.psi(...) in future versions
-    #                 f_Laguerre_Gauss = LaguerreGauss3d.f_spectrum(...)
+    # specify optical beam
+    LGbeam = op.LaguerreGauss3d(x=shift, params=params)
 
     if e_z != 0:
         source_Ez = mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
@@ -289,10 +214,7 @@ def main(args):
                               amplitude=e_z,
                               size=mp.Vector3(0, 3, 3),
                               center=mp.Vector3(source_shift, 0, 0),
-                              #amp_func=lambda r: Gauss(r, params)
-                              #amp_func=lambda r: psi_cartesian(r, shift, params)
-                              #amp_func=lambda r: psi_spherical(r)#, shift, params)
-                              amp_func=psi_spherical
+                              amp_func=LGbeam.profile
                               )
         sources.append(source_Ez)
 
@@ -302,10 +224,7 @@ def main(args):
                               amplitude=e_y,
                               size=mp.Vector3(0, 3, 3),
                               center=mp.Vector3(source_shift, 0, 0),
-                              #amp_func=lambda r: Gauss(r, params)
-                              #amp_func=lambda r: psi_cartesian(r, shift, params)
-                              #amp_func=lambda r: psi_spherical(r)#, shift, params)
-                              amp_func=psi_spherical
+                              amp_func=LGbeam.profile
                               )
         sources.append(source_Ey)
 
@@ -422,11 +341,6 @@ if __name__ == '__main__':
                         type=float,
                         default=45,
                         help='incidence angle in degrees (default: %(default)s)')
-
-    parser.add_argument('-test_output',
-                        action='store_true',
-                        default=False,
-                        help='switch to enable test print statements')
 
     args = parser.parse_args()
     main(args)
