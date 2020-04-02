@@ -12,6 +12,7 @@ import math
 import sys
 
 from scipy.integrate import dblquad
+from types import MappingProxyType
 
 
 if not cython.compiled:
@@ -91,7 +92,7 @@ class Beam3d:
         """..."""
         self.x = x   # TODO: rename x to x_shift
         self._k = params['k']
-        self.params = params
+        self.params = MappingProxyType(params)  # read-only view of a dict
         self.called = called
 
     def _integrand(self, x, y):

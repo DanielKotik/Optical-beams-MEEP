@@ -45,7 +45,7 @@ cdef (double complex, double, double) _complex_dblquad(Beam3d func,
 # -----------------------------------------------------------------------------
 cdef class Beam3d:
     cdef:
-        readonly dict params
+        dict __dict__
         double x, _k
         public bool called
 
