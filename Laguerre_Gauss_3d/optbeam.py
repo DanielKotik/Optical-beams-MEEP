@@ -85,6 +85,17 @@ def _complex_dblquad(func, a, b, gfun, hfun):
     return real + 1j*imag, real_tol, imag_tol
 
 
+def critical(n1, n2):
+    """Calculate critical angle in degrees."""
+    assert n1 > n2, "\nWarning: Critical angle is not defined, since n1 <= n2!"
+    return math.degrees(math.asin(n2/n1))
+
+
+def brewster(n1, n2):
+    """Calculate Brewster angle in degrees."""
+    return math.degrees(math.atan(n2/n1))
+
+
 class Beam3d:
     """Abstract base class."""
 

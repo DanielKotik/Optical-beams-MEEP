@@ -49,30 +49,15 @@ of the complex electric field) obtained by
 
 """
 import argparse
-import cmath
 import math
 import meep as mp
 import sys
 
 from datetime import datetime
-
-from optbeam import PsiSpherical
-from optbeam2 import PsiCartesian
-# TODO: change in future versions to LaguerreGauss3d, Airy3d etc.
+from optbeam import LaguerreGauss3d, critical, brewster
 
 
 print("Meep version:", mp.__version__)
-
-
-def Critical(n1, n2):
-    """Calculate critical angle in degrees."""
-    assert n1 > n2, "\nWarning: Critical angle is not defined, since n1 <= n2!"
-    return math.degrees(math.asin(n2/n1))
-
-
-def Brewster(n1, n2):
-    """Calculate Brewster angle in degrees."""
-    return math.degrees(math.atan(n2/n1))
 
 
 def main(args):
@@ -97,7 +82,7 @@ def main(args):
     # angle of incidence
     chi_deg = args.chi_deg
     #chi_deg = 1.0*Critical(n1, n2)
-    #chi_deg = 0.95*Brewster(n1, n2)
+    #chi_deg = 0.95*brewster(n1, n2)
 
     test_output = args.test_output
 
