@@ -5,8 +5,8 @@ file:    Gauss2d.py
 brief:   Python configuration input file for the FDTD solver Meep simulating the
          scattering of a Gaussian beam at planar and curved dielectric interfaces
 author:  Daniel Kotik
-version: 1.4.2
-release date: 27.02.2020
+version: 1.5-beta
+release date: xx.xx.2020
 creation date: 17.12.2019
 
 

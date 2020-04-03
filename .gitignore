@@ -8,6 +8,10 @@ Gauss_2d/convex/*
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
+### Cython ###
+Laguerre_Gauss_3d/optbeam.c
+Laguerre_Gauss_3d/optbeam.html
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
