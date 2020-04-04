@@ -28,40 +28,53 @@ def complex_quad(func, a, b, **kwargs):
     return real + 1j*imag, real_tol, imag_tol
 
 
-def f_Gauss(k_y, params):
-    """Gaussian spectrum amplitude."""
-    W_y = params['W_y']
+class Beam2d:
+    """..."""
 
-    return math.exp(-(k_y*W_y/2)**2)
+    def __init__(self, x, params, called=False):
+        """..."""
+        self.x = x
+        self._k = params['k']
+        self._params = params
+        self.called = called
 
+        self._W_y = params['W_y']
 
-def psi(r, x, params):
-    """Field amplitude function."""
-    k1 = params["k"]
+    def profile(self, r):
+        """Field amplitude function."""
+        self._ry = r.y
+        self._rz = r.z
 
-    try:
-        getattr(psi, "called")
-    except AttributeError:
-        psi.called = True
-        print("Calculating inital field configuration. "
-              "This will take some time...")
+        if not self.called:
+            print("Calculating inital field configuration. "
+                  "This will take some time...")
+            self.called = True
 
-    def phase(k_y, x, y):
+        try:
+            (result,
+             real_tol,
+             imag_tol) = complex_quad(self._integrand, -self._k, self._k)
+        except Exception as e:
+            print(type(e).__name__ + ":", e)
+            sys.exit()
+
+        return result
+
+    def spectrum(self, k_y):
+        """Spectrum amplitude function, f."""
+        return self._f_Gauss(k_y, self._W_y)
+
+    def _phase(self, k_y, x, y):
         """Phase function."""
-        return x*math.sqrt(k1**2 - k_y**2) + k_y*y
+        return x*math.sqrt(self._k**2 - k_y**2) + k_y*y
 
-    try:
-        (result,
-         real_tol,
-         imag_tol) = complex_quad(lambda k_y:
-                                  f_Gauss(k_y, params)
-                                  * cmath.exp(1j*phase(k_y, x, r.y)),
-                                  -k1, k1)
-    except Exception as e:
-        print(type(e).__name__ + ":", e)
-        sys.exit()
+    def _integrand(self, k_y):
+        """Integrand function."""
+        return self.spectrum(k_y) * cmath.exp(1j*self._phase(k_y, self.x, self._ry))
 
-    return result
+    def _f_Gauss(self, k_y, W_y):
+        """Gaussian spectrum amplitude."""
+        return math.exp(-(k_y*W_y/2)**2)
 
 
 def main():
@@ -83,7 +96,9 @@ def main():
     w_0 = 0.1061032953945969
     params = dict(W_y=w_0, k=k1)
 
-    return (lambda r: psi(r, x, params), r)
+    beam = Beam2d(x=x, params=params)
+
+    return (beam, r)
 
 
 if __name__ == '__main__':
