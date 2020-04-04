@@ -12,6 +12,7 @@ import math
 import sys
 
 from scipy.integrate import quad
+from types import MappingProxyType
 
 
 def complex_quad(func, a, b, **kwargs):
@@ -28,17 +29,23 @@ def complex_quad(func, a, b, **kwargs):
     return real + 1j*imag, real_tol, imag_tol
 
 
-class Beam2d:
+class Beam2dCartesian:
     """..."""
 
     def __init__(self, x, params, called=False):
         """..."""
         self.x = x
         self._k = params['k']
-        self._params = params
+        self._params = MappingProxyType(params)  # read-only view of a dict
         self.called = called
 
-        self._W_y = params['W_y']
+    @property
+    def params(self):
+        """Beam specific parameters.
+
+        This is a read-only property.
+        """
+        return self._params
 
     def profile(self, r):
         """Field amplitude function."""
@@ -62,7 +69,7 @@ class Beam2d:
 
     def spectrum(self, k_y):
         """Spectrum amplitude function, f."""
-        return self._f_Gauss(k_y, self._W_y)
+        raise NotImplementedError
 
     def _phase(self, k_y, x, y):
         """Phase function."""
@@ -71,6 +78,29 @@ class Beam2d:
     def _integrand(self, k_y):
         """Integrand function."""
         return self.spectrum(k_y) * cmath.exp(1j*self._phase(k_y, self.x, self._ry))
+
+
+# -----------------------------------------------------------------------------
+# specific beam implementations based on Beam2dCartesian base class
+# -----------------------------------------------------------------------------
+class Gauss2d(Beam2dCartesian):
+    """2d Gauss beam."""
+
+    def __init__(self, x, params, called=False):
+        """..."""
+        self._W_y = params['W_y']
+        super().__init__(x, params, called)
+
+    def profile(self, r):
+        """..."""
+        if self.x == 0:
+            return NotImplemented
+        else:
+            return super().profile(r)
+
+    def spectrum(self, k_y):
+        """Spectrum amplitude function, f."""
+        return self._f_Gauss(k_y, self._W_y)
 
     def _f_Gauss(self, k_y, W_y):
         """Gaussian spectrum amplitude."""
@@ -96,7 +126,7 @@ def main():
     w_0 = 0.1061032953945969
     params = dict(W_y=w_0, k=k1)
 
-    beam = Beam2d(x=x, params=params)
+    beam = Gauss2d(x=x, params=params)
 
     return (beam, r)
 
