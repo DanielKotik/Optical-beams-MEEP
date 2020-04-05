@@ -7,6 +7,7 @@ version: 1.5-beta
 release date: xx.xx.2020
 creation date: 03.04.2020
 """
+import cython
 import cmath
 import math
 import sys
@@ -15,16 +16,30 @@ from scipy.integrate import quad
 from types import MappingProxyType
 
 
+if not cython.compiled:
+    from math import (exp as _exp,
+                      sqrt as _sqrt)
+    from cmath import exp as _cexp
+    print("\nPlease consider compiling `%s.py` via Cython: "
+          "`$ cythonize -3 -i %s.py`\n" % (__name__, __name__))
+else:
+    from scipy import LowLevelCallable
+
+
+def _real_1d_func(x, func):
+    """Return real part of a 1d function."""
+    return func(x).real
+
+
+def _imag_1d_func(x, func):
+    """Return imag part of a 1d function."""
+    return func(x).imag
+
+
 def complex_quad(func, a, b, **kwargs):
     """Integrate real and imaginary part of the given function."""
-    def real_func(x):
-        return func(x).real
-
-    def imag_func(x):
-        return func(x).imag
-
-    real, real_tol = quad(real_func, a, b, **kwargs)
-    imag, imag_tol = quad(imag_func, a, b, **kwargs)
+    real, real_tol = quad(_real_1d_func, a, b, (func,))
+    imag, imag_tol = quad(_imag_1d_func, a, b, (func,))
 
     return real + 1j*imag, real_tol, imag_tol
 
@@ -73,11 +88,11 @@ class Beam2dCartesian:
 
     def _phase(self, k_y, x, y):
         """Phase function."""
-        return x*math.sqrt(self._k**2 - k_y**2) + k_y*y
+        return x*_sqrt(self._k**2 - k_y**2) + k_y*y
 
     def _integrand(self, k_y):
         """Integrand function."""
-        return self.spectrum(k_y) * cmath.exp(1j*self._phase(k_y, self.x, self._ry))
+        return self.spectrum(k_y) * _cexp(1j*self._phase(k_y, self.x, self._ry))
 
 
 # -----------------------------------------------------------------------------
@@ -104,7 +119,7 @@ class Gauss2d(Beam2dCartesian):
 
     def _f_Gauss(self, k_y, W_y):
         """Gaussian spectrum amplitude."""
-        return math.exp(-(k_y*W_y/2)**2)
+        return _exp(-(k_y*W_y/2)**2)
 
 
 def main():
