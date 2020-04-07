@@ -18,8 +18,16 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+### Cython ###
 # C extensions
 *.so
+
+# profiling annotions
+*.html
+
+# Cython generated C source code
+*.c
+
 
 # Distribution / packaging
 .Python
