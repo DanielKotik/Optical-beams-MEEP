@@ -24,6 +24,9 @@ cdef extern from "complex.h":
 # -----------------------------------------------------------------------------
 # function declarations
 # -----------------------------------------------------------------------------
+cdef double _imag_1d_func_c(int n, double *arr, void *func_ptr)
+cdef double _real_1d_func_c(int n, double *arr, void *func_ptr)
+
 @cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double,
                imag_tol=cython.double)
 cdef (double complex, double, double) complex_quad(func, double a, double b)

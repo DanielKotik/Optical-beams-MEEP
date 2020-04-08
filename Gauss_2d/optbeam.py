@@ -36,6 +36,26 @@ def _imag_1d_func(x, func):
     return func(x).imag
 
 
+def _imag_1d_func_c(n, arr, func_ptr):
+    """Return imag part of a 1d function.
+
+    Cython implementation.
+    """
+    # pure python formulation of:
+    # return (<Beam2dCartesian>func_ptr)(arr[0], arr[1]).imag
+    return cython.cast(Beam2dCartesian, func_ptr)._integrand(arr[0]).imag
+
+
+def _real_1d_func_c(n, arr, func_ptr):
+    """Return real part of a 1d function.
+
+    Cython implementation.
+    """
+    # pure python formulation of:
+    # return (<Beam2dCartesian>func_ptr)(arr[0], arr[1]).real
+    return cython.cast(Beam2dCartesian, func_ptr)._integrand(arr[0]).real
+
+
 def complex_quad(func, a, b):
     """Integrate real and imaginary part of the given function."""
     real, real_tol = quad(_real_1d_func, a, b, (func,))
