@@ -29,7 +29,7 @@ cdef double _real_1d_func_c(int n, double *arr, void *func_ptr)
 
 @cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double,
                imag_tol=cython.double)
-cdef (double complex, double, double) complex_quad(func, double a, double b)
+cdef (double complex, double, double) _complex_quad(func, double a, double b)
 
 # -----------------------------------------------------------------------------
 # class declarations
@@ -44,7 +44,7 @@ cdef class Beam2dCartesian:
 
     cdef double spectrum(self, double k_y) nogil
     cdef double _phase(self, double k_y, double x, double y) nogil
-    cpdef double complex _integrand(self, double k_y)
+    cdef double complex _integrand(self, double k_y) nogil
 
 cdef class Gauss2d(Beam2dCartesian):
     cdef:

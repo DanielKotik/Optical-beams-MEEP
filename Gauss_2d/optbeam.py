@@ -56,10 +56,27 @@ def _real_1d_func_c(n, arr, func_ptr):
     return cython.cast(Beam2dCartesian, func_ptr)._integrand(arr[0]).real
 
 
-def complex_quad(func, a, b):
+def _complex_quad(func, a, b):
     """Integrate real and imaginary part of the given function."""
-    real, real_tol = quad(_real_1d_func, a, b, (func,))
-    imag, imag_tol = quad(_imag_1d_func, a, b, (func,))
+    if cython.compiled:
+        # pure python formulation of: cdef void *f_ptr = <void*>func
+        f_ptr = cython.declare(cython.p_void, cython.cast(cython.p_void, func))
+
+        func_capsule = PyCapsule_New(f_ptr, cython.NULL, cython.NULL)
+
+        current_module = sys.modules[__name__]
+
+        ll_real_1d_func_c = LowLevelCallable.from_cython(current_module,
+                                                         '_real_1d_func_c',
+                                                         func_capsule)
+        ll_imag_1d_func_c = LowLevelCallable.from_cython(current_module,
+                                                         '_imag_1d_func_c',
+                                                         func_capsule)
+        real, real_tol = quad(ll_real_1d_func_c, a, b)
+        imag, imag_tol = quad(ll_imag_1d_func_c, a, b)
+    else:
+        real, real_tol = quad(_real_1d_func, a, b, (func,))
+        imag, imag_tol = quad(_imag_1d_func, a, b, (func,))
 
     return real + 1j*imag, real_tol, imag_tol
 
@@ -95,7 +112,8 @@ class Beam2dCartesian:
         try:
             (result,
              real_tol,
-             imag_tol) = complex_quad(self._integrand, -self._k, self._k)
+             imag_tol) = _complex_quad(self if cython.compiled else self._integrand,
+                                      -self._k, self._k)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()
