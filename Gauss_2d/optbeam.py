@@ -36,7 +36,7 @@ def _imag_1d_func(x, func):
     return func(x).imag
 
 
-def complex_quad(func, a, b, **kwargs):
+def complex_quad(func, a, b):
     """Integrate real and imaginary part of the given function."""
     real, real_tol = quad(_real_1d_func, a, b, (func,))
     imag, imag_tol = quad(_imag_1d_func, a, b, (func,))

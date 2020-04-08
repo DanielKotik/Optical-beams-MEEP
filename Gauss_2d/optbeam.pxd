@@ -11,9 +11,41 @@ cimport cython
 from cpython.pycapsule cimport PyCapsule_New
 from cpython cimport bool
 
+# -----------------------------------------------------------------------------
+# declare C functions as "cpdef" to export them to the module
+# -----------------------------------------------------------------------------
 cdef extern from "math.h":
     cpdef double _exp "exp" (double x) nogil
     cpdef double _sqrt "sqrt" (double x) nogil
 
 cdef extern from "complex.h":
     cpdef double complex _cexp "cexp" (double complex z) nogil
+
+# -----------------------------------------------------------------------------
+# function declarations
+# -----------------------------------------------------------------------------
+@cython.locals(real=cython.double, imag=cython.double, real_tol=cython.double,
+               imag_tol=cython.double)
+cdef (double complex, double, double) complex_quad(func, double a, double b)
+
+# -----------------------------------------------------------------------------
+# class declarations
+# -----------------------------------------------------------------------------
+cdef class Beam2dCartesian:
+    cdef:
+        dict __dict__
+        double x, _k
+        public bool called
+
+        double _ry, _rz
+
+    cdef double spectrum(self, double k_y) nogil
+    cdef double _phase(self, double k_y, double x, double y) nogil
+    cpdef double complex _integrand(self, double k_y)
+
+cdef class Gauss2d(Beam2dCartesian):
+    cdef:
+        double _W_y
+
+    cdef double _f_Gauss(self, double k_y, double W_y) nogil
+    cdef double spectrum(self, double k_y) nogil
