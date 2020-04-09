@@ -142,13 +142,13 @@ class Gauss2d(Beam2dCartesian):
     def __init__(self, x, params, called=False):
         """..."""
         self._W_y = params['W_y']
-        self._norm = 2 * math.sqrt(math.pi) / self._W_y
+        self._norm = 2 * _sqrt(math.pi) / self._W_y
         super().__init__(x, params, called)
 
     def profile(self, r):
         """..."""
         if self.x == 0:
-            return self._norm * math.exp(-(r.y / self._W_y)**2)
+            return self._norm * _exp(-(r.y / self._W_y)**2)
         else:
             return super().profile(r)
 

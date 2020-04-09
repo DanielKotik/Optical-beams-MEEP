@@ -49,6 +49,7 @@ cdef class Beam2dCartesian:
 cdef class Gauss2d(Beam2dCartesian):
     cdef:
         double _W_y
+        double _norm
 
     cdef double _f_Gauss(self, double k_y, double W_y) nogil
     cdef double spectrum(self, double k_y) nogil
