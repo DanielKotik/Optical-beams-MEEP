@@ -8,7 +8,6 @@ release date: xx.xx.2020
 creation date: 03.04.2020
 """
 import cython
-import cmath
 import math
 import sys
 
