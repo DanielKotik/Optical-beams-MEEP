@@ -100,7 +100,11 @@ class Beam2dCartesian:
         return self._params
 
     def profile(self, r):
-        """Field amplitude function."""
+        """Field amplitude function.
+
+        Plane wave decomposition, to calculate field amplitude at light source
+        position if not coinciding with beam waist.
+        """
         self._ry = r.y
         self._rz = r.z
 
@@ -121,7 +125,7 @@ class Beam2dCartesian:
         return result
 
     def spectrum(self, k_y):
-        """Spectrum amplitude function, f."""
+        """Spectrum amplitude distribution function, f."""
         raise NotImplementedError
 
     def _phase(self, k_y, x, y):
