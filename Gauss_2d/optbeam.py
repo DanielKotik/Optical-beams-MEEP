@@ -113,7 +113,7 @@ class Beam2dCartesian:
             (result,
              real_tol,
              imag_tol) = _complex_quad(self if cython.compiled else self._integrand,
-                                      -self._k, self._k)
+                                       -self._k, self._k)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()
@@ -142,12 +142,13 @@ class Gauss2d(Beam2dCartesian):
     def __init__(self, x, params, called=False):
         """..."""
         self._W_y = params['W_y']
+        self._norm = 2 * math.sqrt(math.pi) / self._W_y
         super().__init__(x, params, called)
 
     def profile(self, r):
         """..."""
         if self.x == 0:
-            return NotImplemented
+            return self._norm * math.exp(-(r.y / self._W_y)**2)
         else:
             return super().profile(r)
 
