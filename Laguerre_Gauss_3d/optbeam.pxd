@@ -72,6 +72,7 @@ cdef class LaguerreGauss3d(Beam3dSpherical):
     cdef:
       int _m
       double _W_y
+      double _norm
 
     cdef double complex _f_Gauss_spherical(self, double sin_theta, double _W_y, double k) nogil
     cdef double complex _f_Laguerre_Gauss_spherical(self, double sin_theta, double theta, double phi,
@@ -82,6 +83,7 @@ cdef class LaguerreGauss3dCartesian(Beam3dCartesian):
     cdef:
       int _m
       double _W_y
+      double _norm
 
     cdef double _phi(self, double k_y, double k_z) nogil
     cdef double _theta(self, double k_y, double k_z, double k) nogil

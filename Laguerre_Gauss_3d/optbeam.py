@@ -217,11 +217,12 @@ class LaguerreGauss3dCartesian(Beam3dCartesian):
         super().__init__(x, params, called)
         self._W_y = params['W_y']
         self._m = params['m']
+        self._norm = 4 * math.pi / (self._W_y**2)
 
     def profile(self, r):
         """..."""
         if self.x == 0 and self._m == 0:
-            return 2*math.pi*self._k * _exp(-((r.y**2 + r.z**2) / self._W_y**2))
+            return self._norm * _exp(-((r.y**2 + r.z**2) / self._W_y**2))
         else:
             return super().profile(r)
 
@@ -277,11 +278,12 @@ class LaguerreGauss3d(Beam3dSpherical):
         super().__init__(x, params, called)
         self._W_y = params['W_y']
         self._m = params['m']
+        self._norm = 4 * math.pi / (self._W_y**2)
 
     def profile(self, r):
         """..."""
         if self.x == 0 and self._m == 0:
-            return 2*math.pi*self._k * _exp(-((r.y**2 + r.z**2) / self._W_y**2))
+            return self._norm * _exp(-((r.y**2 + r.z**2) / self._W_y**2))
         else:
             return super().profile(r)
 
