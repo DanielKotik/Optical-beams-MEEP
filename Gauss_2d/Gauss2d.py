@@ -47,16 +47,13 @@ from datetime import datetime
 print("Meep version:", mp.__version__)
 
 
-def interfaceType(string):
+def interfaceType(string_val):
     """Provide interface argument type."""
-    value = string
-    if (value != "planar" and
-        value != "concave" and
-        value != "convex"):
+    if string_val not in ["planar", "concave", "convex"]:
         raise argparse.ArgumentTypeError('Value has to be either concave, '
                                          'convex or planar (but %s is provided)'
-                                         % value)
-    return value
+                                         % string_val)
+    return string_val
 
 
 def main(args):
