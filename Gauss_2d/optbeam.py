@@ -80,6 +80,17 @@ def _complex_quad(func, a, b):
     return real + 1j*imag, real_tol, imag_tol
 
 
+def critical(n1, n2):
+    """Calculate critical angle in degrees."""
+    assert n1 > n2, "\nWarning: Critical angle is not defined, since n1 <= n2!"
+    return math.degrees(math.asin(n2/n1))
+
+
+def brewster(n1, n2):
+    """Calculate Brewster angle in degrees."""
+    return math.degrees(math.atan(n2/n1))
+
+
 class Beam2dCartesian:
     """..."""
 
@@ -101,7 +112,7 @@ class Beam2dCartesian:
     def profile(self, r):
         """Field amplitude function.
 
-        Plane wave decomposition, to calculate field amplitude at light source
+        Plane wave decomposition: calculate field amplitude at light source
         position if not coinciding with beam waist.
         """
         self._ry = r.y
@@ -150,6 +161,7 @@ class Gauss2d(Beam2dCartesian):
 
     def profile(self, r):
         """..."""
+        # beam profile distribution (field amplitude) at the waist of the beam
         if self.x == 0:
             return self._norm * _exp(-(r.y / self._W_y)**2)
         else:
