@@ -153,33 +153,38 @@ class Beam2dCartesian:
 class IncAiry2d(Beam2dCartesian):
     """2d incomplete Airy beam."""
 
-    pass
-
-
-class Gauss2d(Beam2dCartesian):
-    """2d Gauss beam."""
-
     def __init__(self, x, params, called=False):
         """..."""
         self._W_y = params['W_y']
-        self._norm = 2 * _sqrt(math.pi) / self._W_y
+        self._M = params['M']
+        self._W = params['W']
+        #self._norm = 2 * _sqrt(math.pi) / self._W_y
         super().__init__(x, params, called)
 
     def profile(self, r):
         """..."""
         # beam profile distribution (field amplitude) at the waist of the beam
         if self.x == 0:
-            return self._norm * _exp(-(r.y / self._W_y)**2)
+            # replace integrand function
+            return super().profile(r)
+            #return self._norm * _exp(-(r.y / self._W_y)**2)
         else:
             return super().profile(r)
 
     def spectrum(self, k_y):
-        """Spectrum amplitude function, f."""
-        return self._f_Gauss(k_y, self._W_y)
+        """..."""
+        return self._f_Airy(k_y, self._W_y, self._M, self._W)
 
-    def _f_Gauss(self, k_y, W_y):
-        """Gaussian spectrum amplitude."""
-        return _exp(-(k_y*W_y/2)**2)
+    def _f_Airy(self, k_y, W_y, M, W):
+        """Airy spectrum amplitude."""
+        return W_y * _cexp(1.0j*(-1/3)*(k_y*W_y)**3) \
+            * self._heaviside(W_y * k_y - (M - W)) \
+            * self._heaviside((M + W) - W_y * k_y)
+
+    def _heaviside(x):
+        """Theta (Heaviside step) function."""
+        return 0 if x < 0 else 1
+
 
 
 def main():
@@ -197,11 +202,13 @@ def main():
     # alternative:
     # import meep; r = meep.Vector3(0, y, z)
 
-    k1 = 116.11326447667875
-    w_0 = 0.1061032953945969
-    params = dict(W_y=w_0, k=k1)
+    k1 = 75.39822368615503
+    w_0 = 0.09284038347027228
+    M = 0
+    W = 4
+    params = dict(W_y=w_0, k=k1, M=M, W=W)
 
-    beam = Gauss2d(x=x, params=params)
+    beam = IncAiry2d(x=x, params=params)
 
     return (beam, r)
 
