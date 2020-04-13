@@ -181,7 +181,7 @@ class IncAiry2d(Beam2dCartesian):
             * self._heaviside(W_y * k_y - (M - W)) \
             * self._heaviside((M + W) - W_y * k_y)
 
-    def _heaviside(x):
+    def _heaviside(self, x):
         """Theta (Heaviside step) function."""
         return 0 if x < 0 else 1
 

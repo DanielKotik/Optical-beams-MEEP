@@ -42,14 +42,17 @@ cdef class Beam2dCartesian:
 
         double _ry, _rz
 
-    cdef double spectrum(self, double k_y) nogil
+    cdef double complex spectrum(self, double k_y) nogil
     cdef double _phase(self, double k_y, double x, double y) nogil
     cdef double complex _integrand(self, double k_y) nogil
 
-cdef class Gauss2d(Beam2dCartesian):
+cdef class IncAiry2d(Beam2dCartesian):
     cdef:
         double _W_y
-        double _norm
+        double _M
+        double _W
+        #double _norm
 
-    cdef double _f_Gauss(self, double k_y, double W_y) nogil
-    cdef double spectrum(self, double k_y) nogil
+    cdef double _heaviside(self, double x) nogil
+    cdef double complex _f_Airy(self, double k_y, double W_y, double M, double W) nogil
+    cdef double complex spectrum(self, double k_y) nogil
