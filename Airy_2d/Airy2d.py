@@ -41,44 +41,16 @@ exmple use:
 
 """
 import argparse
-import cmath
 import math
 import meep as mp
-import sys
+import optbeam as op
 
 from datetime import datetime
-from scipy.integrate import quad
 
 print("Meep version:", mp.__version__)
 
 
-def complex_quad(func, a, b, **kwargs):
-    """Integrate real and imaginary part of the given function."""
-    def real_func(x):
-        return func(x).real
-
-    def imag_func(x):
-        return func(x).imag
-
-    real, real_tol = quad(real_func, a, b, **kwargs)
-    imag, imag_tol = quad(imag_func, a, b, **kwargs)
-
-    return real + 1j*imag, real_tol, imag_tol
-
-
-def Critical(n1, n2):
-    """Calculate critical angle in degrees."""
-    assert n1 > n2, "\nWarning: Critical angle is not defined, since n1 <= n2!"
-    return math.degrees(math.asin(n2/n1))
-
-
-def Brewster(n1, n2):
-    """Calculate Brewster angle in degrees."""
-    return math.degrees(math.atan(n2/n1))
-
-
 def main(args):
-    """Main function."""
     print("\nstart time:", datetime.now())
 
     # --------------------------------------------------------------------------
@@ -100,10 +72,8 @@ def main(args):
 
     # angle of incidence
     chi_deg = args.chi_deg
-    #chi_deg = 1.0*Critical(n1, n2)
-    #chi_deg = 0.95*Brewster(n1, n2)
-
-    test_output = args.test_output
+    #chi_deg = 1.0*op.critical(n1, n2)
+    #chi_deg = 0.95*op.brewster(n1, n2)
 
     # --------------------------------------------------------------------------
     # specific Meep parameters (may need to be adjusted)
@@ -172,95 +142,6 @@ def main(args):
     Courant = (n1 if n1 < n2 else n2) / 2
 
     # --------------------------------------------------------------------------
-    # beam profile distribution (field amplitude) at the waist of the beam
-    # --------------------------------------------------------------------------
-    def Gauss(r, params):
-        """Gauss profile."""
-        W_y = params['W_y']
-
-        return math.exp(-(r.y / W_y)**2)
-
-    def Ai_inc(r, params):
-        """Incomplete Airy function."""
-        W_y, M, W = params['W_y'], params['M'], params['W']
-
-        (result,
-         real_tol,
-         imag_tol) = complex_quad(lambda xi:
-                                  cmath.exp(1.0j*(-(xi**3)/3 + (xi * r.y/W_y))),
-                                  M-W, M+W)
-        return result
-
-    if test_output:
-        print("w_0:", params['W_y'])
-        print("Airy function 1:", Ai_inc(mp.Vector3(1, -0.3, 1), params))
-
-    # --------------------------------------------------------------------------
-    # spectrum amplitude distribution
-    # --------------------------------------------------------------------------
-    def Heaviside(x):
-        """Theta (Heaviside step) function."""
-        return 0 if x < 0 else 1
-
-    def f_Gauss(k_y, params):
-        """Gaussian spectrum amplitude."""
-        W_y = params['W_y']
-
-        return math.exp(-(k_y*W_y/2)**2)
-
-    def f_Airy(k_y, params):
-        """Airy spectrum amplitude."""
-        W_y, M, W = params['W_y'], params['M'], params['W']
-
-        return W_y*cmath.exp(1.0j*(-1/3)*(k_y*W_y)**3) \
-            * Heaviside(W_y*k_y - (M-W)) * Heaviside((M+W) - (W_y*k_y))
-
-    if test_output:
-        print("Airy spectrum:", f_Airy(0.2, params))
-
-    # --------------------------------------------------------------------------
-    # plane wave decomposition
-    # (purpose: calculate field amplitude at light source position if not
-    #           coinciding with beam waist)
-    # --------------------------------------------------------------------------
-    def psi(r, f, x, params):
-        """Field amplitude function."""
-        try:
-            getattr(psi, "called")
-        except AttributeError:
-            psi.called = True
-            print("Calculating inital field configuration. "
-                  "This will take some time...")
-
-        def phase(k_y, x, y):
-            """Phase function."""
-            return x*math.sqrt(k1**2 - k_y**2) + k_y*y
-
-        try:
-            (result,
-             real_tol,
-             imag_tol) = complex_quad(lambda k_y:
-                                      f(k_y, params) *
-                                      cmath.exp(1j*phase(k_y, x, r.y)),
-                                      -k1, k1, limit=100)
-        except Exception as e:
-            print(type(e).__name__ + ":", e)
-            sys.exit()
-
-        return result
-
-    # --------------------------------------------------------------------------
-    # some test outputs (uncomment if needed)
-    # --------------------------------------------------------------------------
-    if test_output:
-        x, y, z = -2.15, 0.3, 0.5
-        r = mp.Vector3(0, y, z)
-
-        print()
-        print("psi :", psi(r, f_Airy, x, params))
-        sys.exit()
-
-    # --------------------------------------------------------------------------
     # display values of physical variables
     # --------------------------------------------------------------------------
     print()
@@ -282,15 +163,15 @@ def main(args):
     eps_averaging = True                  # default: True
     filename_prefix = None
 
+    # specify optical beam
+    beam = op.IncAiry2d(x=shift, params=params)
+
     sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                          component=mp.Ez if s_pol else mp.Ey,
                          size=mp.Vector3(0, 9, 0),
                          center=mp.Vector3(source_shift, 0, 0),
-                         #amp_func=lambda r: Gauss(r, params)
-                         #amp_func=lambda r: Ai_inc(r, params)
-                         #amp_func=lambda r: psi(r, f_Gauss, shift, params)
-                         amp_func=lambda r: psi(r, f_Airy, shift, params)
-                        )
+                         amp_func=beam.profile
+                         )
                ]
 
     sim = mp.Simulation(cell_size=cell,
@@ -384,11 +265,6 @@ if __name__ == '__main__':
                         type=float,
                         default=45,
                         help='incidence angle in degrees (default: %(default)s)')
-
-    parser.add_argument('-test_output',
-                        action='store_true',
-                        default=False,
-                        help='switch to enable test print statements')
 
     args = parser.parse_args()
     main(args)
