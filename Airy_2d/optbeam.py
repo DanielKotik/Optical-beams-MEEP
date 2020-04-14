@@ -193,8 +193,10 @@ class IncAiry2d(Beam2dCartesian):
             xi = k_y
             return _cexp(1.0j*(-(xi**3)/3 + (xi * self._ry/self._W_y)))
         else:
-            # FIXME: return super()._integrand(k_y) results in:
-            #        RuntimeError: super(): __class__ cell not found
+            # next line needs _integrand declared cpdef without nogil attribute,
+            # and will execute slower than repeating the super class integration
+            # routine function here
+            #return super(IncAiry2d, self)._integrand(k_y)
             return self.spectrum(k_y) * _cexp(1j*self._phase(k_y, self.x, self._ry))
 
 
@@ -220,7 +222,7 @@ def main():
     W = 4
     params = dict(W_y=w_0, k=k1, M=M, W=W)
 
-    beam = IncAiry2d(x=x, params=params)
+    beam = IncAiry2d(x=0, params=params)
 
     return (beam, r)
 
