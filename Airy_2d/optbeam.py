@@ -101,6 +101,10 @@ class Beam2dCartesian:
         self._params = MappingProxyType(params)  # read-only view of a dict
         self.called = called
 
+        # integration boundaries
+        self._a = -self._k
+        self._b = self._k
+
     @property
     def params(self):
         """Beam specific parameters.
@@ -127,7 +131,7 @@ class Beam2dCartesian:
             (result,
              real_tol,
              imag_tol) = _complex_quad(self if cython.compiled else self._integrand,
-                                       -self._k, self._k)
+                                       self._a, self._b)
         except Exception as e:
             print(type(e).__name__ + ":", e)
             sys.exit()
@@ -163,16 +167,11 @@ class IncAiry2d(Beam2dCartesian):
     def profile(self, r):
         """..."""
         if self.x == 0:
-            self._ry = r.y
-            # beam profile distribution (field amplitude) at the waist of the beam
-            (result,
-             real_tol,
-             imag_tol) = _complex_quad(lambda xi:
-                                       _cexp(1.0j*(-(xi**3)/3 + (xi * self._ry/self._W_y))),
-                                        self._M-self._W, self._M+self._W)
-            return result
-        else:
-            return super().profile(r)
+            # adjust integration boundaries
+            self._a = self._M-self._W
+            self._b = self._M+self._W
+
+        return super().profile(r)
 
     def spectrum(self, k_y):
         """..."""
@@ -187,6 +186,16 @@ class IncAiry2d(Beam2dCartesian):
     def _heaviside(self, x):
         """Theta (Heaviside step) function."""
         return 0 if x < 0 else 1
+
+    def _integrand(self, k_y):
+        """..."""
+        if self.x == 0:
+            xi = k_y
+            return _cexp(1.0j*(-(xi**3)/3 + (xi * self._ry/self._W_y)))
+        else:
+            # FIXME: return super()._integrand(k_y) results in:
+            #        RuntimeError: super(): __class__ cell not found
+            return self.spectrum(k_y) * _cexp(1j*self._phase(k_y, self.x, self._ry))
 
 
 

@@ -40,6 +40,7 @@ cdef class Beam2dCartesian:
         double x, _k
         public bool called
         double _ry, _rz
+        double _a, _b
 
     cdef double complex spectrum(self, double k_y) nogil
     cdef double _phase(self, double k_y, double x, double y) nogil
@@ -50,6 +51,7 @@ cdef class IncAiry2d(Beam2dCartesian):
         double _W_y
         double _M
         double _W
+        double xi
 
     cdef double _heaviside(self, double x) nogil
     cdef double complex _f_Airy(self, double k_y, double W_y, double M, double W) nogil
