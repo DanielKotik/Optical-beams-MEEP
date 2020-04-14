@@ -158,16 +158,19 @@ class IncAiry2d(Beam2dCartesian):
         self._W_y = params['W_y']
         self._M = params['M']
         self._W = params['W']
-        #self._norm = 2 * _sqrt(math.pi) / self._W_y
         super().__init__(x, params, called)
 
     def profile(self, r):
         """..."""
-        # beam profile distribution (field amplitude) at the waist of the beam
         if self.x == 0:
-            # replace integrand function
-            return super().profile(r)
-            #return self._norm * _exp(-(r.y / self._W_y)**2)
+            self._ry = r.y
+            # beam profile distribution (field amplitude) at the waist of the beam
+            (result,
+             real_tol,
+             imag_tol) = _complex_quad(lambda xi:
+                                       _cexp(1.0j*(-(xi**3)/3 + (xi * self._ry/self._W_y))),
+                                        self._M-self._W, self._M+self._W)
+            return result
         else:
             return super().profile(r)
 

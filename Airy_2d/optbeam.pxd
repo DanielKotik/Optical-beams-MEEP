@@ -39,7 +39,6 @@ cdef class Beam2dCartesian:
         dict __dict__
         double x, _k
         public bool called
-
         double _ry, _rz
 
     cdef double complex spectrum(self, double k_y) nogil
@@ -51,7 +50,6 @@ cdef class IncAiry2d(Beam2dCartesian):
         double _W_y
         double _M
         double _W
-        #double _norm
 
     cdef double _heaviside(self, double x) nogil
     cdef double complex _f_Airy(self, double k_y, double W_y, double M, double W) nogil
