@@ -16,8 +16,7 @@ from types import MappingProxyType
 
 
 if not cython.compiled:
-    from math import (exp as _exp,
-                      sqrt as _sqrt)
+    from math import sqrt as _sqrt
     from cmath import exp as _cexp
     print("\nPlease consider compiling `%s.py` via Cython: "
           "`$ cythonize -3 -i %s.py`\n" % (__name__, __name__))
