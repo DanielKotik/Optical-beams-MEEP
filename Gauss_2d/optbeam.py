@@ -55,7 +55,7 @@ def _real_1d_func_c(n, arr, func_ptr):
     return cython.cast(Beam2dCartesian, func_ptr)._integrand(arr[0]).real
 
 
-def _complex_quad(func, a, b):
+def _complex_quad(func, a, b, kwargs={}):
     """Integrate real and imaginary part of the given function."""
     if cython.compiled:
         # pure python formulation of: cdef void *f_ptr = <void*>func
@@ -71,11 +71,11 @@ def _complex_quad(func, a, b):
         ll_imag_1d_func_c = LowLevelCallable.from_cython(current_module,
                                                          '_imag_1d_func_c',
                                                          func_capsule)
-        real, real_tol = quad(ll_real_1d_func_c, a, b)
-        imag, imag_tol = quad(ll_imag_1d_func_c, a, b)
+        real, real_tol = quad(ll_real_1d_func_c, a, b, **kwargs)
+        imag, imag_tol = quad(ll_imag_1d_func_c, a, b, **kwargs)
     else:
-        real, real_tol = quad(_real_1d_func, a, b, (func,))
-        imag, imag_tol = quad(_imag_1d_func, a, b, (func,))
+        real, real_tol = quad(_real_1d_func, a, b, (func,), **kwargs)
+        imag, imag_tol = quad(_imag_1d_func, a, b, (func,), **kwargs)
 
     return real + 1j*imag, real_tol, imag_tol
 

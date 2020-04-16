@@ -38,7 +38,8 @@ cdef double _real_2d_func_c(int n, double *arr, void *func_ptr)
                imag_tol=cython.double)
 cdef (double complex, double, double) _complex_dblquad(Beam3d func,
                                                        double a, double b,
-                                                       double gfun, double hfun)
+                                                       double gfun, double hfun,
+                                                       dict kwargs=*)
 
 # -----------------------------------------------------------------------------
 # class declarations
