@@ -79,8 +79,6 @@ def main(args):
     #chi_deg = 1.0*op.critical(n1, n2)
     #chi_deg = 0.95*op.brewster(n1, n2)
 
-    test_output = args.test_output
-
     # --------------------------------------------------------------------------
     # specific Meep parameters (may need to be adjusted)
     # --------------------------------------------------------------------------
