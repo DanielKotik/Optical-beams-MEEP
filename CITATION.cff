@@ -1,0 +1,15 @@
+# YAML 1.2
+# Metadata for citation of this software according to the CFF format (https://citation-file-format.github.io/)
+cff-version: 1.0.3
+message: If you use this software, please cite it using these metadata.
+title: 'Optical-beams-MEEP'
+doi: 10.5281/zenodo.3691799
+authors:
+- given-names: Daniel
+  family-names: Kotik
+- given-names: Jörg
+  family-names: Götte
+version: 1.4.2
+date-released: 2020-02-28
+repository-code: https://github.com/DanielKotik/Optical-beams-MEEP
+license: MIT
