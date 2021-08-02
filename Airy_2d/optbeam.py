@@ -40,7 +40,7 @@ def _imag_1d_func_c(n, arr, func_ptr):
     Cython implementation.
     """
     # pure python formulation of:
-    # return (<Beam2dCartesian>func_ptr)(arr[0], arr[1]).imag
+    # return (<Beam2dCartesian>func_ptr)(arr[0]).imag
     return cython.cast(Beam2dCartesian, func_ptr)._integrand(arr[0]).imag
 
 
@@ -50,7 +50,7 @@ def _real_1d_func_c(n, arr, func_ptr):
     Cython implementation.
     """
     # pure python formulation of:
-    # return (<Beam2dCartesian>func_ptr)(arr[0], arr[1]).real
+    # return (<Beam2dCartesian>func_ptr)(arr[0]).real
     return cython.cast(Beam2dCartesian, func_ptr)._integrand(arr[0]).real
 
 
@@ -197,7 +197,6 @@ class IncAiry2d(Beam2dCartesian):
             # routine function here
             #return super(IncAiry2d, self)._integrand(k_y)
             return self.spectrum(k_y) * _cexp(1j*self._phase(k_y, self.x, self._ry))
-
 
 
 def main():
