@@ -6,8 +6,8 @@ brief:   Python configuration input file for the FDTD solver Meep simulating the
          scattering of a polarised Laguerre-Gaussian beam at a planar dielectric
          interface (3d)
 author:  Daniel Kotik
-version: 1.4.2
-release date: 27.02.2020
+version: 1.5-beta
+release date: xx.xx.2020
 creation date: 10.01.2020
 
 
@@ -49,41 +49,13 @@ of the complex electric field) obtained by
 
 """
 import argparse
-import cmath
 import math
 import meep as mp
-import sys
+import optbeam as op
 
 from datetime import datetime
-from scipy.integrate import dblquad
-
 
 print("Meep version:", mp.__version__)
-
-
-def complex_dblquad(func, a, b, gfun, hfun, **kwargs):
-    """Integrate real and imaginary part of the given function."""
-    def real_func(x, y):
-        return func(x, y).real
-
-    def imag_func(x, y):
-        return func(x, y).imag
-
-    real, real_tol = dblquad(real_func, a, b, gfun, hfun, **kwargs)
-    imag, imag_tol = dblquad(imag_func, a, b, gfun, hfun, **kwargs)
-
-    return real + 1j*imag, real_tol, imag_tol
-
-
-def Critical(n1, n2):
-    """Calculate critical angle in degrees."""
-    assert n1 > n2, "\nWarning: Critical angle is not defined, since n1 <= n2!"
-    return math.degrees(math.asin(n2/n1))
-
-
-def Brewster(n1, n2):
-    """Calculate Brewster angle in degrees."""
-    return math.degrees(math.atan(n2/n1))
 
 
 def main(args):
@@ -107,10 +79,8 @@ def main(args):
 
     # angle of incidence
     chi_deg = args.chi_deg
-    #chi_deg = 1.0*Critical(n1, n2)
-    #chi_deg = 0.95*Brewster(n1, n2)
-
-    test_output = args.test_output
+    #chi_deg = 1.0*op.critical(n1, n2)
+    #chi_deg = 0.95*op.brewster(n1, n2)
 
     # --------------------------------------------------------------------------
     # specific Meep parameters (may need to be adjusted)
@@ -183,191 +153,6 @@ def main(args):
     Courant = (n1 if n1 < n2 else n2) / 3
 
     # --------------------------------------------------------------------------
-    # 2d-beam profile distribution (field amplitude) at the waist of the beam
-    # --------------------------------------------------------------------------
-    def Gauss(r, params):
-        """Gauss profile."""
-        W_y = params['W_y']
-
-        return math.exp(-((r.y**2 + r.z**2) / W_y**2))
-
-    # --------------------------------------------------------------------------
-    # some test outputs
-    # --------------------------------------------------------------------------
-    if test_output:
-        print("Gauss 2d beam profile:", Gauss(mp.Vector3(0, 0.5, 0.2), params))
-        print()
-
-    # --------------------------------------------------------------------------
-    # spectrum amplitude distribution(s)
-    # --------------------------------------------------------------------------
-
-    # cartesian coordinates (not recommmended) -------------------------
-    def phi(k_y, k_z):
-        """Azimuthal angle.
-
-        Part of coordinate transformation from k-space to (theta, phi)-space.
-        """
-        return math.atan2(k_y, -k_z)
-
-    def theta(k_y, k_z, k):
-        """Polar angle.
-
-        Part of coordinate transformation from k-space to (theta, phi)-space.
-        """
-        return math.acos(cmath.sqrt(k**2 - k_y**2 - k_z**2).real / k)
-
-    def f_Gauss_cartesian(k_y, k_z, params):
-        """2d-Gaussian spectrum amplitude.
-
-        Impementation for Cartesian coordinates.
-        """
-        W_y = params['W_y']
-
-        return math.exp(-W_y**2 * (k_y**2 + k_z**2)/4)
-
-    def f_Laguerre_Gauss_cartesian(k_y, k_z, params):
-        """Laguerre-Gaussian spectrum amplitude.
-
-        Impementation for Cartesian coordinates.
-        """
-        m, k = params['m'], params['k']
-
-        return f_Gauss_cartesian(k_y, k_z, params) * \
-            cmath.exp(1j*m*phi(k_y, k_z)) * theta(k_y, k_z, k)**abs(m)
-
-    # spherical coordinates --------------------------------------------
-    def f_Gauss_spherical(sin_theta, theta, phi, params):
-        """2d-Gaussian spectrum amplitude.
-
-        Impementation for spherical coordinates.
-        """
-        W_y, k = params['W_y'], params['k']
-
-        return math.exp(-(k*W_y*sin_theta/2)**2)
-
-    def f_Laguerre_Gauss_spherical(sin_theta, theta, phi, params):
-        """Laguerre-Gaussian spectrum amplitude.
-
-        Impementation for spherical coordinates.
-        """
-        m = params['m']
-
-        return f_Gauss_spherical(sin_theta, theta, phi, params) * theta**abs(m) * \
-            cmath.exp(1j*m*phi)
-
-    # --------------------------------------------------------------------------
-    # some test outputs
-    # --------------------------------------------------------------------------
-    if test_output:
-        k_y, k_z = 1.0, 5.2
-        theta_ = theta(k_y, k_z, k1)
-        phi_ = phi(k_y, k_z)
-
-        print("Gauss spectrum (cartesian):",
-              f_Gauss_cartesian(k_y, k_z, params))
-        print("Gauss spectrum (spherical):",
-              f_Gauss_spherical(math.sin(theta_), theta_, phi_, params))
-        print()
-        print("L-G spectrum   (cartesian):",
-              f_Laguerre_Gauss_cartesian(k_y, k_z, params))
-        print("L-G spectrum   (spherical):",
-              f_Laguerre_Gauss_spherical(math.sin(theta_), theta_, phi_, params))
-        print()
-
-    # --------------------------------------------------------------------------
-    # plane wave decomposition
-    # (purpose: calculate field amplitude at light source position if not
-    #           coinciding with beam waist)
-    # --------------------------------------------------------------------------
-    def psi_cartesian(r, x, params):
-        """Field amplitude function.
-
-        Integration in Cartesian coordinates.
-        """
-        k, m = params['k'], params['m']
-
-        try:
-            getattr(psi_cartesian, "called")
-        except AttributeError:
-            psi_cartesian.called = True
-            print("Calculating inital field configuration. "
-                  "This will take some time...")
-
-        def phase(k_y, k_z, x, y, z):
-            """Phase function."""
-            return x*cmath.sqrt(k**2 - k_y**2 - k_z**2).real + y*k_y + z*k_z
-
-        f = (f_Gauss_cartesian if m == 0 else f_Laguerre_Gauss_cartesian)
-
-        try:
-            (result,
-             real_tol,
-             imag_tol) = complex_dblquad(lambda k_y, k_z:
-                                         f(k_y, k_z, params) *
-                                         cmath.exp(1j*phase(k_y, k_z, x, r.y, r.z)),
-                                         -k, k, -k, k)
-        except Exception as e:
-            print(type(e).__name__ + ":", e)
-            sys.exit()
-
-        return result
-
-    def psi_spherical(r, x, params):
-        """Field amplitude function.
-
-        Integration in spherical coordinates.
-        """
-        k, m = params['k'], params['m']
-
-        try:
-            getattr(psi_spherical, "called")
-        except AttributeError:
-            psi_spherical.called = True
-            print("Calculating inital field configuration. "
-                  "This will take some time...")
-
-        def phase(theta, phi, x, y, z):
-            """Phase function."""
-            sin_theta, sin_phi = math.sin(theta), math.sin(phi)
-            cos_theta, cos_phi = math.cos(theta), math.cos(phi)
-
-            return k*(sin_theta*(y*sin_phi - z*cos_phi) + cos_theta*x)
-
-        f = (f_Gauss_spherical if m == 0 else f_Laguerre_Gauss_spherical)
-
-        try:
-            (result,
-             real_tol,
-             imag_tol) = complex_dblquad(lambda theta, phi:
-                                         math.sin(theta) * math.cos(theta) *
-                                         f(math.sin(theta), theta, phi, params) *
-                                         cmath.exp(1j*phase(theta, phi, x, r.y, r.z)),
-                                         0, 2*math.pi, 0, math.pi/2)
-        except Exception as e:
-            print(type(e).__name__ + ":", e)
-            sys.exit()
-
-        return k**2 * result
-
-    # --------------------------------------------------------------------------
-    # some test outputs (uncomment if needed)
-    # --------------------------------------------------------------------------
-    if test_output:
-        k_y, k_z = 1.0, 5.2
-        x, y, z = -2.15, 0.3, 0.5
-        r = mp.Vector3(0, y, z)
-
-        print("phi:", phi(k_y, k_z))
-        print()
-        print("psi            (cartesian):",
-              psi_cartesian(r, f_Laguerre_Gauss_cartesian, x, params))
-        print("psi            (spherical):",
-              psi_spherical(r, f_Laguerre_Gauss_spherical, x, params))
-        print("psi       (origin, simple):", Gauss(r, params))
-        sys.exit()
-
-    # --------------------------------------------------------------------------
     # display values of physical variables
     # --------------------------------------------------------------------------
     print()
@@ -420,15 +205,16 @@ def main(args):
 
     sources = []
 
+    # specify optical beam
+    LGbeam = op.LaguerreGauss3d(x=shift, params=params)
+
     if e_z != 0:
         source_Ez = mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                               component=mp.Ez,
                               amplitude=e_z,
                               size=mp.Vector3(0, 3, 3),
                               center=mp.Vector3(source_shift, 0, 0),
-                              #amp_func=lambda r: Gauss(r, params)
-                              #amp_func=lambda r: psi_cartesian(r, shift, params)
-                              amp_func=lambda r: psi_spherical(r, shift, params)
+                              amp_func=LGbeam.profile
                               )
         sources.append(source_Ez)
 
@@ -438,9 +224,7 @@ def main(args):
                               amplitude=e_y,
                               size=mp.Vector3(0, 3, 3),
                               center=mp.Vector3(source_shift, 0, 0),
-                              #amp_func=lambda r: Gauss(r, params)
-                              #amp_func=lambda r: psi_cartesian(r, shift, params)
-                              amp_func=lambda r: psi_spherical(r, shift, params)
+                              amp_func=LGbeam.profile
                               )
         sources.append(source_Ey)
 
@@ -557,11 +341,6 @@ if __name__ == '__main__':
                         type=float,
                         default=45,
                         help='incidence angle in degrees (default: %(default)s)')
-
-    parser.add_argument('-test_output',
-                        action='store_true',
-                        default=False,
-                        help='switch to enable test print statements')
 
     args = parser.parse_args()
     main(args)

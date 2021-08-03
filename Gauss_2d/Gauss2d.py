@@ -5,8 +5,8 @@ file:    Gauss2d.py
 brief:   Python configuration input file for the FDTD solver Meep simulating the
          scattering of a Gaussian beam at planar and curved dielectric interfaces
 author:  Daniel Kotik
-version: 1.4.2
-release date: 27.02.2020
+version: 1.5-beta
+release date: xx.xx.2020
 creation date: 17.12.2019
 
 
@@ -38,52 +38,22 @@ Parenthesis show options for overlaying the dielectric function HDF5FILE_1.
 
 """
 import argparse
-import cmath
 import math
 import meep as mp
-import sys
+import optbeam as op
 
 from datetime import datetime
-from scipy.integrate import quad
 
 print("Meep version:", mp.__version__)
 
 
-def interfaceType(string):
+def interfaceType(string_val):
     """Provide interface argument type."""
-    value = string
-    if (value != "planar" and
-        value != "concave" and
-        value != "convex"):
+    if string_val not in ["planar", "concave", "convex"]:
         raise argparse.ArgumentTypeError('Value has to be either concave, '
                                          'convex or planar (but %s is provided)'
-                                         % value)
-    return value
-
-
-def complex_quad(func, a, b, **kwargs):
-    """Integrate real and imaginary part of the given function."""
-    def real_func(x):
-        return func(x).real
-
-    def imag_func(x):
-        return func(x).imag
-
-    real, real_tol = quad(real_func, a, b, **kwargs)
-    imag, imag_tol = quad(imag_func, a, b, **kwargs)
-
-    return real + 1j*imag, real_tol, imag_tol
-
-
-def Critical(n1, n2):
-    """Calculate critical angle in degrees."""
-    assert n1 > n2, "\nWarning: Critical angle is not defined, since n1 <= n2!"
-    return math.degrees(math.asin(n2/n1))
-
-
-def Brewster(n1, n2):
-    """Calculate Brewster angle in degrees."""
-    return math.degrees(math.atan(n2/n1))
+                                         % string_val)
+    return string_val
 
 
 def main(args):
@@ -106,10 +76,8 @@ def main(args):
 
     # angle of incidence
     chi_deg = args.chi_deg
-    #chi_deg = 1.0*Critical(n1, n2)
-    #chi_deg = 0.95*Brewster(n1, n2)
-
-    test_output = args.test_output
+    #chi_deg = 1.0*op.critical(n1, n2)
+    #chi_deg = 0.95*op.brewster(n1, n2)
 
     # --------------------------------------------------------------------------
     # specific Meep parameters (may need to be adjusted)
@@ -199,69 +167,6 @@ def main(args):
     Courant = (n1 if n1 < n2 else n2) / 2
 
     # --------------------------------------------------------------------------
-    # beam profile distribution (field amplitude) at the waist of the beam
-    # --------------------------------------------------------------------------
-    def Gauss(r, params):
-        """Gauss profile."""
-        W_y = params['W_y']
-
-        return math.exp(-(r.y / W_y)**2)
-
-    # --------------------------------------------------------------------------
-    # spectrum amplitude distribution
-    # --------------------------------------------------------------------------
-    def f_Gauss(k_y, params):
-        """Gaussian spectrum amplitude."""
-        W_y = params['W_y']
-
-        return math.exp(-(k_y*W_y/2)**2)
-
-    if test_output:
-        print("Gauss spectrum:", f_Gauss(0.2, params))
-
-    # --------------------------------------------------------------------------
-    # plane wave decomposition
-    # (purpose: calculate field amplitude at light source position if not
-    #           coinciding with beam waist)
-    # --------------------------------------------------------------------------
-    def psi(r, x, params):
-        """Field amplitude function."""
-        try:
-            getattr(psi, "called")
-        except AttributeError:
-            psi.called = True
-            print("Calculating inital field configuration. "
-                  "This will take some time...")
-
-        def phase(k_y, x, y):
-            """Phase function."""
-            return x*math.sqrt(k1**2 - k_y**2) + k_y*y
-
-        try:
-            (result,
-             real_tol,
-             imag_tol) = complex_quad(lambda k_y:
-                                      f_Gauss(k_y, params) *
-                                      cmath.exp(1j*phase(k_y, x, r.y)),
-                                      -k1, k1)
-        except Exception as e:
-            print(type(e).__name__ + ":", e)
-            sys.exit()
-
-        return result
-
-    # --------------------------------------------------------------------------
-    # some test outputs (uncomment if needed)
-    # --------------------------------------------------------------------------
-    if test_output:
-        x, y, z = -2.15, 0.3, 0.5
-        r = mp.Vector3(0, y, z)
-
-        print()
-        print("psi :", psi(r, x, params))
-        sys.exit()
-
-    # --------------------------------------------------------------------------
     # display values of physical variables
     # --------------------------------------------------------------------------
     print()
@@ -286,12 +191,14 @@ def main(args):
     eps_averaging = True                  # default: True
     filename_prefix = None
 
+    # specify optical beam
+    beam = op.Gauss2d(x=shift, params=params)
+
     sources = [mp.Source(src=mp.ContinuousSource(frequency=freq, width=0.5),
                          component=mp.Ez if s_pol else mp.Ey,
                          size=mp.Vector3(0, 2, 0),
                          center=mp.Vector3(source_shift, 0, 0),
-                         #amp_func=lambda r: Gauss(r, params)
-                         amp_func=lambda r: psi(r, shift, params)
+                         amp_func=beam.profile
                          )
                ]
 
@@ -388,11 +295,6 @@ if __name__ == '__main__':
                         type=float,
                         default=45,
                         help='incidence angle in degrees (default: %(default)s)')
-
-    parser.add_argument('-test_output',
-                        action='store_true',
-                        default=False,
-                        help='switch to enable test print statements')
 
     args = parser.parse_args()
     main(args)
