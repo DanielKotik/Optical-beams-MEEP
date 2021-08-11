@@ -1,4 +1,24 @@
+
+import cython
+import math
+import sys
+
+if not cython.compiled:
+    from math import (sin as _sin,
+                      cos as _cos,
+                      exp as _exp,
+                      acos as _acos,
+                      atan2 as _atan2)
+    from cmath import (exp as _cexp,
+                       sqrt as _csqrt)
+    from builtins import abs as _abs
+    print("\nPlease consider compiling `%s.py` via Cython: "
+          "`$ cythonize -3 -i %s.py`\n" % (__name__, __name__))
+
+from types import MappingProxyType
+
 from ._helpers import _complex_dblquad
+
 
 class Beam3d:
     """Abstract base class."""
@@ -64,7 +84,8 @@ class Beam3dSpherical(Beam3d):
         cos_theta = _cos(theta)
 
         return sin_theta * cos_theta * self.spectrum(sin_theta, theta, phi) * \
-            _cexp(1j*self._phase(sin_theta, cos_theta, phi, self.x, self._ry, self._rz))
+            _cexp(1j*self._phase(sin_theta, cos_theta,
+                                 phi, self.x, self._ry, self._rz))
 
 
 class Beam3dCartesian(Beam3d):
@@ -211,5 +232,7 @@ class LaguerreGauss3d(Beam3dSpherical):
 
         Implementation for spherical coordinates.
         """
+        return self._f_Gauss_spherical(sin_theta, W_y, k) * theta**_abs(m) * \
+            _cexp(1j*m*phi)
         return self._f_Gauss_spherical(sin_theta, W_y, k) * theta**_abs(m) * \
             _cexp(1j*m*phi)

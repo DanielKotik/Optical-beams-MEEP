@@ -1,3 +1,15 @@
+
+import cython
+import sys
+
+if cython.compiled:
+    from scipy import LowLevelCallable
+
+from scipy.integrate import dblquad
+
+from .beams import Beam3d
+
+
 def _real_2d_func(x, y, func):
     """Return real part of a 2d function."""
     return func(x, y).real
