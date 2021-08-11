@@ -1,3 +1,17 @@
+
+import cython
+import math
+import sys
+
+if not cython.compiled:
+    from math import (exp as _exp,
+                      sqrt as _sqrt)
+    from cmath import exp as _cexp
+    print("\nPlease consider compiling `%s.py` via Cython: "
+          "`$ cythonize -3 -i %s.py`\n" % (__name__, __name__))
+
+from types import MappingProxyType
+
 from ._helpers import _complex_quad
 
 

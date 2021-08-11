@@ -1,3 +1,15 @@
+
+import cython
+import sys
+
+if cython.compiled:
+    from scipy import LowLevelCallable
+
+from scipy.integrate import quad
+
+from .beams import Beam2dCartesian
+
+
 def _real_1d_func(x, func):
     """Return real part of a 1d function."""
     return func(x).real
