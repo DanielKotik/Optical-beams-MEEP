@@ -15,8 +15,8 @@ from types import MappingProxyType
 from ._helpers import _complex_quad
 
 
-class Beam2dCartesian:
-    """..."""
+class Beam2d:
+    """Abstract base class."""
 
     def __init__(self, x, params, called=False):
         """..."""
@@ -32,6 +32,14 @@ class Beam2dCartesian:
         This is a read-only property.
         """
         return self._params
+
+    def _integrand(self, x):
+        """Integrand function over one coordinate x."""
+        raise NotImplementedError
+
+
+class Beam2dCartesian(Beam2d):
+    """..."""
 
     def profile(self, r):
         """Field amplitude function.

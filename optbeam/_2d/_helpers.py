@@ -7,7 +7,7 @@ if cython.compiled:
 
 from scipy.integrate import quad
 
-from .beams import Beam2dCartesian
+from .beams import Beam2d
 
 
 def _real_1d_func(x, func):
@@ -27,7 +27,7 @@ def _imag_1d_func_c(n, arr, func_ptr):
     """
     # pure python formulation of:
     # return (<Beam2dCartesian>func_ptr)(arr[0]).imag
-    return cython.cast(Beam2dCartesian, func_ptr)._integrand(arr[0]).imag
+    return cython.cast(Beam2d, func_ptr)._integrand(arr[0]).imag
 
 
 def _real_1d_func_c(n, arr, func_ptr):
@@ -37,7 +37,7 @@ def _real_1d_func_c(n, arr, func_ptr):
     """
     # pure python formulation of:
     # return (<Beam2dCartesian>func_ptr)(arr[0]).real
-    return cython.cast(Beam2dCartesian, func_ptr)._integrand(arr[0]).real
+    return cython.cast(Beam2d, func_ptr)._integrand(arr[0]).real
 
 
 def _complex_quad(func, a, b, kwargs={}):
