@@ -6,8 +6,7 @@ if cython.compiled:
     from scipy import LowLevelCallable
 
 from scipy.integrate import dblquad
-
-from .beams import Beam3d
+from types import MappingProxyType
 
 
 def _real_2d_func(x, y, func):
@@ -65,3 +64,26 @@ def _complex_dblquad(func, a, b, gfun, hfun, kwargs={}):
             _imag_2d_func, a, b, gfun, hfun, (func,), **kwargs)
 
     return real + 1j*imag, real_tol, imag_tol
+
+
+class Beam3d:
+    """Abstract base class."""
+
+    def __init__(self, x, params, called=False):
+        """..."""
+        self.x = x   # TODO: rename x to x_shift
+        self._k = params['k']
+        self._params = MappingProxyType(params)  # read-only view of a dict
+        self.called = called
+
+    @property
+    def params(self):
+        """Beam specific parameters.
+
+        This is a read-only property.
+        """
+        return self._params
+
+    def _integrand(self, x, y):
+        """Integrand function over two coordinates x and y."""
+        raise NotImplementedError
