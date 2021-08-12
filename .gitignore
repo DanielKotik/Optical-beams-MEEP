@@ -1,8 +1,8 @@
-Airy_2d/Airy2d-out/*
-Laguerre_Gauss_3d/LaguerreGauss3d-out/*
-Gauss_2d/planar/*
-Gauss_2d/concave/*
-Gauss_2d/convex/*
+scripts/Airy_2d/Airy2d-out/*
+scripts/Laguerre_Gauss_3d/LaguerreGauss3d-out/*
+scripts/Gauss_2d/planar/*
+scripts/Gauss_2d/concave/*
+scripts/Gauss_2d/convex/*
 
 ### Jupyter ###
 .ipynb_checkpoints

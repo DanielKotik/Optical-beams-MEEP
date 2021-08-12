@@ -1,12 +1,12 @@
-![concave](Gauss_2d/img/concave_intensity_cropped_rotated_resized.png)
-![planar](Gauss_2d/img/planar_intensity_cropped_rotated_resized.png)
-![convex](Gauss_2d/img/convex_intensity_cropped_rotated_resized.png)
-![Airy](Airy_2d/img/Airy_beam_M_0_W_4_scattering.png)
+![concave](scripts/Gauss_2d/img/concave_intensity_cropped_rotated_resized.png)
+![planar](scripts/Gauss_2d/img/planar_intensity_cropped_rotated_resized.png)
+![convex](scripts/Gauss_2d/img/convex_intensity_cropped_rotated_resized.png)
+![Airy](scripts/Airy_2d/img/Airy_beam_M_0_W_4_scattering.png)
 
-![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_longitudinal_resized.png)
-![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_transverse_resized.png)
-![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_3d_half_resized.png)
-![Airy](Airy_2d/img/Airy_beam_M_0_W_4_free_space.png)
+![snap](scripts/Laguerre_Gauss_3d/img/vortex_beam_m_2_longitudinal_resized.png)
+![snap](scripts/Laguerre_Gauss_3d/img/vortex_beam_m_2_transverse_resized.png)
+![snap](scripts/Laguerre_Gauss_3d/img/vortex_beam_m_2_3d_half_resized.png)
+![Airy](scripts/Airy_2d/img/Airy_beam_M_0_W_4_free_space.png)
 
 # Optical-beams-MEEP
 [![DOI](https://zenodo.org/badge/91711821.svg)](https://zenodo.org/badge/latestdoi/91711821)
