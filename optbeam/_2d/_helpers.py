@@ -6,8 +6,7 @@ if cython.compiled:
     from scipy import LowLevelCallable
 
 from scipy.integrate import quad
-
-from .beams import Beam2d
+from types import MappingProxyType
 
 
 def _real_1d_func(x, func):
@@ -63,3 +62,26 @@ def _complex_quad(func, a, b, kwargs={}):
         imag, imag_tol = quad(_imag_1d_func, a, b, (func,), **kwargs)
 
     return real + 1j*imag, real_tol, imag_tol
+
+
+class Beam2d:
+    """Abstract base class."""
+
+    def __init__(self, x, params, called=False):
+        """..."""
+        self.x = x
+        self._k = params['k']
+        self._params = MappingProxyType(params)  # read-only view of a dict
+        self.called = called
+
+    @property
+    def params(self):
+        """Beam specific parameters.
+
+        This is a read-only property.
+        """
+        return self._params
+
+    def _integrand(self, x):
+        """Integrand function over one coordinate x."""
+        raise NotImplementedError

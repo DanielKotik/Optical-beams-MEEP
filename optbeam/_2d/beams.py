@@ -10,32 +10,7 @@ if not cython.compiled:
     print("\nPlease consider compiling `%s.py` via Cython: "
           "`$ cythonize -3 -i %s.py`\n" % (__name__, __name__))
 
-from types import MappingProxyType
-
-from ._helpers import _complex_quad
-
-
-class Beam2d:
-    """Abstract base class."""
-
-    def __init__(self, x, params, called=False):
-        """..."""
-        self.x = x
-        self._k = params['k']
-        self._params = MappingProxyType(params)  # read-only view of a dict
-        self.called = called
-
-    @property
-    def params(self):
-        """Beam specific parameters.
-
-        This is a read-only property.
-        """
-        return self._params
-
-    def _integrand(self, x):
-        """Integrand function over one coordinate x."""
-        raise NotImplementedError
+from ._helpers import _complex_quad, Beam2d
 
 
 class Beam2dCartesian(Beam2d):
