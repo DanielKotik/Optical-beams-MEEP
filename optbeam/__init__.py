@@ -1,4 +1,6 @@
 
+__version__ = "1.4.2"
+
 from math import (degrees as _degrees,
                   asin as _asin,
                   atan as _atan)
