@@ -9,7 +9,7 @@ authors:
   family-names: Kotik
 - given-names: Jörg
   family-names: Götte
-version: 2.0.1
+version: 2.0.2
 date-released: 2021-08-15
 repository-code: https://github.com/DanielKotik/Optical-beams-MEEP
 license: MIT
