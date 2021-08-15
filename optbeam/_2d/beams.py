@@ -16,7 +16,7 @@ if cython and not cython.compiled:
     print("\nPlease consider compiling `%s.py` via Cython: "
           "`$ cythonize -3 -i %s.py`\n" % (__name__, __name__))
 
-from ._helpers import _complex_quad, Beam2d
+from .helpers import _complex_quad, Beam2d
 
 
 class Beam2dCartesian(Beam2d):
