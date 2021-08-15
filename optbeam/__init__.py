@@ -1,5 +1,5 @@
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 from math import (degrees as _degrees,
                   asin as _asin,
