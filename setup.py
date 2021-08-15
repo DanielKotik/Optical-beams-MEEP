@@ -7,6 +7,10 @@ with open("README.md") as f:
 with open("LICENSE") as f:
     license = f.read()
 
+extras = {
+    'dev': ['bump2version'],
+}
+
 setup(
     name="optbeam",
     version="1.4.2",
@@ -21,4 +25,5 @@ setup(
     packages=find_packages(exclude=("scripts")),
     include_package_data=True,
     install_requires=["scipy"],
+    extras_require=extras,
 )
