@@ -13,7 +13,7 @@ extras = {
 
 setup(
     name="optbeam",
-    version="1.4.2",
+    version="2.0.0",
     description=("Simulation of reflection and refraction of polarized "
                  "opticial beams at plane and curved dielectric interfaces"),
     long_description=readme,
