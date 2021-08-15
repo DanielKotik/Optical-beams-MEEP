@@ -1,12 +1,12 @@
-![concave](Gauss_2d/img/concave_intensity_cropped_rotated_resized.png)
-![planar](Gauss_2d/img/planar_intensity_cropped_rotated_resized.png)
-![convex](Gauss_2d/img/convex_intensity_cropped_rotated_resized.png)
-![Airy](Airy_2d/img/Airy_beam_M_0_W_4_scattering.png)
+![concave](scripts/Gauss_2d/img/concave_intensity_cropped_rotated_resized.png)
+![planar](scripts/Gauss_2d/img/planar_intensity_cropped_rotated_resized.png)
+![convex](scripts/Gauss_2d/img/convex_intensity_cropped_rotated_resized.png)
+![Airy](scripts/Airy_2d/img/Airy_beam_M_0_W_4_scattering.png)
 
-![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_longitudinal_resized.png)
-![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_transverse_resized.png)
-![snap](Laguerre_Gauss_3d/img/vortex_beam_m_2_3d_half_resized.png)
-![Airy](Airy_2d/img/Airy_beam_M_0_W_4_free_space.png)
+![snap](scripts/Laguerre_Gauss_3d/img/vortex_beam_m_2_longitudinal_resized.png)
+![snap](scripts/Laguerre_Gauss_3d/img/vortex_beam_m_2_transverse_resized.png)
+![snap](scripts/Laguerre_Gauss_3d/img/vortex_beam_m_2_3d_half_resized.png)
+![Airy](scripts/Airy_2d/img/Airy_beam_M_0_W_4_free_space.png)
 
 # Optical-beams-MEEP
 [![DOI](https://zenodo.org/badge/91711821.svg)](https://zenodo.org/badge/latestdoi/91711821)
@@ -31,8 +31,19 @@ Originally, these files have been used in studying optical beam shifts providing
 We highly recommend to install the parallel version of PyMeep via Conda:
 
 ```shell
-$ conda create -n pmp -c conda-forge pymeep=*=mpi_mpich_*
+# create conda virtual environment "pmp"
+$ conda create -n pmp -c conda-forge pymeep=*=mpi_mpich_* scipy
+
+# next command is optional, but recommended to enforce environment isolation (no local
+# user site packages in conda environment that may shadow conda installed dependencies)
+$ conda env config vars set PYTHONNOUSERSITE=True -n pmp
+
+# activate environment
 $ conda activate pmp
+
+# install optbeam package inside environment (-e flag is optional; it makes an
+# editable install for developers)
+$ python -m pip install [-e] .
 ```
 
 For detailed installation instructions, see the [Meep documentation](https://meep.readthedocs.io/en/latest/Installation/#conda-packages).
