@@ -31,8 +31,19 @@ Originally, these files have been used in studying optical beam shifts providing
 We highly recommend to install the parallel version of PyMeep via Conda:
 
 ```shell
-$ conda create -n pmp -c conda-forge pymeep=*=mpi_mpich_*
+# create conda virtual environment "pmp"
+$ conda create -n pmp -c conda-forge pymeep=*=mpi_mpich_* scipy
+
+# next command is optional, but recommended to enforce environment isolation (no local
+# user site packages in conda environment that may shadow conda installed dependencies)
+$ conda env config vars set PYTHONNOUSERSITE=True -n pmp
+
+# activate environment
 $ conda activate pmp
+
+# install optbeam package inside environment (-e flag is optional; it makes an
+# editable install for developers)
+$ python -m pip install [-e] .
 ```
 
 For detailed installation instructions, see the [Meep documentation](https://meep.readthedocs.io/en/latest/Installation/#conda-packages).
