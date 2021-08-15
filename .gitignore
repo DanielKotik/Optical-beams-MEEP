@@ -120,3 +120,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Virtual environment created via python -m venv optbeam-env
+optbeam-env
