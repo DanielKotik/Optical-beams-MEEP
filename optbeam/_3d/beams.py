@@ -1,9 +1,13 @@
 
-import cython
 import math
 import sys
 
-if not cython.compiled:
+try:
+    import cython
+except ModuleNotFoundError:
+    cython = None
+
+if not cython or not cython.compiled:
     from math import (sin as _sin,
                       cos as _cos,
                       exp as _exp,
@@ -12,6 +16,8 @@ if not cython.compiled:
     from cmath import (exp as _cexp,
                        sqrt as _csqrt)
     from builtins import abs as _abs
+
+if cython and not cython.compiled:
     print("\nPlease consider compiling `%s.py` via Cython: "
           "`$ cythonize -3 -i %s.py`\n" % (__name__, __name__))
 
@@ -34,7 +40,8 @@ class Beam3dSpherical(Beam3d):
         try:
             (result,
              real_tol,
-             imag_tol) = _complex_dblquad(self if cython.compiled else self._integrand,
+             imag_tol) = _complex_dblquad(self if cython and cython.compiled
+                                          else self._integrand,
                                           0, 2*math.pi, 0, math.pi/2)
         except Exception as e:
             print(type(e).__name__ + ":", e)
@@ -79,7 +86,8 @@ class Beam3dCartesian(Beam3d):
         try:
             (result,
              real_tol,
-             imag_tol) = _complex_dblquad(self if cython.compiled else self._integrand,
+             imag_tol) = _complex_dblquad(self if cython
+                                          and cython.compiled else self._integrand,
                                           -self._k, self._k, -self._k, self._k)
         except Exception as e:
             print(type(e).__name__ + ":", e)

@@ -1,9 +1,17 @@
 
-import cython
 import sys
 
-if cython.compiled:
-    from scipy import LowLevelCallable
+try:
+    import cython
+except ModuleNotFoundError:
+    cython = None
+
+if cython:
+    if cython.compiled:
+        from scipy import LowLevelCallable
+    else:
+        print("\nPlease consider compiling `%s.py` via Cython: "
+              "`$ cythonize -3 -i %s.py`\n" % (__name__, __name__))
 
 from scipy.integrate import dblquad
 from types import MappingProxyType
@@ -41,7 +49,7 @@ def _real_2d_func_c(n, arr, func_ptr):
 
 def _complex_dblquad(func, a, b, gfun, hfun, kwargs={}):
     """Integrate real and imaginary part of the given function."""
-    if cython.compiled:
+    if cython and cython.compiled:
         # pure python formulation of: cdef void *f_ptr = <void*>func
         f_ptr = cython.declare(cython.p_void, cython.cast(cython.p_void, func))
 

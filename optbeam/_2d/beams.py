@@ -1,12 +1,18 @@
 
-import cython
 import math
 import sys
 
-if not cython.compiled:
+try:
+    import cython
+except ModuleNotFoundError:
+    cython = None
+
+if not cython or not cython.compiled:
     from math import (exp as _exp,
                       sqrt as _sqrt)
     from cmath import exp as _cexp
+
+if cython and not cython.compiled:
     print("\nPlease consider compiling `%s.py` via Cython: "
           "`$ cythonize -3 -i %s.py`\n" % (__name__, __name__))
 
@@ -33,7 +39,8 @@ class Beam2dCartesian(Beam2d):
         try:
             (result,
              real_tol,
-             imag_tol) = _complex_quad(self if cython.compiled else self._integrand,
+             imag_tol) = _complex_quad(self if cython
+                                       and cython.compiled else self._integrand,
                                        -self._k, self._k)
         except Exception as e:
             print(type(e).__name__ + ":", e)
