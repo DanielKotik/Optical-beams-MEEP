@@ -217,5 +217,3 @@ class LaguerreGauss3d(Beam3dSpherical):
         """
         return self._f_Gauss_spherical(sin_theta, W_y, k) * theta**_abs(m) * \
             _cexp(1j*m*phi)
-        return self._f_Gauss_spherical(sin_theta, W_y, k) * theta**_abs(m) * \
-            _cexp(1j*m*phi)
