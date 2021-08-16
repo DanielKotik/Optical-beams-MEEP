@@ -32,7 +32,9 @@ cdef class Beam3dSpherical(Beam3d):
 
     cdef double _phase(self, double sin_theta, double cos_theta, double phi,
                        double x, double y, double z) nogil
+    # TODO: check if next line is actually needed since we can declared in Beam3d
     cdef double complex spectrum(self, double sin_theta, double theta, double phi) nogil
+    # TODO: check if next line is actually needed since it is declared in Beam3d
     cdef double complex _integrand(self, double theta, double phi) nogil
 
 cdef class Beam3dCartesian(Beam3d):
