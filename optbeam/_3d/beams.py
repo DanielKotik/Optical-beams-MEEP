@@ -4,10 +4,12 @@ import sys
 
 try:
     import cython
+    cython_imported = True
 except ModuleNotFoundError:
-    cython = None
+    cython_imported = False
 
-if not cython or not cython.compiled:
+# TODO: check if conditional statement is needed at all
+if not cython_imported or not cython.compiled:
     from math import (sin as _sin,
                       cos as _cos,
                       exp as _exp,
@@ -16,12 +18,12 @@ if not cython or not cython.compiled:
     from cmath import (exp as _cexp,
                        sqrt as _csqrt)
     from builtins import abs as _abs
+    from .helpers import Beam3d, _complex_dblquad
 
-if cython and not cython.compiled:
+
+if cython_imported and not cython.compiled:
     print("\nPlease consider compiling `%s.py` via Cython: "
           "`$ cythonize -3 -i %s.py`\n" % (__name__, __name__))
-
-from .helpers import _complex_dblquad, Beam3d
 
 
 class Beam3dSpherical(Beam3d):
@@ -215,7 +217,5 @@ class LaguerreGauss3d(Beam3dSpherical):
 
         Implementation for spherical coordinates.
         """
-        return self._f_Gauss_spherical(sin_theta, W_y, k) * theta**_abs(m) * \
-            _cexp(1j*m*phi)
         return self._f_Gauss_spherical(sin_theta, W_y, k) * theta**_abs(m) * \
             _cexp(1j*m*phi)

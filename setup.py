@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+from Cython.Build import cythonize
 
 
 with open("README.md") as f:
@@ -13,7 +14,7 @@ extras = {
 
 setup(
     name="optbeam",
-    version="2.0.2",
+    version="2.0.3",
     description=("Simulation of reflection and refraction of polarized "
                  "opticial beams at plane and curved dielectric interfaces"),
     long_description=readme,
@@ -23,7 +24,12 @@ setup(
     author_email="kotik@physics.org",
     license=license,
     packages=find_packages(exclude=("scripts")),
+    ext_modules=cythonize("optbeam/_2d/*.py",
+                          "optbeam/_3d/*.py",
+                          force=True,
+                          compiler_directives={'language_level': 3}),
+    zip_safe=False,
     include_package_data=True,
-    install_requires=["scipy"],
+    install_requires=["scipy", "cython"],
     extras_require=extras,
 )
