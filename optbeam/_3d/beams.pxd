@@ -1,7 +1,4 @@
-from cpython.pycapsule cimport PyCapsule_New
-
-from .helpers cimport _complex_dblquad, Beam3d
-
+from .helpers cimport Beam3d, _complex_dblquad
 
 # -----------------------------------------------------------------------------
 # declare C functions as "cpdef" to export them to the module
