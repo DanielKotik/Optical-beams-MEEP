@@ -3,10 +3,11 @@ import sys
 
 try:
     import cython
+    cython_imported = True
 except ModuleNotFoundError:
-    cython = None
+    cython_imported = False
 
-if cython:
+if cython_imported:
     if cython.compiled:
         from scipy import LowLevelCallable
     else:
@@ -49,7 +50,7 @@ def _real_1d_func_c(n, arr, func_ptr):
 
 def _complex_quad(func, a, b, kwargs={}):
     """Integrate real and imaginary part of the given function."""
-    if cython and cython.compiled:
+    if cython_imported and cython.compiled:
         # pure python formulation of: cdef void *f_ptr = <void*>func
         f_ptr = cython.declare(cython.p_void, cython.cast(cython.p_void, func))
 
