@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+from Cython.Build import cythonize
 
 
 with open("README.md") as f:
@@ -23,7 +24,11 @@ setup(
     author_email="kotik@physics.org",
     license=license,
     packages=find_packages(exclude=("scripts")),
+    ext_modules=cythonize("optbeam/_3d/*.py",
+                          force=True,
+                          compiler_directives={'language_level': 3}),
+    zip_safe=False,
     include_package_data=True,
-    install_requires=["scipy"],
+    install_requires=["scipy", "cython"],
     extras_require=extras,
 )
