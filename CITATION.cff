@@ -3,7 +3,7 @@
 cff-version: 1.0.3
 message: If you use this software, please cite it using these metadata.
 title: 'Optical-beams-MEEP'
-doi: 10.5281/zenodo.3691799
+doi: 10.5281/zenodo.2631828 # This DOI represents all versions, and will always resolve to the latest one.
 authors:
 - given-names: Daniel
   family-names: Kotik
