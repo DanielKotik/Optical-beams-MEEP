@@ -28,8 +28,8 @@ The provided files (and features) are:
 
 Originally, these files have been used in studying optical beam shifts providing independent numerical simulations. With regards to their scriptability, together with the ease and widespread use of the powerful [Meep](https://github.com/stevengj/meep) tool, these scripts can easily be adapted to other and possibly more complicated beam/interface setups.
 
-## Installation
-We highly recommend to install the parallel version of PyMeep via Conda:
+## Installation of PyMeep and optbeam
+We highly recommend to install the _parallel_ version of PyMeep via Conda:
 
 ```shell
 # create conda virtual environment "pmp"
@@ -39,16 +39,16 @@ $ conda create -n pmp -c conda-forge pymeep=*=mpi_mpich_* scipy cython
 # user site packages in conda environment that may shadow conda installed dependencies)
 $ conda env config vars set PYTHONNOUSERSITE=True -n pmp
 
-# activate environment
+# activate conda environment
 $ conda activate pmp
 
-# install optbeam package inside environment
-$ python -m pip install .
+# install optbeam package inside conda environment
+$ python3 -m pip install .
 ```
 
-For detailed installation instructions, see the [Meep documentation](https://meep.readthedocs.io/en/latest/Installation/#conda-packages).
+For detailed installation instructions of PyMeep using the Conda package manager, see the [Meep documentation](https://meep.readthedocs.io/en/latest/Installation/#conda-packages).
 
-## Invocation
+## Invocation of scripts
 A Scheme (extension ``.ctl``) or Python configuration file (extension `.py`) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, for example by executing commands like (notice the single quotes to specify strings and Scheme expressions):
 
 ```shell
@@ -59,7 +59,7 @@ $ mpirun -quiet -np X meep-mpi interface='"concave"' Gauss2d.ctl
 $ mpirun -quiet -np X python3 Gauss2d.py -interface concave
 ```
 
-or some other example
+or another example
 
 ```shell
 # Scheme
