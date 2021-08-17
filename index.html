@@ -241,15 +241,26 @@ defined in expressions beginning with <code class="docutils literal notranslate"
 <p>The generated HDF5 files can be processed by different visualisation tools. To get a quick impression of the data
 <a class="reference external" href="https://github.com/stevengj/meep">Meep</a> comes bundled with the <a class="reference external" href="https://github.com/stevengj/h5utils">h5utils</a>
 programs. Utilising these tools, visualisation is fairly easy performed by issuing for example the following commands:</p>
-<p><em>for 2d simulations</em>
-<code class="docutils literal notranslate"><span class="pre">h5topng</span> <span class="pre">-S2</span> <span class="pre">-Zc</span> <span class="pre">dkbluered</span> <span class="pre">-a</span> <span class="pre">gray</span> <span class="pre">-A</span> <span class="pre">eps-000000000.h5</span> <span class="pre">ez-000003696.h5</span></code> (real part of the field pattern, optical
-denser material is shaded in grey)</p>
-<p><code class="docutils literal notranslate"><span class="pre">h5topng</span> <span class="pre">-S2</span> <span class="pre">-c</span> <span class="pre">hot</span> <span class="pre">-a</span> <span class="pre">yarg</span> <span class="pre">-A</span> <span class="pre">eps-000000000.h5</span> <span class="pre">e2_s-000003696.h5</span></code> (intensity distribution, optical
-denser material is shaded in grey)</p>
-<p><em>for 3d simulations</em>
-<code class="docutils literal notranslate"><span class="pre">h5topng</span> <span class="pre">-S2</span> <span class="pre">-0</span> <span class="pre">-z</span> <span class="pre">0</span>&#160; <span class="pre">-c</span> <span class="pre">hot</span> <span class="pre">e_real2_p-000001500.h5</span></code> (slice within the plane of incidence)</p>
-<p><code class="docutils literal notranslate"><span class="pre">h5topng</span> <span class="pre">-S2</span> <span class="pre">-x</span> <span class="pre">INDEX</span> <span class="pre">-c</span> <span class="pre">hot</span> <span class="pre">e_real2_p-000001500.h5</span></code> (slice transversal to the incident propagation axis with INDEX specifying the slice index)</p>
-<p><code class="docutils literal notranslate"><span class="pre">h5tovtk</span> <span class="pre">e_real2_p-000001500.h5</span></code> (creates a VTK file to be opened by e.g. the <a class="reference external" href="https://github.com/enthought/mayavi">MayaVi</a> or <a class="reference external" href="https://github.com/Kitware/ParaView">ParaView</a> visualisation application)</p>
+<p><em>for 2d simulations:</em></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># real part of the field pattern, optical denser material is shaded in grey</span>
+$ h5topng -S2 -Zc dkbluered -a gray -A eps-000000000.h5 ez-000003696.h5
+
+<span class="c1"># intensity distribution, optical denser material is shaded in grey</span>
+$ h5topng -S2 -c hot -a yarg -A eps-000000000.h5 e2_s-000003696.h5
+</pre></div>
+</div>
+<p><em>for 3d simulations:</em></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># slice within the plane of incidence</span>
+$ h5topng -S2 -0 -z <span class="m">0</span>  -c hot e_real2_p-000001500.h5
+
+<span class="c1"># slice transversal to the incident propagation axis with INDEX specifying the slice index</span>
+$ h5topng -S2 -x INDEX -c hot e_real2_p-000001500.h5
+
+<span class="c1"># create a VTK file</span>
+$ h5tovtk e_real2_p-000001500.h5
+</pre></div>
+</div>
+<p>A VTK file can be opened by e.g. the <a class="reference external" href="https://github.com/enthought/mayavi">MayaVi</a> or <a class="reference external" href="https://github.com/Kitware/ParaView">ParaView</a> visualisation application.</p>
 <p>The <a class="reference external" href="https://meep.readthedocs.io/en/latest/Scheme_Tutorials/Basics/">Meep Scheme tutorial</a> provides further useful
 information and assistance.
 For a more detailed explanation of our configuration files and the physical background, please see my dissertation thesis. Coming soon.</p>
