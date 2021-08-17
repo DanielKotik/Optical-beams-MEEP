@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Welcome to Optical-beams-MEEP’s documentation! &mdash; Optical-beams-MEEP  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> Optical-beams-MEEP
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Welcome to Optical-beams-MEEP’s documentation!</a></li>
+<li><a class="reference internal" href="#optical-beams-meep">Optical-beams-MEEP</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#invocation">Invocation</a></li>
+<li><a class="reference internal" href="#visualisation">Visualisation</a></li>
+<li><a class="reference internal" href="#supported-beams-interfaces-and-polarisation-configurations">Supported beams, interfaces and polarisation configurations</a></li>
+<li><a class="reference internal" href="#citing">Citing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Optical-beams-MEEP</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Welcome to Optical-beams-MEEP’s documentation!</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            
+              <a href="https://github.com//DanielKotik/Optical-beams-MEEP/blob/develop/docs/source/index.md" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="tex2jax_ignore mathjax_ignore section" id="welcome-to-optical-beams-meep-s-documentation">
+<h1>Welcome to Optical-beams-MEEP’s documentation!<a class="headerlink" href="#welcome-to-optical-beams-meep-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p><img alt="concave" src="_images/concave_intensity_cropped_rotated_resized.png" />
+<img alt="planar" src="_images/planar_intensity_cropped_rotated_resized.png" />
+<img alt="convex" src="_images/convex_intensity_cropped_rotated_resized.png" />
+<img alt="Airy" src="_images/Airy_beam_M_0_W_4_scattering.png" /></p>
+<p><img alt="snap" src="_images/vortex_beam_m_2_longitudinal_resized.png" />
+<img alt="snap" src="_images/vortex_beam_m_2_transverse_resized.png" />
+<img alt="snap" src="_images/vortex_beam_m_2_3d_half_resized.png" />
+<img alt="Airy" src="_images/Airy_beam_M_0_W_4_free_space.png" /></p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="optical-beams-meep">
+<h1>Optical-beams-MEEP<a class="headerlink" href="#optical-beams-meep" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://zenodo.org/badge/latestdoi/91711821"><img alt="DOI" src="https://zenodo.org/badge/91711821.svg" /></a>
+<a class="reference external" href="https://mybinder.org/v2/gh/DanielKotik/Optical-beams-MEEP/master?filepath=beam_profiles.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
+<a class="reference external" href="https://img.shields.io/badge/PyMeep-1.12.0-success"><img alt="PyMeep" src="https://img.shields.io/badge/PyMeep-1.12.0-success" /></a>
+<a class="reference external" href="https://github.com/NanoComp/meep"><img alt="Meep" src="https://img.shields.io/badge/Meep-1.7.0-success" /></a>
+<a class="reference external" href="https://github.com/NanoComp/libctl/"><img alt="libctl" src="https://img.shields.io/badge/libctl-4.1.4-success" /></a>
+<a class="reference external" href="https://www.gnu.org/software/guile/"><img alt="Guile" src="https://img.shields.io/badge/Guile-2.2.3--4-success" /></a></p>
+<p>FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces based on <a class="reference external" href="https://github.com/stevengj/meep">Meep</a> as underlying FDTD simulation software package. A mathematical description of the currently implemented beam profiles is outlined in this <a class="reference external" href="https://github.com/DanielKotik/Optical-beams-MEEP/blob/master/beam_profiles.ipynb">Jupyter notebook</a>.</p>
+<p>The provided files (and features) are:</p>
+<ul class="simple">
+<li><p>Scheme/Python configuration files for Gaussian beams (2d) impinging upon planar, concave and convex dielectric interfaces</p></li>
+<li><p>Scheme/Python configuration file for Laguerre-Gaussian (vortex) beams (3d) impinging upon a planar dielectric interface</p></li>
+<li><p>Scheme/Python configuration file for Airy beams (2d) impinging upon a planar dielectric interface</p></li>
+<li><p>Python scripts for enhanced visualisation and analysis of the generated HDF5 output files</p></li>
+<li><p>The waist/focus of the beams can be placed anywhere along the propagation direction - independently of the location of the source current distribution</p></li>
+</ul>
+<p>Originally, these files have been used in studying optical beam shifts providing independent numerical simulations. With regards to their scriptability, together with the ease and widespread use of the powerful <a class="reference external" href="https://github.com/stevengj/meep">Meep</a> tool, these scripts can easily be adapted to other and possibly more complicated beam/interface setups.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>We highly recommend to install the parallel version of PyMeep via Conda:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># create conda virtual environment &quot;pmp&quot;</span>
+$ conda create -n pmp -c conda-forge <span class="nv">pymeep</span><span class="o">=</span>*<span class="o">=</span>mpi_mpich_* scipy cython
+
+<span class="c1"># next command is optional, but recommended to enforce environment isolation (no local</span>
+<span class="c1"># user site packages in conda environment that may shadow conda installed dependencies)</span>
+$ conda env config vars <span class="nb">set</span> <span class="nv">PYTHONNOUSERSITE</span><span class="o">=</span>True -n pmp
+
+<span class="c1"># activate environment</span>
+$ conda activate pmp
+
+<span class="c1"># install optbeam package inside environment</span>
+$ python -m pip install .
+</pre></div>
+</div>
+<p>For detailed installation instructions, see the <a class="reference external" href="https://meep.readthedocs.io/en/latest/Installation/#conda-packages">Meep documentation</a>.</p>
+</div>
+<div class="section" id="invocation">
+<h2>Invocation<a class="headerlink" href="#invocation" title="Permalink to this headline">¶</a></h2>
+<p>A Scheme (extension <code class="docutils literal notranslate"><span class="pre">.ctl</span></code>) or Python configuration file (extension <code class="docutils literal notranslate"><span class="pre">.py</span></code>) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, for example by executing commands like (notice the single quotes to specify strings and Scheme expressions):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scheme</span>
+$ mpirun -quiet -np X meep-mpi <span class="nv">interface</span><span class="o">=</span><span class="s1">&#39;&quot;concave&quot;&#39;</span> Gauss2d.ctl
+
+<span class="c1"># Python</span>
+$ mpirun -quiet -np X python3 Gauss2d.py -interface concave
+</pre></div>
+</div>
+<p>or some other example</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scheme</span>
+$ mpirun -quiet -np X meep-mpi <span class="nv">n2</span><span class="o">=</span><span class="m">1</span>.5 <span class="nv">e_z</span><span class="o">=</span><span class="s1">&#39;(/ 1+1i 2)&#39;</span> <span class="nv">e_y</span><span class="o">=</span><span class="s1">&#39;(/ 1-1i 2)&#39;</span> LaguerreGauss3d.ctl
+
+<span class="c1"># Python</span>
+$ mpirun -quiet -np X python3 LaguerreGauss3d.py -n2 <span class="m">1</span>.5 -e_z <span class="s2">&quot;(1+1j)/2&quot;</span> -e_y <span class="s2">&quot;(1-1j)/2&quot;</span>
+</pre></div>
+</div>
+<p>with <code class="docutils literal notranslate"><span class="pre">X</span></code> indicating the number of cores. All possible Meep parameters that can be set from the command line are
+defined in expressions beginning with <code class="docutils literal notranslate"><span class="pre">(define-param</span> <span class="pre">...</span></code> in the respective Scheme configuration files.</p>
+</div>
+<div class="section" id="visualisation">
+<h2>Visualisation<a class="headerlink" href="#visualisation" title="Permalink to this headline">¶</a></h2>
+<p>The generated HDF5 files can be processed by different visualisation tools. To get a quick impression of the data
+<a class="reference external" href="https://github.com/stevengj/meep">Meep</a> comes bundled with the <a class="reference external" href="https://github.com/stevengj/h5utils">h5utils</a>
+programs. Utilising these tools, visualisation is fairly easy performed by issuing for example the following commands:</p>
+<p><em>for 2d simulations</em>
+<code class="docutils literal notranslate"><span class="pre">h5topng</span> <span class="pre">-S2</span> <span class="pre">-Zc</span> <span class="pre">dkbluered</span> <span class="pre">-a</span> <span class="pre">gray</span> <span class="pre">-A</span> <span class="pre">eps-000000000.h5</span> <span class="pre">ez-000003696.h5</span></code> (real part of the field pattern, optical
+denser material is shaded in grey)</p>
+<p><code class="docutils literal notranslate"><span class="pre">h5topng</span> <span class="pre">-S2</span> <span class="pre">-c</span> <span class="pre">hot</span> <span class="pre">-a</span> <span class="pre">yarg</span> <span class="pre">-A</span> <span class="pre">eps-000000000.h5</span> <span class="pre">e2_s-000003696.h5</span></code> (intensity distribution, optical
+denser material is shaded in grey)</p>
+<p><em>for 3d simulations</em>
+<code class="docutils literal notranslate"><span class="pre">h5topng</span> <span class="pre">-S2</span> <span class="pre">-0</span> <span class="pre">-z</span> <span class="pre">0</span>&#160; <span class="pre">-c</span> <span class="pre">hot</span> <span class="pre">e_real2_p-000001500.h5</span></code> (slice within the plane of incidence)</p>
+<p><code class="docutils literal notranslate"><span class="pre">h5topng</span> <span class="pre">-S2</span> <span class="pre">-x</span> <span class="pre">INDEX</span> <span class="pre">-c</span> <span class="pre">hot</span> <span class="pre">e_real2_p-000001500.h5</span></code> (slice transversal to the incident propagation axis with INDEX specifying the slice index)</p>
+<p><code class="docutils literal notranslate"><span class="pre">h5tovtk</span> <span class="pre">e_real2_p-000001500.h5</span></code> (creates a VTK file to be opened by e.g. the <a class="reference external" href="https://github.com/enthought/mayavi">MayaVi</a> or <a class="reference external" href="https://github.com/Kitware/ParaView">ParaView</a> visualisation application)</p>
+<p>The <a class="reference external" href="https://meep.readthedocs.io/en/latest/Scheme_Tutorials/Basics/">Meep Scheme tutorial</a> provides further useful
+information and assistance.
+For a more detailed explanation of our configuration files and the physical background, please see my dissertation thesis. Coming soon.</p>
+</div>
+<div class="section" id="supported-beams-interfaces-and-polarisation-configurations">
+<h2>Supported beams, interfaces and polarisation configurations<a class="headerlink" href="#supported-beams-interfaces-and-polarisation-configurations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>[x] Gaussian beams (2d), planar, s- and p-polarisation</p></li>
+<li><p>[x] Gaussian beams (2d), concave, s- and p-polarisation</p></li>
+<li><p>[x] Gaussian beams (2d), convex, s- and p-polarisation</p></li>
+<li><p>[x] Laguerre-Gaussian (vortex) beams (3d), planar, arbitrary complex polarisation</p></li>
+<li><p>[x] Airy beams (2d), planar, s- and p-polarisation</p></li>
+</ul>
+</div>
+<div class="section" id="citing">
+<h2>Citing<a class="headerlink" href="#citing" title="Permalink to this headline">¶</a></h2>
+<p>If you use code from this repository in a published work, please cite the DOI
+corresponding to the specific version of <strong>Optical-beams-MEEP</strong> that you used
+(DOIs are listed at <a class="reference external" href="https://zenodo.org/">Zenodo.org</a>).</p>
+</div>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Daniel Kotik.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
