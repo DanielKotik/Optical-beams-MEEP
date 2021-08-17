@@ -59,6 +59,10 @@ source_suffix = {
     '.md': 'markdown',
 }
 
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None),
+                       'scipy': ('https://docs.scipy.org/doc/scipy/', None),
+                       }
+
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
 
