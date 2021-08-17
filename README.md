@@ -15,6 +15,7 @@
 [![Meep](https://img.shields.io/badge/Meep-1.7.0-success)](https://github.com/NanoComp/meep)
 [![libctl](https://img.shields.io/badge/libctl-4.1.4-success)](https://github.com/NanoComp/libctl/)
 [![Guile](https://img.shields.io/badge/Guile-2.2.3--4-success)](https://www.gnu.org/software/guile/)
+[![docs](https://github.com/DanielKotik/Optical-beams-MEEP/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/DanielKotik/Optical-beams-MEEP/actions/workflows/gh-pages.yml)
 
 FDTD simulation of reflection and refraction of polarised optical beams at plane and curved dielectric interfaces based on [Meep](https://github.com/stevengj/meep) as underlying FDTD simulation software package. A mathematical description of the currently implemented beam profiles is outlined in this [Jupyter notebook](https://github.com/DanielKotik/Optical-beams-MEEP/blob/master/beam_profiles.ipynb).
 
