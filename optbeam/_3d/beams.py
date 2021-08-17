@@ -42,7 +42,7 @@ class Beam3dSpherical(Beam3d):
         try:
             (result,
              real_tol,
-             imag_tol) = _complex_dblquad(self if cython and cython.compiled
+             imag_tol) = _complex_dblquad(self if cython_imported and cython.compiled
                                           else self._integrand,
                                           0, 2*math.pi, 0, math.pi/2)
         except Exception as e:
@@ -88,8 +88,8 @@ class Beam3dCartesian(Beam3d):
         try:
             (result,
              real_tol,
-             imag_tol) = _complex_dblquad(self if cython
-                                          and cython.compiled else self._integrand,
+             imag_tol) = _complex_dblquad(self if cython_imported and cython.compiled
+                                          else self._integrand,
                                           -self._k, self._k, -self._k, self._k)
         except Exception as e:
             print(type(e).__name__ + ":", e)
