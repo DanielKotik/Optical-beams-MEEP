@@ -89,8 +89,8 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">Welcome to Optical-beams-MEEP’s documentation!</a></li>
 <li><a class="reference internal" href="#optical-beams-meep">Optical-beams-MEEP</a><ul>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#invocation">Invocation</a></li>
+<li><a class="reference internal" href="#installation-of-pymeep-and-optbeam">Installation of PyMeep and optbeam</a></li>
+<li><a class="reference internal" href="#invocation-of-scripts">Invocation of scripts</a></li>
 <li><a class="reference internal" href="#visualisation">Visualisation</a></li>
 <li><a class="reference internal" href="#supported-beams-interfaces-and-polarisation-configurations">Supported beams, interfaces and polarisation configurations</a></li>
 <li><a class="reference internal" href="#citing">Citing</a></li>
@@ -196,9 +196,9 @@
 <li><p>The waist/focus of the beams can be placed anywhere along the propagation direction - independently of the location of the source current distribution</p></li>
 </ul>
 <p>Originally, these files have been used in studying optical beam shifts providing independent numerical simulations. With regards to their scriptability, together with the ease and widespread use of the powerful <a class="reference external" href="https://github.com/stevengj/meep">Meep</a> tool, these scripts can easily be adapted to other and possibly more complicated beam/interface setups.</p>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>We highly recommend to install the parallel version of PyMeep via Conda:</p>
+<div class="section" id="installation-of-pymeep-and-optbeam">
+<h2>Installation of PyMeep and optbeam<a class="headerlink" href="#installation-of-pymeep-and-optbeam" title="Permalink to this headline">¶</a></h2>
+<p>We highly recommend to install the <em>parallel</em> version of PyMeep via Conda:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># create conda virtual environment &quot;pmp&quot;</span>
 $ conda create -n pmp -c conda-forge <span class="nv">pymeep</span><span class="o">=</span>*<span class="o">=</span>mpi_mpich_* scipy cython
 
@@ -206,17 +206,17 @@ $ conda create -n pmp -c conda-forge <span class="nv">pymeep</span><span class="
 <span class="c1"># user site packages in conda environment that may shadow conda installed dependencies)</span>
 $ conda env config vars <span class="nb">set</span> <span class="nv">PYTHONNOUSERSITE</span><span class="o">=</span>True -n pmp
 
-<span class="c1"># activate environment</span>
+<span class="c1"># activate conda environment</span>
 $ conda activate pmp
 
-<span class="c1"># install optbeam package inside environment</span>
+<span class="c1"># install optbeam package inside conda environment</span>
 $ python -m pip install .
 </pre></div>
 </div>
-<p>For detailed installation instructions, see the <a class="reference external" href="https://meep.readthedocs.io/en/latest/Installation/#conda-packages">Meep documentation</a>.</p>
+<p>For detailed installation instructions of PyMeep using the Conda package manager, see the <a class="reference external" href="https://meep.readthedocs.io/en/latest/Installation/#conda-packages">Meep documentation</a>.</p>
 </div>
-<div class="section" id="invocation">
-<h2>Invocation<a class="headerlink" href="#invocation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="invocation-of-scripts">
+<h2>Invocation of scripts<a class="headerlink" href="#invocation-of-scripts" title="Permalink to this headline">¶</a></h2>
 <p>A Scheme (extension <code class="docutils literal notranslate"><span class="pre">.ctl</span></code>) or Python configuration file (extension <code class="docutils literal notranslate"><span class="pre">.py</span></code>) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, for example by executing commands like (notice the single quotes to specify strings and Scheme expressions):</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scheme</span>
 $ mpirun -quiet -np X meep-mpi <span class="nv">interface</span><span class="o">=</span><span class="s1">&#39;&quot;concave&quot;&#39;</span> Gauss2d.ctl
