@@ -10,6 +10,28 @@ on:
       - develop
 
 jobs:
+  python-style-checks:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Upgrade pip
+        run: python3 -m pip install --upgrade pip
+
+      - name: Install dependencies
+        run: pip install -qU pydocstyle flake8
+
+      - name: Check docstrings
+        run: pydocstyle --convention=numpy optbeam
+
+      - name: Lint with flake8
+        run: flake8 optbeam --count --show-source --statistics
   build-and-deploy-pages:
     runs-on: ubuntu-18.04
     steps:
