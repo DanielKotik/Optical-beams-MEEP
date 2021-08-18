@@ -115,4 +115,4 @@ For a more detailed explanation of our configuration files and the physical back
 ## Citing
 If you use code from this repository in a published work, please cite the DOI
 corresponding to the specific version of **Optical-beams-MEEP** that you used
-(DOIs are listed at [Zenodo.org](https://zenodo.org/)).
+(DOIs are listed at [Zenodo.org](https://doi.org/10.5281/zenodo.2631828)).
