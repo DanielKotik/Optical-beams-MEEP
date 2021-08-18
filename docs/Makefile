@@ -21,4 +21,4 @@ help:
 
 
 apidocs:
-	sphinx-apidoc -f -o source/api ../optbeam
+	sphinx-apidoc -fP -o source/api ../optbeam
