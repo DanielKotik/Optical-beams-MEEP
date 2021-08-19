@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
       - sphinx-docs
+      - develop
+      - master
   push:
     branches:
       - sphinx-docs
