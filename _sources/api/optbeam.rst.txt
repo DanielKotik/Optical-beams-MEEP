@@ -1,0 +1,20 @@
+optbeam package
+===============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   optbeam._2d
+   optbeam._3d
+
+Module contents
+---------------
+
+.. automodule:: optbeam
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

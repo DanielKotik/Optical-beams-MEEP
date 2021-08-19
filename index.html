@@ -40,7 +40,8 @@
 
     
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="optbeam" href="api/modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,20 +86,11 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Welcome to Optical-beams-MEEP’s documentation!</a></li>
-<li><a class="reference internal" href="#optical-beams-meep">Optical-beams-MEEP</a><ul>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#invocation">Invocation</a></li>
-<li><a class="reference internal" href="#visualisation">Visualisation</a></li>
-<li><a class="reference internal" href="#supported-beams-interfaces-and-polarisation-configurations">Supported beams, interfaces and polarisation configurations</a></li>
-<li><a class="reference internal" href="#citing">Citing</a></li>
+              <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">optbeam</a></li>
 </ul>
-</li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-</ul>
-</div>
+
             
           
         </div>
@@ -196,9 +188,9 @@
 <li><p>The waist/focus of the beams can be placed anywhere along the propagation direction - independently of the location of the source current distribution</p></li>
 </ul>
 <p>Originally, these files have been used in studying optical beam shifts providing independent numerical simulations. With regards to their scriptability, together with the ease and widespread use of the powerful <a class="reference external" href="https://github.com/stevengj/meep">Meep</a> tool, these scripts can easily be adapted to other and possibly more complicated beam/interface setups.</p>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>We highly recommend to install the parallel version of PyMeep via Conda:</p>
+<div class="section" id="installation-of-pymeep-and-optbeam">
+<h2>Installation of PyMeep and optbeam<a class="headerlink" href="#installation-of-pymeep-and-optbeam" title="Permalink to this headline">¶</a></h2>
+<p>We highly recommend to install the <em>parallel</em> version of PyMeep via Conda:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># create conda virtual environment &quot;pmp&quot;</span>
 $ conda create -n pmp -c conda-forge <span class="nv">pymeep</span><span class="o">=</span>*<span class="o">=</span>mpi_mpich_* scipy cython
 
@@ -206,17 +198,17 @@ $ conda create -n pmp -c conda-forge <span class="nv">pymeep</span><span class="
 <span class="c1"># user site packages in conda environment that may shadow conda installed dependencies)</span>
 $ conda env config vars <span class="nb">set</span> <span class="nv">PYTHONNOUSERSITE</span><span class="o">=</span>True -n pmp
 
-<span class="c1"># activate environment</span>
+<span class="c1"># activate conda environment</span>
 $ conda activate pmp
 
-<span class="c1"># install optbeam package inside environment</span>
-$ python -m pip install .
+<span class="c1"># install optbeam package inside conda environment</span>
+$ python3 -m pip install .
 </pre></div>
 </div>
-<p>For detailed installation instructions, see the <a class="reference external" href="https://meep.readthedocs.io/en/latest/Installation/#conda-packages">Meep documentation</a>.</p>
+<p>For detailed installation instructions of PyMeep using the Conda package manager, see the <a class="reference external" href="https://meep.readthedocs.io/en/latest/Installation/#conda-packages">Meep documentation</a>.</p>
 </div>
-<div class="section" id="invocation">
-<h2>Invocation<a class="headerlink" href="#invocation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="invocation-of-scripts">
+<h2>Invocation of scripts<a class="headerlink" href="#invocation-of-scripts" title="Permalink to this headline">¶</a></h2>
 <p>A Scheme (extension <code class="docutils literal notranslate"><span class="pre">.ctl</span></code>) or Python configuration file (extension <code class="docutils literal notranslate"><span class="pre">.py</span></code>) may be launched with the serial or parallel version of Meep and with parameters specified via command line arguments, for example by executing commands like (notice the single quotes to specify strings and Scheme expressions):</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scheme</span>
 $ mpirun -quiet -np X meep-mpi <span class="nv">interface</span><span class="o">=</span><span class="s1">&#39;&quot;concave&quot;&#39;</span> Gauss2d.ctl
@@ -225,7 +217,7 @@ $ mpirun -quiet -np X meep-mpi <span class="nv">interface</span><span class="o">
 $ mpirun -quiet -np X python3 Gauss2d.py -interface concave
 </pre></div>
 </div>
-<p>or some other example</p>
+<p>or another example</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scheme</span>
 $ mpirun -quiet -np X meep-mpi <span class="nv">n2</span><span class="o">=</span><span class="m">1</span>.5 <span class="nv">e_z</span><span class="o">=</span><span class="s1">&#39;(/ 1+1i 2)&#39;</span> <span class="nv">e_y</span><span class="o">=</span><span class="s1">&#39;(/ 1-1i 2)&#39;</span> LaguerreGauss3d.ctl
 
@@ -241,15 +233,26 @@ defined in expressions beginning with <code class="docutils literal notranslate"
 <p>The generated HDF5 files can be processed by different visualisation tools. To get a quick impression of the data
 <a class="reference external" href="https://github.com/stevengj/meep">Meep</a> comes bundled with the <a class="reference external" href="https://github.com/stevengj/h5utils">h5utils</a>
 programs. Utilising these tools, visualisation is fairly easy performed by issuing for example the following commands:</p>
-<p><em>for 2d simulations</em>
-<code class="docutils literal notranslate"><span class="pre">h5topng</span> <span class="pre">-S2</span> <span class="pre">-Zc</span> <span class="pre">dkbluered</span> <span class="pre">-a</span> <span class="pre">gray</span> <span class="pre">-A</span> <span class="pre">eps-000000000.h5</span> <span class="pre">ez-000003696.h5</span></code> (real part of the field pattern, optical
-denser material is shaded in grey)</p>
-<p><code class="docutils literal notranslate"><span class="pre">h5topng</span> <span class="pre">-S2</span> <span class="pre">-c</span> <span class="pre">hot</span> <span class="pre">-a</span> <span class="pre">yarg</span> <span class="pre">-A</span> <span class="pre">eps-000000000.h5</span> <span class="pre">e2_s-000003696.h5</span></code> (intensity distribution, optical
-denser material is shaded in grey)</p>
-<p><em>for 3d simulations</em>
-<code class="docutils literal notranslate"><span class="pre">h5topng</span> <span class="pre">-S2</span> <span class="pre">-0</span> <span class="pre">-z</span> <span class="pre">0</span>&#160; <span class="pre">-c</span> <span class="pre">hot</span> <span class="pre">e_real2_p-000001500.h5</span></code> (slice within the plane of incidence)</p>
-<p><code class="docutils literal notranslate"><span class="pre">h5topng</span> <span class="pre">-S2</span> <span class="pre">-x</span> <span class="pre">INDEX</span> <span class="pre">-c</span> <span class="pre">hot</span> <span class="pre">e_real2_p-000001500.h5</span></code> (slice transversal to the incident propagation axis with INDEX specifying the slice index)</p>
-<p><code class="docutils literal notranslate"><span class="pre">h5tovtk</span> <span class="pre">e_real2_p-000001500.h5</span></code> (creates a VTK file to be opened by e.g. the <a class="reference external" href="https://github.com/enthought/mayavi">MayaVi</a> or <a class="reference external" href="https://github.com/Kitware/ParaView">ParaView</a> visualisation application)</p>
+<p><em>for 2d simulations:</em></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># real part of the field pattern, optical denser material is shaded in grey</span>
+$ h5topng -S2 -Zc dkbluered -a gray -A eps-000000000.h5 ez-000003696.h5
+
+<span class="c1"># intensity distribution, optical denser material is shaded in grey</span>
+$ h5topng -S2 -c hot -a yarg -A eps-000000000.h5 e2_s-000003696.h5
+</pre></div>
+</div>
+<p><em>for 3d simulations:</em></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># slice within the plane of incidence</span>
+$ h5topng -S2 -0 -z <span class="m">0</span>  -c hot e_real2_p-000001500.h5
+
+<span class="c1"># slice transversal to the incident propagation axis with INDEX specifying the slice index</span>
+$ h5topng -S2 -x INDEX -c hot e_real2_p-000001500.h5
+
+<span class="c1"># create a VTK file</span>
+$ h5tovtk e_real2_p-000001500.h5
+</pre></div>
+</div>
+<p>A VTK file can be opened by e.g. the <a class="reference external" href="https://github.com/enthought/mayavi">MayaVi</a> or <a class="reference external" href="https://github.com/Kitware/ParaView">ParaView</a> visualisation application.</p>
 <p>The <a class="reference external" href="https://meep.readthedocs.io/en/latest/Scheme_Tutorials/Basics/">Meep Scheme tutorial</a> provides further useful
 information and assistance.
 For a more detailed explanation of our configuration files and the physical background, please see my dissertation thesis. Coming soon.</p>
@@ -268,7 +271,13 @@ For a more detailed explanation of our configuration files and the physical back
 <h2>Citing<a class="headerlink" href="#citing" title="Permalink to this headline">¶</a></h2>
 <p>If you use code from this repository in a published work, please cite the DOI
 corresponding to the specific version of <strong>Optical-beams-MEEP</strong> that you used
-(DOIs are listed at <a class="reference external" href="https://zenodo.org/">Zenodo.org</a>).</p>
+(DOIs are listed at <a class="reference external" href="https://doi.org/10.5281/zenodo.2631828">Zenodo.org</a>).</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">optbeam</a></li>
+</ul>
+</div>
 </div>
 </div>
 <div class="tex2jax_ignore mathjax_ignore section" id="indices-and-tables">
@@ -285,6 +294,9 @@ corresponding to the specific version of <strong>Optical-beams-MEEP</strong> tha
            
           </div>
           <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="api/modules.html" class="btn btn-neutral float-right" title="optbeam" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
