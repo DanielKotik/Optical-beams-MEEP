@@ -234,6 +234,20 @@ class LaguerreGauss3d(Beam3dSpherical):
     def spectrum(self, sin_theta, theta, phi):
         r"""Spectrum amplitude function, f.
 
+        Parameters
+        ----------
+        sin_theta : type
+            Description of parameter `sin_theta`.
+        theta : type
+            Description of parameter `theta`.
+        phi : type
+            Description of parameter `phi`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
         Notes
         -----
         The implementation is based on [1]_.
