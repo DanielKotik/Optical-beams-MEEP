@@ -274,11 +274,7 @@
 <span class="c1"># base classes depending on the choice of a suitable coordinate system</span>
 <span class="c1"># -----------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="LaguerreGauss3dCartesian"><a class="viewcode-back" href="../../../api/optbeam._3d.html#optbeam._3d.beams.LaguerreGauss3dCartesian">[docs]</a><span class="k">class</span> <span class="nc">LaguerreGauss3dCartesian</span><span class="p">(</span><span class="n">Beam3dCartesian</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Cartesian implementaion of a 3d Laguerre-Gauss beam.</span>
-
-<span class="sd">    This class serves only as an example for a will be removed in future</span>
-<span class="sd">    versions.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Cartesian implementaion of a 3d Laguerre-Gauss beam.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">called</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Laguerre-Gauss beam specifc parameters.&quot;&quot;&quot;</span>
@@ -333,12 +329,32 @@
 
 
 <div class="viewcode-block" id="LaguerreGauss3d"><a class="viewcode-back" href="../../../api/optbeam._3d.html#optbeam._3d.beams.LaguerreGauss3d">[docs]</a><span class="k">class</span> <span class="nc">LaguerreGauss3d</span><span class="p">(</span><span class="n">Beam3dSpherical</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;3d Laguerre-Gauss beam.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;3d Laguerre-Gauss beam.</span>
 
-<span class="sd">    Usage:</span>
-<span class="sd">     LGbeam = LaguerreGauss3d(x=x, params=params)</span>
-<span class="sd">     LGbeam.profile(r)</span>
-<span class="sd">     LGbeam.spectrum(sin_theta, theta, phi)</span>
+<span class="sd">    The implementation is based on [1]_.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : type</span>
+<span class="sd">        Description of parameter `x`.</span>
+<span class="sd">    params : type</span>
+<span class="sd">        Description of parameter `params`.</span>
+<span class="sd">    called : type</span>
+<span class="sd">        Description of parameter `called` (the default is False).</span>
+
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Bliokh, K Y, Aiello, A: Goos-Hänchen and Imbert-Fedorov beam shifts:</span>
+<span class="sd">           an overview, Journal of Optics 15(1), 014001, 2013.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; LGbeam = LaguerreGauss3d(x=x, params=params)</span>
+<span class="sd">    &gt;&gt;&gt; LGbeam.profile(r)</span>
+<span class="sd">    &gt;&gt;&gt; LGbeam.spectrum(sin_theta, theta, phi)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">called</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -349,14 +365,47 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_norm</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_W_y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LaguerreGauss3d.profile"><a class="viewcode-back" href="../../../api/optbeam._3d.html#optbeam._3d.beams.LaguerreGauss3d.profile">[docs]</a>    <span class="k">def</span> <span class="nf">profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;...&quot;&quot;&quot;</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Beam profile, psi.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r : type</span>
+<span class="sd">            Description of parameter `r`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        type</span>
+<span class="sd">            Description of returned object.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \psi_\text{LG}(x,y,z) = k^2 \int_0^{\pi/2}\mathrm{d}\theta\int_0^{2\pi}\mathrm{d}\phi\, \sin{\theta}\cos{\theta}\,f_\text{LG}(\theta, \phi) \exp\bigl[\mathrm{i}k \bigl(x \cos{\theta} + y\sin{\theta}\sin{\phi} - z \sin{\theta}\cos{\phi}\bigr)\bigr]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm</span> <span class="o">*</span> <span class="n">_exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">r</span><span class="o">.</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_W_y</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LaguerreGauss3d.spectrum"><a class="viewcode-back" href="../../../api/optbeam._3d.html#optbeam._3d.beams.LaguerreGauss3d.spectrum">[docs]</a>    <span class="k">def</span> <span class="nf">spectrum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sin_theta</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Spectrum amplitude function, f.&quot;&quot;&quot;</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Spectrum amplitude function, f.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The implementation is based on [1]_.</span>
+
+<span class="sd">        The spectrum amplitude is of the form</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           f_\text{LG}(\theta,\phi) = \theta^{|m|} \</span>
+<span class="sd">                                      \exp\biggl[-\Bigl(\frac{kw_0}{2} \</span>
+<span class="sd">                                                        \sin\theta\Bigr)^2 \</span>
+<span class="sd">                                          \biggr] \exp(\mathrm{i} m \phi)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_Gauss_spherical</span><span class="p">(</span><span class="n">sin_theta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_W_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>

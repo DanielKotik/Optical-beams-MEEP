@@ -35,6 +35,8 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -223,22 +225,61 @@
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">optbeam._3d.beams.</span></span><span class="sig-name descname"><span class="pre">LaguerreGauss3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">called</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/optbeam/_3d/beams.html#LaguerreGauss3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optbeam._3d.beams.LaguerreGauss3d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#optbeam._3d.beams.Beam3dSpherical" title="optbeam._3d.beams.Beam3dSpherical"><code class="xref py py-class docutils literal notranslate"><span class="pre">optbeam._3d.beams.Beam3dSpherical</span></code></a></p>
 <p>3d Laguerre-Gauss beam.</p>
-<dl class="simple">
-<dt>Usage:</dt><dd><p>LGbeam = LaguerreGauss3d(x=x, params=params)
-LGbeam.profile(r)
-LGbeam.spectrum(sin_theta, theta, phi)</p>
+<p>The implementation is based on <a class="footnote-reference brackets" href="#id2" id="id1">1</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a>) – Description of parameter <cite>x</cite>.</p></li>
+<li><p><strong>params</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a>) – Description of parameter <cite>params</cite>.</p></li>
+<li><p><strong>called</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a>) – Description of parameter <cite>called</cite> (the default is False).</p></li>
+</ul>
 </dd>
 </dl>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id3">2</a>)</span></dt>
+<dd><p>Bliokh, K Y, Aiello, A: Goos-Hänchen and Imbert-Fedorov beam shifts:
+an overview, Journal of Optics 15(1), 014001, 2013.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">LGbeam</span> <span class="o">=</span> <span class="n">LaguerreGauss3d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">LGbeam</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">LGbeam</span><span class="o">.</span><span class="n">spectrum</span><span class="p">(</span><span class="n">sin_theta</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="optbeam._3d.beams.LaguerreGauss3d.profile">
 <span class="sig-name descname"><span class="pre">profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/optbeam/_3d/beams.html#LaguerreGauss3d.profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optbeam._3d.beams.LaguerreGauss3d.profile" title="Permalink to this definition">¶</a></dt>
-<dd><p>…</p>
+<dd><p>Beam profile, psi.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a>) – Description of parameter <cite>r</cite>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Description of returned object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)">type</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<div class="math notranslate nohighlight">
+\[\psi_\text{LG}(x,y,z) = k^2 \int_0^{\pi/2}\mathrm{d}\theta\int_0^{2\pi}\mathrm{d}\phi\, \sin{\theta}\cos{\theta}\,f_\text{LG}(\theta, \phi) \exp\bigl[\mathrm{i}k \bigl(x \cos{\theta} + y\sin{\theta}\sin{\phi} - z \sin{\theta}\cos{\phi}\bigr)\bigr]\]</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="optbeam._3d.beams.LaguerreGauss3d.spectrum">
 <span class="sig-name descname"><span class="pre">spectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sin_theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/optbeam/_3d/beams.html#LaguerreGauss3d.spectrum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optbeam._3d.beams.LaguerreGauss3d.spectrum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spectrum amplitude function, f.</p>
+<p class="rubric">Notes</p>
+<p>The implementation is based on <a class="footnote-reference brackets" href="#id2" id="id3">1</a>.</p>
+<p>The spectrum amplitude is of the form</p>
+<div class="math notranslate nohighlight">
+\[f_\text{LG}(\theta,\phi) = \theta^{|m|} \
+                           \exp\biggl[-\Bigl(\frac{kw_0}{2} \
+                                             \sin\theta\Bigr)^2 \
+                               \biggr] \exp(\mathrm{i} m \phi)\]</div>
 </dd></dl>
 
 </dd></dl>
@@ -248,8 +289,6 @@ LGbeam.spectrum(sin_theta, theta, phi)</p>
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">optbeam._3d.beams.</span></span><span class="sig-name descname"><span class="pre">LaguerreGauss3dCartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">called</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/optbeam/_3d/beams.html#LaguerreGauss3dCartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optbeam._3d.beams.LaguerreGauss3dCartesian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#optbeam._3d.beams.Beam3dCartesian" title="optbeam._3d.beams.Beam3dCartesian"><code class="xref py py-class docutils literal notranslate"><span class="pre">optbeam._3d.beams.Beam3dCartesian</span></code></a></p>
 <p>Cartesian implementaion of a 3d Laguerre-Gauss beam.</p>
-<p>This class serves only as an example for a will be removed in future
-versions.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="optbeam._3d.beams.LaguerreGauss3dCartesian.profile">
 <span class="sig-name descname"><span class="pre">profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/optbeam/_3d/beams.html#LaguerreGauss3dCartesian.profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optbeam._3d.beams.LaguerreGauss3dCartesian.profile" title="Permalink to this definition">¶</a></dt>
