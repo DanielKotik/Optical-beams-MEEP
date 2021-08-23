@@ -9,6 +9,12 @@ Intended for use together with `PyMeep`_.
 
 .. _PyMeep: https://meep.readthedocs.io/en/latest/
 
+Classes
+-------
+* :class:`._2d.beams.Gauss2d` : 2d Gaussian beam
+* :class:`._2d.beams.IncAiry2d` : 2d incomplete Airy beam
+* :class:`._3d.beams.LaguerreGauss3d` : 3d vortex beam
+
 """
 
 __version__ = "2.1.2"
