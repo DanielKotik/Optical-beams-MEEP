@@ -1,3 +1,4 @@
+"""Contains classes for beams in 2d."""
 
 import math
 import sys
