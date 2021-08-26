@@ -179,9 +179,9 @@ class LaguerreGauss3d(Beam3dSpherical):
     ----------
     x : type
         Description of parameter `x`.
-    params : type
+    params : dict
         Description of parameter `params`.
-    called : type
+    called : bool
         Description of parameter `called` (the default is False).
 
 
@@ -215,7 +215,7 @@ class LaguerreGauss3d(Beam3dSpherical):
 
         Returns
         -------
-        type
+        complex
             Description of returned object.
 
         Notes
@@ -244,7 +244,7 @@ class LaguerreGauss3d(Beam3dSpherical):
 
         Returns
         -------
-        type
+        complex
             Description of returned object.
 
         Notes
