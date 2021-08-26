@@ -269,7 +269,25 @@
             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Gauss2d.spectrum"><a class="viewcode-back" href="../../../api/optbeam._2d.html#optbeam._2d.beams.Gauss2d.spectrum">[docs]</a>    <span class="k">def</span> <span class="nf">spectrum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k_y</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Spectrum amplitude function, f.&quot;&quot;&quot;</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Gauss spectrum amplitude function, f.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        k_y : type</span>
+<span class="sd">            Description of parameter `k_y`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        type</span>
+<span class="sd">            Description of returned object.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        .. math::</span>
+<span class="sd">           f_\text{G} (k_x) = \frac{w_0}{2 \sqrt{\pi}} \</span>
+<span class="sd">                              \exp\biggl[-\Bigl(\frac{k_x w_0}{2} \Bigr)^2 \biggr]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_Gauss</span><span class="p">(</span><span class="n">k_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_W_y</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_f_Gauss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k_y</span><span class="p">,</span> <span class="n">W_y</span><span class="p">):</span>
