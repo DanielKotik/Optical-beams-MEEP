@@ -5,6 +5,14 @@
 :relative-images:
 ```
 
+```{toctree}
+---
+caption: API Reference
+maxdepth: 1
+---
+
+api/modules
+```
 
 ```{toctree}
 ---
