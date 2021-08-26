@@ -192,7 +192,6 @@ class LaguerreGauss3d(Beam3dSpherical):
 
     Examples
     --------
-
     >>> LGbeam = LaguerreGauss3d(x=x, params=params)
     >>> LGbeam.profile(r)
     >>> LGbeam.spectrum(sin_theta, theta, phi)
