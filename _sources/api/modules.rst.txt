@@ -1,7 +1,0 @@
-optbeam
-=======
-
-.. toctree::
-   :maxdepth: 4
-
-   optbeam
