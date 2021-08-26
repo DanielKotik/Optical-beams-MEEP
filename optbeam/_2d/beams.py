@@ -75,7 +75,30 @@ class Gauss2d(Beam2dCartesian):
         super().__init__(x, params, called)
 
     def profile(self, r):
-        """..."""
+        r"""Field amplitude function.
+
+        Plane wave decomposition: calculate field amplitude at light source
+        position if not coinciding with beam waist.
+
+        Parameters
+        ----------
+        r : type
+            Description of parameter `r`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        Notes
+        -----
+        The beam profile at waist is given by
+
+        .. math::
+
+           \psi_\text{G} (x, z=0) = \exp\biggl[-\Bigl(\frac{x}{w_0} \Bigr)^2\biggr]
+
+        """
         # beam profile distribution (field amplitude) at the waist of the beam
         if self.x == 0:
             return self._norm * _exp(-(r.y / self._W_y)**2)
