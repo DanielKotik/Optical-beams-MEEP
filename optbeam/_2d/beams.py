@@ -106,7 +106,25 @@ class Gauss2d(Beam2dCartesian):
             return super().profile(r)
 
     def spectrum(self, k_y):
-        """Spectrum amplitude function, f."""
+        r"""Gauss spectrum amplitude function, f.
+
+        Parameters
+        ----------
+        k_y : type
+            Description of parameter `k_y`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        Notes
+        -----
+        .. math::
+           f_\text{G} (k_x) = \frac{w_0}{2 \sqrt{\pi}} \
+                              \exp\biggl[-\Bigl(\frac{k_x w_0}{2} \Bigr)^2 \biggr]
+
+        """
         return self._f_Gauss(k_y, self._W_y)
 
     def _f_Gauss(self, k_y, W_y):
