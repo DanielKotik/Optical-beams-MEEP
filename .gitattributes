@@ -1,2 +1,3 @@
 *.ctl   linguist-language=Scheme
 *.ipynb linguist-documentation
+*.cff   linguist-language=YAML

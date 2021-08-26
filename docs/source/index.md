@@ -14,6 +14,15 @@ maxdepth: 1
 api/modules
 ```
 
+```{toctree}
+---
+caption: Scripts
+maxdepth: 1
+---
+
+scripts/python
+scripts/scheme
+```
 
 # Indices and tables
 

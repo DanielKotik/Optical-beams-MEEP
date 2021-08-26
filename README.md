@@ -28,6 +28,14 @@ The provided files (and features) are:
 
 Originally, these files have been used in studying optical beam shifts providing independent numerical simulations. With regards to their scriptability, together with the ease and widespread use of the powerful [Meep](https://github.com/stevengj/meep) tool, these scripts can easily be adapted to other and possibly more complicated beam/interface setups.
 
+This repository is structured as follows:
+
+```
+├── docs : Sphinx documentation folder
+├── optbeam : Cython package with exact implementations of optical beams
+└── scripts : Python and Scheme scripts to use together with optbeam+PyMeep/Meep
+```
+
 ## Installation of PyMeep and optbeam
 We highly recommend to install the _parallel_ version of PyMeep via Conda:
 
