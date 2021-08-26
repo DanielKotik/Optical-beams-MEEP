@@ -1,0 +1,1089 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Scheme &mdash; Optical-beams-MEEP  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Python" href="python.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Optical-beams-MEEP
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Scripts</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="python.html">Python</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Scheme</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gauss-beam-in-2d">Gauss beam in 2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#airy-beam-in-2d">Airy beam in 2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#laguerre-gauss-beam">Laguerre-Gauss beam</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Optical-beams-MEEP</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Scheme</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            
+              <a href="https://github.com//DanielKotik/Optical-beams-MEEP/blob/develop/docs/source/scripts/scheme.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="scheme">
+<h1>Scheme<a class="headerlink" href="#scheme" title="Permalink to this headline">¶</a></h1>
+<p>You can find these Scheme scripts <a class="reference external" href="https://github.com/DanielKotik/Optical-beams-MEEP/tree/develop/scripts">here</a>.</p>
+<div class="section" id="gauss-beam-in-2d">
+<h2>Gauss beam in 2d<a class="headerlink" href="#gauss-beam-in-2d" title="Permalink to this headline">¶</a></h2>
+<div class="literal-block-wrapper docutils container" id="gauss2d-ctl">
+<div class="code-block-caption"><span class="caption-text">Gauss2d.ctl</span><a class="headerlink" href="#gauss2d-ctl" title="Permalink to this code">¶</a></div>
+<div class="highlight-scheme notranslate"><div class="highlight"><pre><span></span><span class="c1">;;-------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; file:    Gauss2d.ctl</span>
+<span class="c1">;; brief:   Scheme configuration input file for the FDTD solver Meep simulating the scattering of a </span>
+<span class="c1">;;          Gaussian beam at planar and curved dielectric interfaces</span>
+<span class="c1">;; author:  Daniel Kotik</span>
+<span class="c1">;; version: 1.2.0</span>
+<span class="c1">;; date:    28.11.2019</span>
+<span class="c1">;;</span>
+<span class="c1">;; example invocations: a) launch the serial version of meep with specified polarisation (p)</span>
+<span class="c1">;;</span>
+<span class="c1">;;                              meep s-pol\?=false Gauss2d.ctl</span>
+<span class="c1">;;</span>
+<span class="c1">;;                      b) launch the parallel version of meep using 8 cores with specified interface (concave)</span>
+<span class="c1">;;</span>
+<span class="c1">;;                              mpirun -quiet -np 8 meep-mpi interface=&#39;&quot;concave&quot;&#39; Gauss2d.ctl</span>
+<span class="c1">;;</span>
+<span class="c1">;; coordinate system in meep (defines center of computational cell):  --|-----&gt; x</span>
+<span class="c1">;;                                                                      |</span>
+<span class="c1">;;                                                                      |</span>
+<span class="c1">;;                                                                      v y</span>
+<span class="c1">;;</span>
+<span class="c1">;; example visualisations (square brackets contain optional arguments for overlaying the dielectric function):</span>
+<span class="c1">;;</span>
+<span class="c1">;;          h5topng -S2 -c  hot       [-a yarg -A eps-000000000.h5] e2_s-000003696.h5</span>
+<span class="c1">;;          h5topng -S2 -Zc dkbluered [-a gray -A eps-000000000.h5]   ez-000003696.h5</span>
+<span class="c1">;;</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nstart time: &quot;</span><span class="p">(</span><span class="nf">strftime</span> <span class="s">&quot;%c&quot;</span> <span class="p">(</span><span class="nf">localtime</span> <span class="p">(</span><span class="nf">current-time</span><span class="p">)))</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; physical parameters characterizing light source and interface characteristics </span>
+<span class="c1">;; (must be adjusted - either here or via command line)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="nf">define-input-var</span> <span class="nv">interface</span> <span class="s">&quot;planar&quot;</span>        <span class="c1">; specify type of interface </span>
+                            <span class="ss">&#39;string</span> <span class="p">(</span><span class="k">lambda </span><span class="nv">type</span> <span class="p">(</span><span class="k">or </span><span class="p">(</span><span class="nb">string=? </span><span class="nv">type</span> <span class="s">&quot;planar&quot;</span> <span class="p">)</span> 
+                                                     <span class="p">(</span><span class="nb">string=? </span><span class="nv">type</span> <span class="s">&quot;concave&quot;</span><span class="p">)</span> 
+                                                     <span class="p">(</span><span class="nb">string=? </span><span class="nv">type</span> <span class="s">&quot;convex&quot;</span> <span class="p">))))</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">s-pol?</span> <span class="nv">true</span> <span class="p">)</span>                 <span class="c1">; true for s-spol, false for p-pol</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">ref_medium</span> <span class="mi">0</span><span class="p">)</span>                 <span class="c1">; reference medium whose wavenumber is used as inverse scaling length</span>
+                                            <span class="c1">; (0 - free space, 1 - incident medium, 2 - refracted medium)</span>
+                                            <span class="c1">; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">n1</span>  <span class="mf">1.54</span><span class="p">)</span>                     <span class="c1">; index of refraction of the incident medium</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">n2</span>  <span class="mf">1.00</span><span class="p">)</span>                     <span class="c1">; index of refraction of the refracted medium</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">kw_0</span>   <span class="mi">8</span><span class="p">)</span>                     <span class="c1">; beam width (&gt;5 is good)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">kr_w</span>  <span class="mi">60</span><span class="p">)</span>                     <span class="c1">; beam waist distance to interface (30 to 50 is good if</span>
+                                            <span class="c1">; source position coincides with beam waist)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">kr_c</span> <span class="mi">150</span><span class="p">)</span>                     <span class="c1">; radius of curvature (if interface is either concave of convex)</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Critical</span> <span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span>                    <span class="c1">; calculates the critical angle in degrees</span>
+    <span class="p">(</span><span class="nf">cond</span>
+      <span class="p">((</span><span class="nb">&gt; </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">asin </span><span class="p">(</span><span class="nb">/ </span><span class="nv">n2</span> <span class="nv">n1</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="mf">2.0</span> <span class="nv">pi</span><span class="p">))</span> <span class="mf">360.0</span><span class="p">))</span>
+      <span class="p">((</span><span class="nb">&lt; </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nWarning: Critical angle is not defined, since n1 &lt; n2!\n\n&quot;</span><span class="p">)</span> <span class="p">(</span><span class="nf">exit</span><span class="p">))</span>
+      <span class="p">((</span><span class="nb">= </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nWarning: Critical angle is not defined, since n1 = n2!\n\n&quot;</span><span class="p">)</span> <span class="p">(</span><span class="nf">exit</span><span class="p">))</span>
+    <span class="p">))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Brewster</span> <span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span>                    <span class="c1">; calculates the Brewster angle in degrees</span>
+        <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">atan </span><span class="p">(</span><span class="nb">/ </span><span class="nv">n2</span> <span class="nv">n1</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="mf">2.0</span> <span class="nv">pi</span><span class="p">))</span> <span class="mf">360.0</span><span class="p">))</span>
+
+<span class="c1">;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)</span>
+<span class="c1">;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))</span>
+<span class="c1">;(define-param chi_deg  (* 0.99 (Critical n1 n2)))</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">chi_deg</span>  <span class="mf">45.0</span><span class="p">)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------ </span>
+<span class="c1">;; specific Meep paramters (may need to be adjusted - either here or via command line)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">sx</span> <span class="mi">5</span><span class="p">)</span>                         <span class="c1">; size of cell including PML in x-direction</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">sy</span> <span class="mi">5</span><span class="p">)</span>                         <span class="c1">; size of cell including PML in y-direction</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">pml_thickness</span> <span class="mf">0.25</span><span class="p">)</span>           <span class="c1">; thickness of PML layer</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">freq</span>    <span class="mi">12</span><span class="p">)</span>                   <span class="c1">; vacuum frequency of source (5 to 12 is good)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">runtime</span> <span class="mi">10</span><span class="p">)</span>                   <span class="c1">; runs simulation for 10 times freq periods</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">pixel</span>   <span class="mi">10</span><span class="p">)</span>                   <span class="c1">; number of pixels per wavelength in the denser</span>
+                                            <span class="c1">; medium (at least 10, 20 to 30 is a good choice)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">source_shift</span> <span class="mf">-2.15</span><span class="p">)</span>           <span class="c1">; source position with respect to the center (point of impact) in Meep</span>
+<span class="c1">;(define-param source_shift (* -1.0 rw))    ; units (-2.15 good); if equal -rw, then source position coincides with</span>
+                                            <span class="c1">; waist position</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">relerr</span> <span class="mf">0.0001</span><span class="p">)</span>                <span class="c1">; relative error for integration routine (0.0001 or smaller)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; derived Meep parameters (do not change)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">k_vac</span> <span class="p">(</span><span class="nb">* </span><span class="mf">2.0</span> <span class="nv">pi</span> <span class="nv">freq</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">k1</span>    <span class="p">(</span><span class="nb">* </span><span class="nv">n1</span>  <span class="nv">k_vac</span>  <span class="p">))</span>              <span class="c1">; wave number inside the incident medium</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">n_ref</span> <span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="nb">= </span><span class="nv">ref_medium</span> <span class="mi">0</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1">; index of refraction of the reference medium</span>
+                    <span class="p">((</span><span class="nb">= </span><span class="nv">ref_medium</span> <span class="mi">1</span><span class="p">)</span>  <span class="nv">n1</span><span class="p">)</span>
+                    <span class="p">((</span><span class="nb">= </span><span class="nv">red_medium</span> <span class="mi">2</span><span class="p">)</span>  <span class="nv">n2</span><span class="p">)))</span>
+                    
+<span class="p">(</span><span class="k">define </span><span class="nv">rw</span>  <span class="p">(</span><span class="nb">/ </span><span class="nv">kr_w</span> <span class="p">(</span><span class="nb">* </span><span class="nv">n_ref</span> <span class="nv">k_vac</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">w_0</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">kw_0</span> <span class="p">(</span><span class="nb">* </span><span class="nv">n_ref</span> <span class="nv">k_vac</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">r_c</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">kr_c</span> <span class="p">(</span><span class="nb">* </span><span class="nv">n_ref</span> <span class="nv">k_vac</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">shift</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">source_shift</span> <span class="nv">rw</span><span class="p">))</span>          <span class="c1">; distance from source position to beam waist (along y-axis)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; placement of the dielectric interface within the computational cell</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; helper functions</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">alpha</span> <span class="nv">_chi_deg</span><span class="p">)</span>                    <span class="c1">; angle of inclined plane with y-axis</span>
+        <span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">/ </span><span class="nv">pi</span> <span class="mf">2.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="nv">_chi_deg</span> <span class="mi">360</span><span class="p">)</span> <span class="mi">2</span> <span class="nv">pi</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Delta_x</span> <span class="nv">_alpha</span><span class="p">)</span>                    <span class="c1">; inclined plane offset to the center of the cell</span>
+        <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="nv">sx</span> <span class="mf">2.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nf">-</span><span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">sqrt </span><span class="mf">2.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">cos </span><span class="nv">_alpha</span><span class="p">))</span> <span class="p">(</span><span class="nb">sin </span><span class="nv">_alpha</span><span class="p">))</span> <span class="p">(</span><span class="nb">sin </span><span class="nv">_alpha</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">chi_rad</span> <span class="nv">_chi_deg</span><span class="p">)</span>                  <span class="c1">; conversion degrees to radians</span>
+        <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="nv">_chi_deg</span> <span class="mf">360.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="mf">2.0</span> <span class="nv">pi</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">set! </span><span class="nv">geometry-lattice</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">lattice</span> <span class="p">(</span><span class="nf">size</span> <span class="nv">sx</span> <span class="nv">sy</span> <span class="nv">no-size</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nf">cond</span>
+    <span class="p">((</span><span class="nb">string=? </span><span class="nv">interface</span> <span class="s">&quot;planar&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">set! </span><span class="nv">default-material</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">dielectric</span> <span class="p">(</span><span class="nf">index</span> <span class="nv">n1</span><span class="p">)))</span>
+        <span class="p">(</span><span class="k">set! </span><span class="nv">geometry</span> <span class="p">(</span><span class="nf">list</span>
+                        <span class="p">(</span><span class="nf">make</span> <span class="nv">block</span>         <span class="c1">; located at lower right edge for 45 degree tilt</span>
+                        <span class="p">(</span><span class="nf">center</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">/ </span><span class="nv">sx</span> <span class="mf">2.0</span><span class="p">)</span> <span class="p">(</span><span class="nf">Delta_x</span> <span class="p">(</span><span class="nf">alpha</span> <span class="nv">chi_deg</span><span class="p">)))</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">sy</span> <span class="mf">-2.0</span><span class="p">))</span>
+                        <span class="p">(</span><span class="nf">size</span> <span class="nv">infinity</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">sqrt </span><span class="mf">2.0</span><span class="p">)</span> <span class="nv">sx</span><span class="p">)</span> <span class="nv">infinity</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nf">e1</span> <span class="p">(</span><span class="nb">/ </span><span class="mf">1.0</span> <span class="p">(</span><span class="nb">tan </span><span class="p">(</span><span class="nf">alpha</span> <span class="nv">chi_deg</span><span class="p">)))</span>  <span class="mi">1</span> <span class="mi">0</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nf">e2</span> <span class="mi">-1</span> <span class="p">(</span><span class="nb">/ </span><span class="mf">1.0</span> <span class="p">(</span><span class="nb">tan </span><span class="p">(</span><span class="nf">alpha</span> <span class="nv">chi_deg</span><span class="p">)))</span> <span class="mi">0</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nf">e3</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nf">material</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">dielectric</span> <span class="p">(</span><span class="nf">index</span> <span class="nv">n2</span><span class="p">)))))</span>
+                        <span class="p">))</span>
+    <span class="p">((</span><span class="nb">string=? </span><span class="nv">interface</span> <span class="s">&quot;concave&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">set! </span><span class="nv">default-material</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">dielectric</span> <span class="p">(</span><span class="nf">index</span> <span class="nv">n2</span><span class="p">)))</span>
+        <span class="p">(</span><span class="k">set! </span><span class="nv">geometry</span> <span class="p">(</span><span class="nf">list</span>
+                    <span class="p">(</span><span class="nf">make</span> <span class="nv">cylinder</span>
+                    <span class="p">(</span><span class="nf">center</span> <span class="p">(</span><span class="nb">* </span><span class="mi">-1</span> <span class="p">(</span><span class="nb">* </span><span class="nv">r_c</span> <span class="p">(</span><span class="nb">cos </span><span class="p">(</span><span class="nf">chi_rad</span> <span class="nv">chi_deg</span><span class="p">))))</span> <span class="p">(</span><span class="nb">* </span><span class="nv">r_c</span> <span class="p">(</span><span class="nb">sin </span><span class="p">(</span><span class="nf">chi_rad</span> <span class="nv">chi_deg</span><span class="p">))))</span> 
+                                          <span class="c1">; move center to the right in order to ensure that the point of impact is</span>
+                                          <span class="c1">; always centrally placed</span>
+                    <span class="p">(</span><span class="nf">height</span> <span class="nv">infinity</span><span class="p">)</span>
+                    <span class="p">(</span><span class="nf">radius</span> <span class="nv">r_c</span><span class="p">)</span>
+                    <span class="p">(</span><span class="nf">material</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">dielectric</span> <span class="p">(</span><span class="nf">index</span> <span class="nv">n1</span><span class="p">)))))</span>
+                    <span class="p">))</span>
+    <span class="p">((</span><span class="nb">string=? </span><span class="nv">interface</span> <span class="s">&quot;convex&quot;</span> <span class="p">)</span>
+        <span class="p">(</span><span class="k">set! </span><span class="nv">default-material</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">dielectric</span> <span class="p">(</span><span class="nf">index</span> <span class="nv">n1</span><span class="p">)))</span>
+        <span class="p">(</span><span class="k">set! </span><span class="nv">geometry</span> <span class="p">(</span><span class="nf">list</span>
+                    <span class="p">(</span><span class="nf">make</span> <span class="nv">cylinder</span>
+                    <span class="p">(</span><span class="nf">center</span> <span class="p">(</span><span class="nb">* </span><span class="nv">r_c</span> <span class="p">(</span><span class="nb">cos </span><span class="p">(</span><span class="nf">chi_rad</span> <span class="nv">chi_deg</span><span class="p">)))</span> <span class="p">(</span><span class="nb">* </span><span class="mf">-1.0</span> <span class="p">(</span><span class="nb">* </span><span class="nv">r_c</span> <span class="p">(</span><span class="nb">sin </span><span class="p">(</span><span class="nf">chi_rad</span> <span class="nv">chi_deg</span><span class="p">)))))</span> 
+                                          <span class="c1">; move center to the right in order to ensure that the point of impact is</span>
+                                          <span class="c1">; always centrally placed</span>
+                    <span class="p">(</span><span class="nf">height</span> <span class="nv">infinity</span><span class="p">)</span>
+                    <span class="p">(</span><span class="nf">radius</span> <span class="nv">r_c</span><span class="p">)</span>
+                    <span class="p">(</span><span class="nf">material</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">dielectric</span> <span class="p">(</span><span class="nf">index</span> <span class="nv">n2</span><span class="p">)))))</span>
+                    <span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; add absorbing boundary conditions and discretize structure</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">pml-layers</span> 
+    <span class="p">(</span><span class="nb">list </span><span class="p">(</span><span class="nf">make</span> <span class="nv">pml</span> <span class="p">(</span><span class="nf">thickness</span> <span class="nv">pml_thickness</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">resolution</span>                            <span class="c1">; set resolution in pixels per Meep distance unit</span>
+      <span class="p">(</span><span class="nb">* </span><span class="nv">pixel</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="nv">freq</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">Courant</span>                               <span class="c1">; set Courant factor (mandatory if either n1 or n2 is smaller than 1)</span>
+      <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&lt; </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; beam profile distribution(s) (field amplitude) at the waist of the beam</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Gauss</span> <span class="nv">W_y</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">r</span><span class="p">)</span> <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mf">-1.0</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nf">vector3-y</span> <span class="nv">r</span><span class="p">)</span> <span class="nv">W_y</span><span class="p">)</span> <span class="mf">2.0</span><span class="p">)))</span>
+        <span class="p">))</span>
+
+<span class="c1">;(define (Asymmetric W_y)</span>
+<span class="c1">;        (lambda (r) ...</span>
+<span class="c1">;        ))</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; spectrum amplitude distribution(s)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">f_Gauss</span> <span class="nv">W_y</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">k_y</span><span class="p">)</span> <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mf">-1.0</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">* </span><span class="mf">0.5</span> <span class="nv">k_y</span> <span class="nv">W_y</span><span class="p">)</span> <span class="mf">2.0</span><span class="p">)))</span>
+        <span class="p">))</span>
+
+<span class="c1">;(define (f_asymmetric W_y)</span>
+<span class="c1">;        (lambda (k_y) ...</span>
+<span class="c1">;        ))</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; plane wave decomposition </span>
+<span class="c1">;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">integrand</span> <span class="nv">f</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">k_y</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">f</span> <span class="nv">k_y</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mi">0</span><span class="nv">+1i</span> <span class="nv">x</span> <span class="p">(</span><span class="nb">sqrt </span><span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">* </span><span class="nv">k1</span> <span class="nv">k1</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">k_y</span> <span class="nv">k_y</span><span class="p">)))))</span>
+                        <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mi">0</span><span class="nv">+1i</span> <span class="nv">k_y</span> <span class="nv">y</span><span class="p">)))</span>
+        <span class="p">))</span>
+
+<span class="c1">;; complex field amplitude at position (x, y) with spectrum amplitude distribution f</span>
+<span class="c1">;; (one may have to adjust the &#39;relerr&#39; parameter value in the integrate function)</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">psi</span> <span class="nv">f</span> <span class="nv">x</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">r</span><span class="p">)</span> <span class="p">(</span><span class="nb">car </span><span class="p">(</span><span class="nf">integrate</span> <span class="p">(</span><span class="nf">integrand</span> <span class="nv">f</span> <span class="nv">x</span> <span class="p">(</span><span class="nf">vector3-y</span> <span class="nv">r</span><span class="p">))</span>
+                          <span class="p">(</span><span class="nb">* </span><span class="mf">-1.0</span> <span class="nv">k1</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="mf">1.0</span> <span class="nv">k1</span><span class="p">)</span> <span class="nv">relerr</span><span class="p">))</span>
+        <span class="p">))</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; display values of physical variables</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;Specified variables and derived values: \n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;chi:   &quot;</span> <span class="nv">chi_deg</span>        <span class="s">&quot; [degree]\n&quot;</span><span class="p">)</span> <span class="c1">; angle of incidence</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;incl.: &quot;</span> <span class="p">(</span><span class="nb">- </span><span class="mi">90</span> <span class="nv">chi_deg</span><span class="p">)</span> <span class="s">&quot; [degree]\n&quot;</span><span class="p">)</span> <span class="c1">; interface inclination with respect to the x-axis</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;kw_0:  &quot;</span> <span class="nv">kw_0</span>  <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;kr_w:  &quot;</span> <span class="nv">kr_w</span>  <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">not </span><span class="p">(</span><span class="nb">string=? </span><span class="nv">interface</span> <span class="s">&quot;planar&quot;</span><span class="p">))</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&quot;kr_c:  &quot;</span> <span class="nv">kr_c</span>  <span class="s">&quot;\n&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;k_vac: &quot;</span> <span class="nv">k_vac</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;polarisation: &quot;</span> <span class="p">(</span><span class="k">if </span><span class="nv">s-pol?</span> <span class="s">&quot;s&quot;</span> <span class="s">&quot;p&quot;</span><span class="p">)</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;interface: &quot;</span> <span class="nv">interface</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="c1">;(print &quot;spectrum amplitude: &quot; ((f_Gauss w_0) 20.0)                        &quot;\n&quot;)</span>
+<span class="c1">;(print &quot;integrand:          &quot; ((integrand (f_Gauss w_0) 0.8 2.0) 20.0)    &quot;\n&quot;)</span>
+<span class="c1">;(print &quot;field amplitude:    &quot; ((psi (f_Gauss w_0) 0.8) (vector3 0 0.2 0)) &quot;\n&quot;)</span>
+<span class="c1">;(exit)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; specify current source, output functions and run simulation</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="nf">use-output-directory</span> <span class="nv">interface</span><span class="p">)</span>            <span class="c1">; put output files in a separate folder</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">force-complex-fields?</span> <span class="nv">false</span><span class="p">)</span>          <span class="c1">; default: false</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">eps-averaging?</span> <span class="nv">true</span><span class="p">)</span>                  <span class="c1">; default: true</span>
+
+<span class="p">(</span><span class="k">set! </span><span class="nv">sources</span> <span class="p">(</span><span class="nf">list</span>
+                  <span class="p">(</span><span class="nf">make</span> <span class="nv">source</span>
+                      <span class="p">(</span><span class="nf">src</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">continuous-src</span> <span class="p">(</span><span class="nf">frequency</span> <span class="nv">freq</span><span class="p">)</span> <span class="p">(</span><span class="nf">width</span> <span class="mf">0.5</span><span class="p">)))</span>
+                      <span class="p">(</span><span class="k">if </span><span class="nv">s-pol?</span> <span class="p">(</span><span class="nf">component</span> <span class="nv">Ez</span><span class="p">)</span> <span class="p">(</span><span class="nf">component</span> <span class="nv">Ey</span><span class="p">))</span>
+                      <span class="p">(</span><span class="nf">size</span> <span class="mi">0</span> <span class="mf">2.0</span> <span class="mi">0</span><span class="p">)</span>
+                      <span class="p">(</span><span class="nf">center</span> <span class="nv">source_shift</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span>
+                      <span class="c1">;(amp-func (Gauss w_0)))</span>
+                      <span class="c1">;(amp-func (Asymmetric (/ w_0 (sqrt 3.0)))))</span>
+                      <span class="p">(</span><span class="nf">amp-func</span> <span class="p">(</span><span class="nf">psi</span> <span class="p">(</span><span class="nf">f_Gauss</span> <span class="nv">w_0</span><span class="p">)</span> <span class="nv">shift</span><span class="p">)))</span>
+                  <span class="p">))</span>
+
+<span class="c1">;; calculates |E|^2 with |.| denoting the complex modulus if &#39;force-complex-fields?&#39; is set to true, otherwise |.|</span>
+<span class="c1">;; gives the Euclidean norm</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">eSquared</span> <span class="nv">r</span> <span class="nv">ex</span> <span class="nv">ey</span> <span class="nv">ez</span><span class="p">)</span>
+        <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">magnitude </span><span class="nv">ex</span><span class="p">)</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">magnitude </span><span class="nv">ey</span><span class="p">)</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">magnitude </span><span class="nv">ez</span><span class="p">)</span> <span class="mi">2</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">output-efield2</span><span class="p">)</span> <span class="p">(</span><span class="nf">output-real-field-function</span> <span class="p">(</span><span class="k">if </span><span class="nv">s-pol?</span> <span class="s">&quot;e2_s&quot;</span> <span class="s">&quot;e2_p&quot;</span><span class="p">)</span>
+                                                     <span class="p">(</span><span class="nb">list </span><span class="nv">Ex</span> <span class="nv">Ey</span> <span class="nv">Ez</span><span class="p">)</span> <span class="nv">eSquared</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nf">run-until</span> <span class="nv">runtime</span>
+     <span class="p">(</span><span class="nf">at-beginning</span> <span class="p">(</span><span class="k">lambda </span><span class="p">()</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nCalculating inital field configuration. This will take some time...\n\n&quot;</span><span class="p">)))</span>
+     <span class="p">(</span><span class="nf">at-beginning</span> <span class="nv">output-epsilon</span><span class="p">)</span>          <span class="c1">; output of dielectric function</span>
+     <span class="p">(</span><span class="k">if </span><span class="nv">s-pol?</span>
+         <span class="p">(</span><span class="nf">at-end</span> <span class="nv">output-efield-z</span><span class="p">)</span>           <span class="c1">; output of E_z component (for s-polarisation)</span>
+         <span class="p">(</span><span class="nf">at-end</span> <span class="nv">output-efield-y</span><span class="p">))</span>          <span class="c1">; output of E_y component (for p-polarisation)</span>
+     <span class="p">(</span><span class="nf">at-end</span> <span class="nv">output-efield2</span><span class="p">)</span>                <span class="c1">; output of electric field intensity</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nend time: &quot;</span><span class="p">(</span><span class="nf">strftime</span> <span class="s">&quot;%c&quot;</span> <span class="p">(</span><span class="nf">localtime</span> <span class="p">(</span><span class="nf">current-time</span><span class="p">)))</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="airy-beam-in-2d">
+<h2>Airy beam in 2d<a class="headerlink" href="#airy-beam-in-2d" title="Permalink to this headline">¶</a></h2>
+<div class="literal-block-wrapper docutils container" id="airy2d-ctl">
+<div class="code-block-caption"><span class="caption-text">Airy2d.ctl</span><a class="headerlink" href="#airy2d-ctl" title="Permalink to this code">¶</a></div>
+<div class="highlight-scheme notranslate"><div class="highlight"><pre><span></span><span class="c1">;;-------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; file:    Airy2d.ctl</span>
+<span class="c1">;; brief:   Scheme configuration input file for the FDTD solver Meep simulating the scattering of an </span>
+<span class="c1">;;          incomplete Airy beam at a planar dielectric interface</span>
+<span class="c1">;; author:  Daniel Kotik</span>
+<span class="c1">;; version: 1.2.0</span>
+<span class="c1">;; date:    28.11.2019</span>
+<span class="c1">;;</span>
+<span class="c1">;; example invocations: a) launch the serial version of meep with specified polarisation (p)</span>
+<span class="c1">;;</span>
+<span class="c1">;;                              meep s-pol\?=false Airy2d.ctl</span>
+<span class="c1">;;</span>
+<span class="c1">;;                      b) launch the parallel version of meep using 8 cores</span>
+<span class="c1">;;</span>
+<span class="c1">;;                              mpirun -quiet -np 8 meep-mpi Airy2d.ctl</span>
+<span class="c1">;;</span>
+<span class="c1">;; coordinate system in meep (defines center of computational cell):  --|-----&gt; x</span>
+<span class="c1">;;                                                                      |</span>
+<span class="c1">;;                                                                      |</span>
+<span class="c1">;;                                                                      v y</span>
+<span class="c1">;;</span>
+<span class="c1">;; example visualisation (square brackets contain optional arguments for overlaying the dielectric function):</span>
+<span class="c1">;;</span>
+<span class="c1">;;          h5topng -S2 -X scalex -c hot [-a yarg -A eps-000000000.h5] e2_s-000003696.h5 </span>
+<span class="c1">;;</span>
+<span class="c1">;;          (if necessary, scale the x dimension of the image by scalex)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nstart time: &quot;</span><span class="p">(</span><span class="nf">strftime</span> <span class="s">&quot;%c&quot;</span> <span class="p">(</span><span class="nf">localtime</span> <span class="p">(</span><span class="nf">current-time</span><span class="p">)))</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; physical parameters characterizing light source and interface characteristics </span>
+<span class="c1">;; (must be adjusted - either here or via command line)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">s-pol?</span> <span class="nv">true</span> <span class="p">)</span>                 <span class="c1">; true for s-spol, false for p-pol</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">ref_medium</span> <span class="mi">0</span><span class="p">)</span>                 <span class="c1">; reference medium whose wavenumber is used as inverse scaling length</span>
+                                            <span class="c1">; (0 - free space, 1 - incident medium, 2 - refracted medium)</span>
+                                            <span class="c1">; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">n1</span>  <span class="mf">1.00</span><span class="p">)</span>                     <span class="c1">; index of refraction of the incident medium</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">n2</span>  <span class="mf">0.65</span><span class="p">)</span>                     <span class="c1">; index of refraction of the refracted medium</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">kw_0</span>   <span class="mi">7</span><span class="p">)</span>                     <span class="c1">; beam width (&gt;5 is good)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">kr_w</span>   <span class="mi">0</span><span class="p">)</span>                     <span class="c1">; beam waist distance to interface (30 to 50 is good if</span>
+                                            <span class="c1">; source position coincides with beam waist)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">M</span>  <span class="mi">0</span><span class="p">)</span>                         <span class="c1">; center of integration window</span>
+<span class="p">(</span><span class="nf">set-param!</span>   <span class="nv">W</span>  <span class="mi">4</span><span class="p">)</span>                         <span class="c1">; width of integration window</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Critical</span> <span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span>                    <span class="c1">; calculates the critical angle in degrees</span>
+    <span class="p">(</span><span class="nf">cond</span>
+      <span class="p">((</span><span class="nb">&gt; </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">asin </span><span class="p">(</span><span class="nb">/ </span><span class="nv">n2</span> <span class="nv">n1</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="mf">2.0</span> <span class="nv">pi</span><span class="p">))</span> <span class="mf">360.0</span><span class="p">))</span>
+      <span class="p">((</span><span class="nb">&lt; </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nWarning: Critical angle is not defined, since n1 &lt; n2!\n\n&quot;</span><span class="p">)</span> <span class="p">(</span><span class="nf">exit</span><span class="p">))</span>
+      <span class="p">((</span><span class="nb">= </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nWarning: Critical angle is not defined, since n1 = n2!\n\n&quot;</span><span class="p">)</span> <span class="p">(</span><span class="nf">exit</span><span class="p">))</span>
+    <span class="p">))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Brewster</span> <span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span>                    <span class="c1">; calculates the Brewster angle in degrees</span>
+        <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">atan </span><span class="p">(</span><span class="nb">/ </span><span class="nv">n2</span> <span class="nv">n1</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="mf">2.0</span> <span class="nv">pi</span><span class="p">))</span> <span class="mf">360.0</span><span class="p">))</span>
+
+<span class="c1">;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)</span>
+<span class="c1">;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))</span>
+<span class="c1">;(define-param chi_deg  (* 1.0 (Critical n1 n2)))</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">chi_deg</span>  <span class="mf">45.0</span><span class="p">)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------ </span>
+<span class="c1">;; specific Meep paramters (may need to be adjusted - either here or via command line)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">sx</span> <span class="mi">10</span><span class="p">)</span>                        <span class="c1">; size of cell including PML in x-direction</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">sy</span> <span class="mi">10</span><span class="p">)</span>                        <span class="c1">; size of cell including PML in y-direction</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">pml_thickness</span> <span class="mf">0.25</span><span class="p">)</span>           <span class="c1">; thickness of PML layer</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">freq</span>    <span class="mi">12</span><span class="p">)</span>                   <span class="c1">; vacuum frequency of source (4 to 12 is good)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">runtime</span> <span class="mi">90</span><span class="p">)</span>                   <span class="c1">; runs simulation for X times freq periods</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">pixel</span>   <span class="mi">15</span><span class="p">)</span>                   <span class="c1">; number of pixels per wavelength in the denser medium</span>
+                                            <span class="c1">; (at least 10, 20 to 30 is a good choice)</span>
+<span class="c1">;(define-param source_shift 0)              ; source position with respect to the center (point of impact) in Meep</span>
+<span class="c1">;(define-param source_shift (* -1.0 rw))    ; units (-2.15 good); if equal -rw, then source position coincides with</span>
+                                            <span class="c1">; waist position</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">source_shift</span> <span class="p">(</span><span class="nb">* </span><span class="mf">-0.4</span> <span class="p">(</span><span class="nb">- </span><span class="nv">sx</span> <span class="p">(</span><span class="nb">* </span><span class="mi">2</span> <span class="nv">pml_thickness</span><span class="p">))))</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">relerr</span> <span class="mf">1.0</span><span class="nv">e-5</span><span class="p">)</span>                <span class="c1">; relative error for integration routine (1.0e-4 or smaller)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; derived Meep parameters (do not change)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">k_vac</span> <span class="p">(</span><span class="nb">* </span><span class="mf">2.0</span> <span class="nv">pi</span> <span class="nv">freq</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">k1</span>    <span class="p">(</span><span class="nb">* </span><span class="nv">n1</span>  <span class="nv">k_vac</span>  <span class="p">))</span>              <span class="c1">; wave number inside the incident medium</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">n_ref</span> <span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="nb">= </span><span class="nv">ref_medium</span> <span class="mi">0</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1">; index of refraction of the reference medium</span>
+                    <span class="p">((</span><span class="nb">= </span><span class="nv">ref_medium</span> <span class="mi">1</span><span class="p">)</span>  <span class="nv">n1</span><span class="p">)</span>
+                    <span class="p">((</span><span class="nb">= </span><span class="nv">red_medium</span> <span class="mi">2</span><span class="p">)</span>  <span class="nv">n2</span><span class="p">)))</span>
+                    
+<span class="p">(</span><span class="k">define </span><span class="nv">rw</span>  <span class="p">(</span><span class="nb">/ </span><span class="nv">kr_w</span> <span class="p">(</span><span class="nb">* </span><span class="nv">n_ref</span> <span class="nv">k_vac</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">w_0</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">kw_0</span> <span class="p">(</span><span class="nb">* </span><span class="nv">n_ref</span> <span class="nv">k_vac</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">shift</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">source_shift</span> <span class="nv">rw</span><span class="p">))</span>          <span class="c1">; distance from source position to beam waist (along y-axis)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; placement of the dielectric interface within the computational cell</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; helper functions</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">alpha</span> <span class="nv">_chi_deg</span><span class="p">)</span>                    <span class="c1">; angle of inclined plane with y-axis</span>
+        <span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">/ </span><span class="nv">pi</span> <span class="mf">2.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="nv">_chi_deg</span> <span class="mi">360</span><span class="p">)</span> <span class="mi">2</span> <span class="nv">pi</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Delta_x</span> <span class="nv">_alpha</span><span class="p">)</span>                    <span class="c1">; inclined plane offset to the center of the cell</span>
+        <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="nv">sx</span> <span class="mf">2.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nf">-</span><span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">sqrt </span><span class="mf">2.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">cos </span><span class="nv">_alpha</span><span class="p">))</span> <span class="p">(</span><span class="nb">sin </span><span class="nv">_alpha</span><span class="p">))</span> <span class="p">(</span><span class="nb">sin </span><span class="nv">_alpha</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">chi_rad</span> <span class="nv">_chi_deg</span><span class="p">)</span>                  <span class="c1">; conversion degrees to radians</span>
+        <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="nv">_chi_deg</span> <span class="mf">360.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="mf">2.0</span> <span class="nv">pi</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">set! </span><span class="nv">geometry-lattice</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">lattice</span> <span class="p">(</span><span class="nf">size</span> <span class="nv">sx</span> <span class="nv">sy</span> <span class="nv">no-size</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">set! </span><span class="nv">default-material</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">dielectric</span> <span class="p">(</span><span class="nf">index</span> <span class="nv">n1</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">geometry</span> <span class="p">(</span><span class="nf">list</span>
+                <span class="p">(</span><span class="nf">make</span> <span class="nv">block</span>                 <span class="c1">; located at lower right edge for 45 degree tilt</span>
+                <span class="p">(</span><span class="nf">center</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">/ </span><span class="nv">sx</span> <span class="mf">2.0</span><span class="p">)</span> <span class="p">(</span><span class="nf">Delta_x</span> <span class="p">(</span><span class="nf">alpha</span> <span class="nv">chi_deg</span><span class="p">)))</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">sy</span> <span class="mf">-2.0</span><span class="p">))</span>
+                <span class="p">(</span><span class="nf">size</span> <span class="nv">infinity</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">sqrt </span><span class="mf">2.0</span><span class="p">)</span> <span class="nv">sx</span><span class="p">)</span> <span class="nv">infinity</span><span class="p">)</span>
+                <span class="p">(</span><span class="nf">e1</span> <span class="p">(</span><span class="nb">/ </span><span class="mf">1.0</span> <span class="p">(</span><span class="nb">tan </span><span class="p">(</span><span class="nf">alpha</span> <span class="nv">chi_deg</span><span class="p">)))</span>  <span class="mi">1</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="p">(</span><span class="nf">e2</span> <span class="mi">-1</span> <span class="p">(</span><span class="nb">/ </span><span class="mf">1.0</span> <span class="p">(</span><span class="nb">tan </span><span class="p">(</span><span class="nf">alpha</span> <span class="nv">chi_deg</span><span class="p">)))</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="p">(</span><span class="nf">e3</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">(</span><span class="nf">material</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">dielectric</span> <span class="p">(</span><span class="nf">index</span> <span class="nv">n2</span><span class="p">))))</span>
+                <span class="p">))</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; add absorbing boundary conditions and discretize structure</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">pml-layers</span> 
+    <span class="p">(</span><span class="nb">list </span><span class="p">(</span><span class="nf">make</span> <span class="nv">pml</span> <span class="p">(</span><span class="nf">thickness</span> <span class="nv">pml_thickness</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">resolution</span>                            <span class="c1">; set resolution in pixels per Meep distance unit</span>
+      <span class="p">(</span><span class="nb">* </span><span class="nv">pixel</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="nv">freq</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">Courant</span>                               <span class="c1">; set Courant factor (mandatory if either n1 or n2 is smaller than 1)</span>
+      <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&lt; </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; beam profile distribution (field amplitude) at the waist of the beam</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Gauss</span> <span class="nv">W_y</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">r</span><span class="p">)</span> <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mf">-1.0</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nf">vector3-y</span> <span class="nv">r</span><span class="p">)</span> <span class="nv">W_y</span><span class="p">)</span> <span class="mf">2.0</span><span class="p">)))</span>
+        <span class="p">))</span>
+
+<span class="c1">;; incomplete Airy function</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Ai_inc</span> <span class="nv">W_y</span> <span class="nv">M</span> <span class="nv">W</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">r</span><span class="p">)</span> <span class="p">(</span><span class="nf">car</span>
+        <span class="p">(</span><span class="nf">integrate</span> <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">xi</span><span class="p">)</span> <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mi">0</span><span class="nv">+1i</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="mi">-1</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nb">expt </span><span class="nv">xi</span> <span class="mi">3</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="nv">xi</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nf">vector3-y</span> <span class="nv">r</span><span class="p">)</span> <span class="nv">W_y</span><span class="p">))))))</span>
+                   <span class="p">(</span><span class="nb">- </span><span class="nv">M</span> <span class="nv">W</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">M</span> <span class="nv">W</span><span class="p">)</span> <span class="nv">relerr</span><span class="p">))</span>
+        <span class="p">))</span>
+
+<span class="c1">;; simple test outputs</span>
+<span class="c1">;(print &quot;w_0: &quot; w_0 &quot;\n&quot;)</span>
+<span class="c1">;(print &quot;Airy function 1: &quot; ((Ai_inc w_0 0 4) (vector3 1 -0.3 1)) &quot;\n&quot;)</span>
+<span class="c1">;(exit)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; spectrum amplitude distribution</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">Heaviside</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="nb">&lt; </span> <span class="nv">x</span> <span class="mi">0</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span> <span class="p">((</span><span class="nb">&gt;= </span><span class="nv">x</span> <span class="mi">0</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="p">))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">f_Gauss</span> <span class="nv">W_y</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">k_y</span><span class="p">)</span> <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mf">-1.0</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">* </span><span class="mf">0.5</span> <span class="nv">k_y</span> <span class="nv">W_y</span><span class="p">)</span> <span class="mi">2</span><span class="p">)))</span>
+        <span class="p">))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">f_Airy</span> <span class="nv">W_y</span> <span class="nv">M</span> <span class="nv">W</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">k_y</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">W_y</span> <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mi">0</span><span class="nv">+1i</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="mi">-1</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">* </span><span class="nv">k_y</span> <span class="nv">W_y</span><span class="p">)</span> <span class="mi">3</span><span class="p">))))</span>
+                             <span class="p">(</span><span class="nf">Heaviside</span> <span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">* </span><span class="nv">W_y</span> <span class="nv">k_y</span><span class="p">)</span> <span class="p">(</span><span class="nb">- </span><span class="nv">M</span> <span class="nv">W</span><span class="p">)))</span> <span class="p">(</span><span class="nf">Heaviside</span> <span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">+ </span><span class="nv">M</span> <span class="nv">W</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">W_y</span> <span class="nv">k_y</span><span class="p">))))</span>
+        <span class="p">))</span>
+
+<span class="c1">;; simple test outputs</span>
+<span class="c1">;(print &quot;Airy spectrum: &quot; ((f_Airy w_0 0 4) 0.2) &quot;\n&quot;)</span>
+<span class="c1">;(exit)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; plane wave decomposition </span>
+<span class="c1">;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">integrand</span> <span class="nv">f</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">k_y</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">f</span> <span class="nv">k_y</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mi">0</span><span class="nv">+1i</span> <span class="nv">x</span> <span class="p">(</span><span class="nb">sqrt </span><span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">* </span><span class="nv">k1</span> <span class="nv">k1</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">k_y</span> <span class="nv">k_y</span><span class="p">)))))</span>
+                        <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mi">0</span><span class="nv">+1i</span> <span class="nv">k_y</span> <span class="nv">y</span><span class="p">)))</span>
+        <span class="p">))</span>
+
+<span class="c1">;; complex field amplitude at position (x, y) with spectrum amplitude distribution f</span>
+<span class="c1">;; (one may have to adjust the &#39;relerr&#39; parameter value in the integrate function)</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">psi</span> <span class="nv">f</span> <span class="nv">x</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">r</span><span class="p">)</span> <span class="p">(</span><span class="nb">car </span><span class="p">(</span><span class="nf">integrate</span> <span class="p">(</span><span class="nf">integrand</span> <span class="nv">f</span> <span class="nv">x</span> <span class="p">(</span><span class="nf">vector3-y</span> <span class="nv">r</span><span class="p">))</span>
+                          <span class="p">(</span><span class="nb">* </span><span class="mf">-1.0</span> <span class="nv">k1</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="mf">1.0</span> <span class="nv">k1</span><span class="p">)</span> <span class="nv">relerr</span><span class="p">))</span>
+        <span class="p">))</span>
+
+<span class="c1">;(print &quot;Airy function 2: &quot; ((psi (f_Airy w_0 0 4) 0) (vector3 1 -0.3 1)) &quot;\n&quot;)</span>
+<span class="c1">;(exit)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; display values of physical variables</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;Specified variables and derived values: \n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;chi:   &quot;</span> <span class="nv">chi_deg</span>        <span class="s">&quot; [degree]\n&quot;</span><span class="p">)</span> <span class="c1">; angle of incidence</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;incl.: &quot;</span> <span class="p">(</span><span class="nb">- </span><span class="mi">90</span> <span class="nv">chi_deg</span><span class="p">)</span> <span class="s">&quot; [degree]\n&quot;</span><span class="p">)</span> <span class="c1">; interface inclination with respect to the x-axis</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;kw_0:  &quot;</span> <span class="nv">kw_0</span>  <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;kr_w:  &quot;</span> <span class="nv">kr_w</span>  <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;k_vac: &quot;</span> <span class="nv">k_vac</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;polarisation: &quot;</span> <span class="p">(</span><span class="k">if </span><span class="nv">s-pol?</span> <span class="s">&quot;s&quot;</span> <span class="s">&quot;p&quot;</span><span class="p">)</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; specify current source, output functions and run simulation</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="nf">use-output-directory</span><span class="p">)</span>                      <span class="c1">; put output files in a separate folder</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">force-complex-fields?</span> <span class="nv">false</span><span class="p">)</span>          <span class="c1">; default: false</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">eps-averaging?</span> <span class="nv">true</span><span class="p">)</span>                  <span class="c1">; default: true</span>
+
+<span class="p">(</span><span class="k">set! </span><span class="nv">sources</span> <span class="p">(</span><span class="nf">list</span>
+                  <span class="p">(</span><span class="nf">make</span> <span class="nv">source</span>
+                      <span class="p">(</span><span class="nf">src</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">continuous-src</span> <span class="p">(</span><span class="nf">frequency</span> <span class="nv">freq</span><span class="p">)</span> <span class="p">(</span><span class="nf">width</span> <span class="mf">0.5</span><span class="p">)))</span>
+                      <span class="p">(</span><span class="k">if </span><span class="nv">s-pol?</span> <span class="p">(</span><span class="nf">component</span> <span class="nv">Ez</span><span class="p">)</span> <span class="p">(</span><span class="nf">component</span> <span class="nv">Ey</span><span class="p">))</span>
+                      <span class="p">(</span><span class="nf">size</span> <span class="mi">0</span> <span class="mi">9</span> <span class="mi">0</span><span class="p">)</span>
+                      <span class="p">(</span><span class="nf">center</span> <span class="nv">source_shift</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span>
+                      <span class="c1">;(amp-func (Gauss w_0)))</span>
+                      <span class="c1">;(amp-func (Ai_inc w_0 M W)))</span>
+                      <span class="p">(</span><span class="nf">amp-func</span> <span class="p">(</span><span class="nf">psi</span> <span class="p">(</span><span class="nf">f_Airy</span> <span class="nv">w_0</span> <span class="nv">M</span> <span class="nv">W</span><span class="p">)</span> <span class="nv">shift</span><span class="p">)))</span>
+                  <span class="p">))</span>
+
+<span class="c1">;; calculates |E|^2 with |.| denoting the complex modulus if &#39;force-complex-fields?&#39; is set to true, otherwise |.|</span>
+<span class="c1">;; gives the Euclidean norm</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">eSquared</span> <span class="nv">r</span> <span class="nv">ex</span> <span class="nv">ey</span> <span class="nv">ez</span><span class="p">)</span>
+        <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">magnitude </span><span class="nv">ex</span><span class="p">)</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">magnitude </span><span class="nv">ey</span><span class="p">)</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">magnitude </span><span class="nv">ez</span><span class="p">)</span> <span class="mi">2</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">output-efield2</span><span class="p">)</span> <span class="p">(</span><span class="nf">output-real-field-function</span> <span class="p">(</span><span class="k">if </span><span class="nv">s-pol?</span> <span class="s">&quot;e2_s&quot;</span> <span class="s">&quot;e2_p&quot;</span><span class="p">)</span>
+                                                     <span class="p">(</span><span class="nb">list </span><span class="nv">Ex</span> <span class="nv">Ey</span> <span class="nv">Ez</span><span class="p">)</span> <span class="nv">eSquared</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nf">run-until</span> <span class="nv">runtime</span>
+     <span class="p">(</span><span class="nf">at-beginning</span> <span class="p">(</span><span class="k">lambda </span><span class="p">()</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nCalculating inital field configuration. This will take some time...\n\n&quot;</span><span class="p">)))</span>
+     <span class="p">(</span><span class="nf">at-beginning</span> <span class="nv">output-epsilon</span><span class="p">)</span>          <span class="c1">; output of dielectric function</span>
+     <span class="p">(</span><span class="k">if </span><span class="nv">s-pol?</span>
+         <span class="p">(</span><span class="nf">at-end</span> <span class="nv">output-efield-z</span><span class="p">)</span>           <span class="c1">; output of E_z component (for s-polarisation)</span>
+         <span class="p">(</span><span class="nf">at-end</span> <span class="nv">output-efield-y</span><span class="p">))</span>          <span class="c1">; output of E_y component (for p-polarisation)</span>
+     <span class="p">(</span><span class="nf">at-end</span> <span class="nv">output-efield2</span><span class="p">))</span>               <span class="c1">; output of electric field intensity</span>
+
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nend time: &quot;</span><span class="p">(</span><span class="nf">strftime</span> <span class="s">&quot;%c&quot;</span> <span class="p">(</span><span class="nf">localtime</span> <span class="p">(</span><span class="nf">current-time</span><span class="p">)))</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="laguerre-gauss-beam">
+<h2>Laguerre-Gauss beam<a class="headerlink" href="#laguerre-gauss-beam" title="Permalink to this headline">¶</a></h2>
+<div class="literal-block-wrapper docutils container" id="laguerregauss3d-ctl">
+<div class="code-block-caption"><span class="caption-text">LaguerreGauss3d.ctl</span><a class="headerlink" href="#laguerregauss3d-ctl" title="Permalink to this code">¶</a></div>
+<div class="highlight-scheme notranslate"><div class="highlight"><pre><span></span><span class="c1">;;-------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; file:    LaguerreGauss3d.ctl</span>
+<span class="c1">;; brief:   Scheme configuration input file for the FDTD solver Meep simulating the scattering of a polarised</span>
+<span class="c1">;;          Laguerre-Gaussian beam at a planar dielectric interface (3d)</span>
+<span class="c1">;; author:  Daniel Kotik</span>
+<span class="c1">;; version: 1.2.0</span>
+<span class="c1">;; date:    28.11.2019</span>
+<span class="c1">;;</span>
+<span class="c1">;; example invocations: a) launch the serial version of meep with specified polarisation (p)</span>
+<span class="c1">;;</span>
+<span class="c1">;;                              meep e_z=0 e_y=1 LaguerreGauss3d.ctl</span>
+<span class="c1">;;</span>
+<span class="c1">;;                      b) launch the parallel version of meep using 8 cores</span>
+<span class="c1">;;</span>
+<span class="c1">;;                              mpirun -quiet -np 8 meep-mpi LaguerreGauss3d.ctl</span>
+<span class="c1">;;</span>
+<span class="c1">;; coordinate system in meep (defines center of computational cell):  --|-----&gt; x</span>
+<span class="c1">;;                                                                      |</span>
+<span class="c1">;;                                                                      |</span>
+<span class="c1">;;                                                                      v y</span>
+<span class="c1">;;</span>
+<span class="c1">;; example visualisations:</span>
+<span class="c1">;;      - slice within the plane of incidence (x-y plane)</span>
+<span class="c1">;;          h5topng -S2 -0 -z 0  -c hot [HDF5FILE]</span>
+<span class="c1">;;</span>
+<span class="c1">;;      - slice transversal to the incident propagation axis (INDEX specifies slice index)</span>
+<span class="c1">;;          h5topng -S2 -x INDEX -c hot [HDF5FILE]</span>
+<span class="c1">;;</span>
+<span class="c1">;;      - full 3D simulation (creating a VTK file to be opened e.g., with MayaVi or ParaView)</span>
+<span class="c1">;;          h5tovtk [HDF5FILE]</span>
+<span class="c1">;;</span>
+<span class="c1">;; As input HDF5FILE choose between, for example, &#39;e_real2_p-000001500.h5&#39;, &#39;e_imag2_p-000001500.h5&#39; (these are</span>
+<span class="c1">;; proportional to the electric field energy density) or the sum of both &#39;e2.h5&#39; (which is proportional to the complex</span>
+<span class="c1">;; modulus of the complex electric field) obtained by</span>
+<span class="c1">;;          h5math -e &quot;d1 + d2&quot; e2.h5 e_real2_p-000001500.h5 e_imag2_p-000001500.h5</span>
+<span class="c1">;;</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nstart time: &quot;</span><span class="p">(</span><span class="nf">strftime</span> <span class="s">&quot;%c&quot;</span> <span class="p">(</span><span class="nf">localtime</span> <span class="p">(</span><span class="nf">current-time</span><span class="p">)))</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; physical parameters characterizing light source and interface characteristics</span>
+<span class="c1">;; (must be adjusted - either here or via command line)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">e_z</span>        <span class="mi">1</span><span class="p">)</span>                 <span class="c1">; z-component of Jones vector (s-polarisation: e_z = 1, e_y = 0)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">e_y</span>        <span class="mi">0</span><span class="p">)</span>                 <span class="c1">; y-component of Jones vector (p-polarisation: e_z = 0, e_y = 1)</span>
+                                            <span class="c1">;                      (circular-polarisation: e_z = (/ 1+1i 2),</span>
+                                            <span class="c1">;                                              e_y = (/ 1-1i 2))</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">m_charge</span>   <span class="mi">2</span><span class="p">)</span>                 <span class="c1">; vortex charge (azimuthal quantum number, integer number)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">ref_medium</span> <span class="mi">0</span><span class="p">)</span>                 <span class="c1">; reference medium whose wavenumber is used as inverse scaling length</span>
+                                            <span class="c1">; (0 - free space, 1 - incident medium, 2 - refracted medium)</span>
+                                            <span class="c1">; k is then equivalent to k_ref_medium: k_1 = k_0*n_1 or k_2 = k_0*n_2</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">n1</span>  <span class="mf">1.00</span><span class="p">)</span>                     <span class="c1">; index of refraction of the incident medium</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">n2</span>  <span class="mf">1.54</span><span class="p">)</span>                     <span class="c1">; index of refraction of the refracted medium</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">kw_0</span>   <span class="mi">8</span><span class="p">)</span>                     <span class="c1">; beam width (&gt;5 is good)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">kr_w</span>   <span class="mi">0</span><span class="p">)</span>                     <span class="c1">; beam waist distance to interface (30 to 50 is good if</span>
+                                            <span class="c1">; source position coincides with beam waist)</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Critical</span> <span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span>                    <span class="c1">; calculates the critical angle in degrees</span>
+    <span class="p">(</span><span class="nf">cond</span>
+      <span class="p">((</span><span class="nb">&gt; </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">asin </span><span class="p">(</span><span class="nb">/ </span><span class="nv">n2</span> <span class="nv">n1</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="mf">2.0</span> <span class="nv">pi</span><span class="p">))</span> <span class="mf">360.0</span><span class="p">))</span>
+      <span class="p">((</span><span class="nb">&lt; </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nWarning: Critical angle is not defined, since n1 &lt; n2!\n\n&quot;</span><span class="p">)</span> <span class="p">(</span><span class="nf">exit</span><span class="p">))</span>
+      <span class="p">((</span><span class="nb">= </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nWarning: Critical angle is not defined, since n1 = n2!\n\n&quot;</span><span class="p">)</span> <span class="p">(</span><span class="nf">exit</span><span class="p">))</span>
+    <span class="p">))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Brewster</span> <span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span>                    <span class="c1">; calculates the Brewster angle in degrees</span>
+        <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">atan </span><span class="p">(</span><span class="nb">/ </span><span class="nv">n2</span> <span class="nv">n1</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="mf">2.0</span> <span class="nv">pi</span><span class="p">))</span> <span class="mf">360.0</span><span class="p">))</span>
+
+<span class="c1">;; define incidence angle relative to the Brewster or critical angle, or set it explicitly (in degrees)</span>
+<span class="c1">;(define-param chi_deg  (* 0.85 (Brewster n1 n2)))</span>
+<span class="c1">;(define-param chi_deg  (* 0.99 (Critical n1 n2)))</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">chi_deg</span>  <span class="mf">45.0</span><span class="p">)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; specific Meep paramters (may need to be adjusted - either here or via command line)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">sx</span> <span class="mi">5</span><span class="p">)</span>                         <span class="c1">; size of cell including PML in x-direction</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">sy</span> <span class="mi">5</span><span class="p">)</span>                         <span class="c1">; size of cell including PML in y-direction</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">sz</span> <span class="mi">4</span><span class="p">)</span>                         <span class="c1">; size of cell including PML in z-direction</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">pml_thickness</span> <span class="mf">0.25</span><span class="p">)</span>           <span class="c1">; thickness of PML layer</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">freq</span>     <span class="mi">5</span><span class="p">)</span>                   <span class="c1">; vacuum frequency of source (default 5)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">runtime</span> <span class="mi">10</span><span class="p">)</span>                   <span class="c1">; runs simulation for 10 times freq periods</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">pixel</span>   <span class="mi">10</span><span class="p">)</span>                   <span class="c1">; number of pixels per wavelength in the denser</span>
+                                            <span class="c1">; medium (at least 10, 20 to 30 is a good choice)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">source_shift</span> <span class="mf">-2.15</span><span class="p">)</span>           <span class="c1">; source position with respect to the center (point of impact) in Meep</span>
+<span class="c1">;(define-param source_shift (* -1.0 r_w))   ; units (-2.15 good); if equal -r_w, then source position coincides with</span>
+                                            <span class="c1">; waist position</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">relerr</span> <span class="mf">0.0001</span><span class="p">)</span>                <span class="c1">; relative error for integration routine (0.0001 or smaller)</span>
+<span class="p">(</span><span class="nf">define-param</span> <span class="nv">maxeval</span> <span class="mi">10000</span><span class="p">)</span>                <span class="c1">; maximum evaluations for integration routine (we recommend 1000 for testing</span>
+                                            <span class="c1">; purposes and 10000 or higher for a final simulation run)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; derived Meep parameters (do not change)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">k_vac</span> <span class="p">(</span><span class="nb">* </span><span class="mf">2.0</span> <span class="nv">pi</span> <span class="nv">freq</span><span class="p">))</span>              <span class="c1">; vacuum wave number</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">k1</span>    <span class="p">(</span><span class="nb">* </span><span class="nv">n1</span>  <span class="nv">k_vac</span>  <span class="p">))</span>              <span class="c1">; wave number inside the incident medium</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">n_ref</span> <span class="p">(</span><span class="k">cond </span><span class="p">((</span><span class="nb">= </span><span class="nv">ref_medium</span> <span class="mi">0</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1">; index of refraction of the reference medium</span>
+                    <span class="p">((</span><span class="nb">= </span><span class="nv">ref_medium</span> <span class="mi">1</span><span class="p">)</span>  <span class="nv">n1</span><span class="p">)</span>
+                    <span class="p">((</span><span class="nb">= </span><span class="nv">red_medium</span> <span class="mi">2</span><span class="p">)</span>  <span class="nv">n2</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="nv">r_w</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">kr_w</span> <span class="p">(</span><span class="nb">* </span><span class="nv">n_ref</span> <span class="nv">k_vac</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">w_0</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">kw_0</span> <span class="p">(</span><span class="nb">* </span><span class="nv">n_ref</span> <span class="nv">k_vac</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">shift</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">source_shift</span> <span class="nv">r_w</span><span class="p">))</span>         <span class="c1">; distance from source position to beam waist (along y-axis)</span>
+
+<span class="p">(</span><span class="k">define </span><span class="nv">s-pol?</span>                              <span class="c1">; true if s-polarised</span>
+       <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="k">and </span><span class="p">(</span><span class="nb">= </span><span class="nv">e_z</span>   <span class="mi">1</span> <span class="p">)</span> <span class="p">(</span><span class="nb">= </span><span class="nv">e_y</span>   <span class="mi">0</span> <span class="p">))</span> <span class="nv">true</span> <span class="nv">false</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">p-pol?</span>                              <span class="c1">; true if p-polarised</span>
+       <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="k">and </span><span class="p">(</span><span class="nb">= </span><span class="nv">e_z</span>   <span class="mi">0</span> <span class="p">)</span> <span class="p">(</span><span class="nb">= </span><span class="nv">e_y</span>   <span class="mi">1</span> <span class="p">))</span> <span class="nv">true</span> <span class="nv">false</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define </span><span class="nv">a-pol?</span>                              <span class="c1">; true if arbitrary (complex) polarised</span>
+       <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="k">and </span><span class="p">(</span><span class="nb">not </span><span class="nv">s-pol?</span><span class="p">)</span> <span class="p">(</span><span class="nb">not </span><span class="nv">p-pol?</span><span class="p">))</span> <span class="nv">true</span> <span class="nv">false</span><span class="p">))</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; placement of the planar dielectric interface within the computational cell</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; helper functions</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">alpha</span> <span class="nv">_chi_deg</span><span class="p">)</span>                    <span class="c1">; angle of inclined plane with y-axis</span>
+        <span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">/ </span><span class="nv">pi</span> <span class="mf">2.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="nv">_chi_deg</span> <span class="mi">360</span><span class="p">)</span> <span class="mi">2</span> <span class="nv">pi</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Delta_x</span> <span class="nv">_alpha</span><span class="p">)</span>                    <span class="c1">; inclined plane offset to the center of the cell</span>
+        <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">/ </span><span class="nv">sx</span> <span class="mf">2.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nf">-</span><span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">sqrt </span><span class="mf">2.0</span><span class="p">)</span> <span class="p">(</span><span class="nb">cos </span><span class="nv">_alpha</span><span class="p">))</span> <span class="p">(</span><span class="nb">sin </span><span class="nv">_alpha</span><span class="p">))</span> <span class="p">(</span><span class="nb">sin </span><span class="nv">_alpha</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">set! </span><span class="nv">geometry-lattice</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">lattice</span> <span class="p">(</span><span class="nf">size</span> <span class="nv">sx</span> <span class="nv">sy</span> <span class="nv">sz</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">default-material</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">dielectric</span> <span class="p">(</span><span class="nf">index</span> <span class="nv">n1</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">set! </span><span class="nv">geometry</span> <span class="p">(</span><span class="nf">list</span>
+                <span class="p">(</span><span class="nf">make</span> <span class="nv">block</span>                 <span class="c1">; located at lower right edge for 45 degree tilt</span>
+                <span class="p">(</span><span class="nf">center</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">/ </span><span class="nv">sx</span> <span class="mf">2.0</span><span class="p">)</span> <span class="p">(</span><span class="nf">Delta_x</span> <span class="p">(</span><span class="nf">alpha</span> <span class="nv">chi_deg</span><span class="p">)))</span> <span class="p">(</span><span class="nb">/ </span><span class="nv">sy</span> <span class="mf">-2.0</span><span class="p">))</span>
+                <span class="p">(</span><span class="nf">size</span> <span class="nv">infinity</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">sqrt </span><span class="mf">2.0</span><span class="p">)</span> <span class="nv">sx</span><span class="p">)</span> <span class="nv">infinity</span><span class="p">)</span>
+                <span class="p">(</span><span class="nf">e1</span> <span class="p">(</span><span class="nb">/ </span><span class="mf">1.0</span> <span class="p">(</span><span class="nb">tan </span><span class="p">(</span><span class="nf">alpha</span> <span class="nv">chi_deg</span><span class="p">)))</span>  <span class="mi">1</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="p">(</span><span class="nf">e2</span> <span class="mi">-1</span> <span class="p">(</span><span class="nb">/ </span><span class="mf">1.0</span> <span class="p">(</span><span class="nb">tan </span><span class="p">(</span><span class="nf">alpha</span> <span class="nv">chi_deg</span><span class="p">)))</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="p">(</span><span class="nf">e3</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">(</span><span class="nf">material</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">dielectric</span> <span class="p">(</span><span class="nf">index</span> <span class="nv">n2</span><span class="p">))))</span>
+                <span class="p">))</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; add absorbing boundary conditions and discretize structure</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">pml-layers</span>
+    <span class="p">(</span><span class="nb">list </span><span class="p">(</span><span class="nf">make</span> <span class="nv">pml</span> <span class="p">(</span><span class="nf">thickness</span> <span class="nv">pml_thickness</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">resolution</span>                            <span class="c1">; set resolution in pixels per Meep distance unit</span>
+      <span class="p">(</span><span class="nb">* </span><span class="nv">pixel</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="nv">freq</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">Courant</span>                               <span class="c1">; set Courant factor (mandatory if either n1 or n2 is smaller than 1)</span>
+      <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&lt; </span><span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="nv">n1</span> <span class="nv">n2</span><span class="p">)</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; 2d-beam profile distribution (field amplitude) at the waist of the beam</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">Gauss</span> <span class="nv">W_y</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">r</span><span class="p">)</span> <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mf">-1.0</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">vector3-y</span> <span class="nv">r</span><span class="p">)</span> <span class="p">(</span><span class="nf">vector3-y</span> <span class="nv">r</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">vector3-z</span> <span class="nv">r</span><span class="p">)</span> <span class="p">(</span><span class="nf">vector3-z</span> <span class="nv">r</span><span class="p">)))</span>
+                                    <span class="p">(</span><span class="nb">* </span><span class="nv">W_y</span> <span class="nv">W_y</span><span class="p">))))</span>
+        <span class="p">))</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; some test outputs (uncomment if needed)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;(print &quot;Gauss 2d beam profile: &quot; ((Gauss w_0) (vector3 0 0.5 0.2)) &quot;\n&quot;)</span>
+<span class="c1">;(exit)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; spectrum amplitude distribution(s)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+
+<span class="c1">;;cartesian coordinates (not recommended) ---------------------------</span>
+<span class="c1">;; coordinate transformation: from k-space to (theta, phi)-space</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">phi</span> <span class="nv">k</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">k_y</span> <span class="nv">k_z</span><span class="p">)</span> <span class="p">(</span><span class="nb">atan </span><span class="p">(</span><span class="nb">/ </span><span class="nv">k_y</span> <span class="nv">k</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">* </span><span class="mi">-1</span> <span class="nv">k_z</span><span class="p">)</span> <span class="nv">k</span><span class="p">))</span>
+        <span class="p">))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">theta</span> <span class="nv">k</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">k_y</span> <span class="nv">k_z</span><span class="p">)</span> <span class="p">(</span><span class="nb">acos </span><span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">real-part </span><span class="p">(</span><span class="nb">sqrt </span><span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">* </span><span class="nv">k</span> <span class="nv">k</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">k_y</span> <span class="nv">k_y</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">k_z</span> <span class="nv">k_z</span><span class="p">))))</span> <span class="nv">k</span><span class="p">))</span>
+        <span class="p">))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">f_Gauss_cartesian</span> <span class="nv">W_y</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">k_y</span> <span class="nv">k_z</span><span class="p">)</span> <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mi">-1</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nb">* </span><span class="nv">W_y</span> <span class="nv">W_y</span><span class="p">)</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="nv">k_y</span> <span class="nv">k_y</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">k_z</span> <span class="nv">k_z</span><span class="p">))</span> <span class="mi">4</span><span class="p">))))</span>
+        <span class="p">))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">f_Laguerre_Gauss_cartesian</span> <span class="nv">W_y</span> <span class="nv">m</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">k_y</span> <span class="nv">k_z</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="p">((</span><span class="nf">f_Gauss_cartesian</span> <span class="nv">W_y</span><span class="p">)</span> <span class="nv">k_y</span> <span class="nv">k_z</span><span class="p">)</span> <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mi">0</span><span class="nv">+1i</span> <span class="nv">m</span> <span class="p">((</span><span class="nf">phi</span> <span class="nv">k1</span><span class="p">)</span> <span class="nv">k_y</span> <span class="nv">k_z</span><span class="p">)))</span>
+                             <span class="p">(</span><span class="nb">expt </span><span class="p">((</span><span class="nf">theta</span> <span class="nv">k1</span><span class="p">)</span> <span class="nv">k_y</span> <span class="nv">k_z</span><span class="p">)</span> <span class="p">(</span><span class="nb">abs </span><span class="nv">m</span><span class="p">)))</span>
+        <span class="p">))</span>
+
+<span class="c1">;; spherical coordinates --------------------------------------------</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">f_Gauss_spherical</span> <span class="nv">W_y</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">sin_theta</span> <span class="o">.</span> <span class="nv">opt</span><span class="p">)</span>           <span class="c1">; opt is an optional list of (unused) arguments (here:  theta, phi)</span>
+                <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mi">-1</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">* </span><span class="nv">k1</span> <span class="nv">W_y</span> <span class="nv">sin_theta</span><span class="p">)</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">2</span><span class="p">)))</span>
+        <span class="p">))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">f_Laguerre_Gauss_spherical</span> <span class="nv">W_y</span> <span class="nv">m</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">sin_theta</span> <span class="nv">theta</span> <span class="nv">phi</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="p">((</span><span class="nf">f_Gauss_spherical</span> <span class="nv">W_y</span><span class="p">)</span> <span class="nv">sin_theta</span><span class="p">)</span> <span class="p">(</span><span class="nb">expt </span><span class="nv">theta</span> <span class="p">(</span><span class="nb">abs </span><span class="nv">m</span><span class="p">))</span> <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mi">0</span><span class="nv">+1i</span> <span class="nv">m</span> <span class="nv">phi</span><span class="p">)))</span>
+        <span class="p">))</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; some test outputs (uncomment if needed)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;(let ((k_y 1.0) (k_z 5.2))                  ; set local test values</span>
+<span class="c1">;    (print &quot;\nGauss spectrum (cartesian): &quot; ((f_Gauss_cartesian w_0) k_y k_z)  &quot;\n&quot;)</span>
+<span class="c1">;    (print   &quot;Gauss spectrum (spherical): &quot; ((f_Gauss_spherical w_0) (sin ((theta k1) k_y k_z))) &quot;\n&quot;)</span>
+<span class="c1">;</span>
+<span class="c1">;    (print &quot;\nL-G spectrum   (cartesian): &quot; ((f_Laguerre_Gauss_cartesian w_0 m_charge) k_y k_z) &quot;\n&quot;)</span>
+<span class="c1">;    (print   &quot;L-G spectrum   (spherical): &quot; ((f_Laguerre_Gauss_spherical w_0 m_charge) (sin ((theta k1) k_y k_z))</span>
+<span class="c1">;                                                                                       ((theta k1) k_y k_z)</span>
+<span class="c1">;                                                                                       ((phi k1) k_y k_z)) &quot;\n\n&quot;)</span>
+<span class="c1">;)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; plane wave decomposition</span>
+<span class="c1">;; (purpose: calculate field amplitude at light source position if not coinciding with beam waist)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">integrand_cartesian</span> <span class="nv">f</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">k_y</span> <span class="nv">k_z</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">f</span> <span class="nv">k_y</span> <span class="nv">k_z</span><span class="p">)</span>
+                             <span class="c1">;(exp (* 0+1i x (real-part (sqrt (- (* k1 k1) (* k_y k_y) (* k_z k_z))))))</span>
+                             <span class="c1">;(exp (* 0+1i y k_y))</span>
+                             <span class="c1">;(exp (* 0+1i z k_z)))</span>
+                             <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mi">0</span><span class="nv">+1i</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="p">(</span><span class="nb">real-part </span><span class="p">(</span><span class="nb">sqrt </span><span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">* </span><span class="nv">k1</span> <span class="nv">k1</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">k_y</span> <span class="nv">k_y</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">k_z</span> <span class="nv">k_z</span><span class="p">)))))</span>
+                                             <span class="p">(</span><span class="nb">* </span><span class="nv">y</span> <span class="nv">k_y</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">z</span> <span class="nv">k_z</span><span class="p">)))))</span>
+        <span class="p">))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">integrand_spherical</span> <span class="nv">f</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">theta</span> <span class="nv">phi</span><span class="p">)</span> <span class="p">(</span><span class="k">let </span><span class="p">((</span><span class="nf">sin_theta</span> <span class="p">(</span><span class="nb">sin </span><span class="nv">theta</span><span class="p">))</span> <span class="p">(</span><span class="nf">cos_theta</span> <span class="p">(</span><span class="nb">cos </span><span class="nv">theta</span><span class="p">)))</span>
+                            <span class="p">(</span><span class="nb">* </span><span class="nv">sin_theta</span> <span class="nv">cos_theta</span> <span class="p">(</span><span class="nf">f</span> <span class="nv">sin_theta</span> <span class="nv">theta</span> <span class="nv">phi</span><span class="p">)</span>
+                               <span class="c1">;(exp (* 0-1i k1 z (sin theta) (cos phi)))</span>
+                               <span class="c1">;(exp (* 0+1i k1 y (sin theta) (sin phi)))</span>
+                               <span class="c1">;(exp (* 0+1i k1 x (cos theta))))</span>
+                               <span class="p">(</span><span class="nb">exp </span><span class="p">(</span><span class="nb">* </span><span class="mi">0</span><span class="nv">+1i</span> <span class="nv">k1</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">* </span><span class="nv">sin_theta</span> <span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nb">* </span><span class="nv">y</span> <span class="p">(</span><span class="nb">sin </span><span class="nv">phi</span><span class="p">))</span> <span class="p">(</span><span class="nb">* </span><span class="nv">z</span> <span class="p">(</span><span class="nb">cos </span><span class="nv">phi</span><span class="p">))))</span>
+                                                  <span class="p">(</span><span class="nb">* </span><span class="nv">cos_theta</span> <span class="nv">x</span><span class="p">))))))</span>
+        <span class="p">))</span>
+
+<span class="c1">;; complex field amplitude at position (x, y) with spectrum amplitude distribution f</span>
+<span class="c1">;; (one may have to adjust the &#39;relerr&#39; and &#39;maxeval&#39; parameter values in the integrate function)</span>
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">psi_cartesian</span> <span class="nv">f</span> <span class="nv">x</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">r</span><span class="p">)</span> <span class="p">(</span><span class="nb">car </span><span class="p">(</span><span class="nf">integrate</span> <span class="p">(</span><span class="nf">integrand_cartesian</span> <span class="nv">f</span> <span class="nv">x</span> <span class="p">(</span><span class="nf">vector3-y</span> <span class="nv">r</span><span class="p">)</span> <span class="p">(</span><span class="nf">vector3-z</span> <span class="nv">r</span><span class="p">))</span>
+                         <span class="p">(</span><span class="nb">list </span><span class="p">(</span><span class="nb">* </span><span class="mf">-1.0</span> <span class="nv">k1</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="mf">-1.0</span> <span class="nv">k1</span><span class="p">))</span> <span class="p">(</span><span class="nb">list </span><span class="p">(</span><span class="nb">* </span><span class="mf">1.0</span> <span class="nv">k1</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="mf">1.0</span> <span class="nv">k1</span><span class="p">))</span> <span class="nv">relerr</span> <span class="mi">0</span> <span class="nv">maxeval</span><span class="p">))</span>
+        <span class="p">))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">psi_spherical</span> <span class="nv">f</span> <span class="nv">x</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">r</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="nv">k1</span> <span class="nv">k1</span> <span class="p">(</span><span class="nb">car </span><span class="p">(</span><span class="nf">integrate</span> <span class="p">(</span><span class="nf">integrand_spherical</span> <span class="nv">f</span> <span class="nv">x</span> <span class="p">(</span><span class="nf">vector3-y</span> <span class="nv">r</span><span class="p">)</span> <span class="p">(</span><span class="nf">vector3-z</span> <span class="nv">r</span><span class="p">))</span>
+                         <span class="p">(</span><span class="nb">list </span><span class="mi">0</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nb">list </span><span class="p">(</span><span class="nb">/ </span><span class="nv">pi</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">* </span><span class="mi">2</span> <span class="nv">pi</span><span class="p">))</span> <span class="nv">relerr</span> <span class="mi">0</span> <span class="nv">maxeval</span><span class="p">)))</span>
+        <span class="p">))</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; some test outputs (uncomment if needed)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;(let ((k_y 1.0) (k_z 5.2) (x -2.15) (y 0.3) (z 0.5))  ; set local test values</span>
+<span class="c1">;    (print &quot;integrand      (cartesian): &quot; ((integrand_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) x y z)</span>
+<span class="c1">;                                                                k_y k_z) &quot;\n&quot;)</span>
+<span class="c1">;    (print &quot;integrand      (spherical): &quot; ((integrand_spherical (f_Laguerre_Gauss_spherical w_0 m_charge)</span>
+<span class="c1">;                                                                 x y z) ((theta k1) k_y k_z) ((phi k1) k_y k_z)) &quot;\n\n&quot;)</span>
+<span class="c1">;</span>
+<span class="c1">;    (print &quot;psi            (cartesian): &quot; ((psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) x)</span>
+<span class="c1">;                                           (vector3 0 y z)) &quot;\n&quot;)</span>
+<span class="c1">;</span>
+<span class="c1">;    (print &quot;psi            (spherical): &quot; ((psi_spherical (f_Laguerre_Gauss_spherical w_0 m_charge) x)</span>
+<span class="c1">;                                           (vector3 0 y z)) &quot;\n&quot;)</span>
+<span class="c1">;</span>
+<span class="c1">;    (print &quot;psi       (origin, simple): &quot; ((Gauss w_0) (vector3 0 y z)) &quot;\n&quot;)</span>
+<span class="c1">;)</span>
+<span class="c1">;(exit)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; display values of various variables</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;Expected output file size: &quot;</span> <span class="p">(</span><span class="nb">round </span><span class="p">(</span><span class="nb">* </span><span class="mi">8</span> <span class="p">(</span><span class="nb">/ </span><span class="p">(</span><span class="nb">* </span><span class="nv">sx</span> <span class="nv">sy</span> <span class="nv">sz</span> <span class="p">(</span><span class="nb">expt </span><span class="nv">resolution</span> <span class="mi">3</span><span class="p">))</span> <span class="p">(</span><span class="nb">expt </span><span class="mi">1024</span> <span class="mi">2</span><span class="p">))))</span> <span class="s">&quot; MiB\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;Specified variables and derived values: \n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;n1:    &quot;</span> <span class="nv">n1</span>    <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;n2:    &quot;</span> <span class="nv">n2</span>    <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;chi:   &quot;</span> <span class="nv">chi_deg</span>        <span class="s">&quot; [degree]\n&quot;</span><span class="p">)</span> <span class="c1">; angle of incidence</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;incl.: &quot;</span> <span class="p">(</span><span class="nb">- </span><span class="mi">90</span> <span class="nv">chi_deg</span><span class="p">)</span> <span class="s">&quot; [degree]\n&quot;</span><span class="p">)</span> <span class="c1">; interface inclination with respect to the x-axis</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;kw_0:  &quot;</span> <span class="nv">kw_0</span>  <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;kr_w:  &quot;</span> <span class="nv">kr_w</span>  <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;k_vac: &quot;</span> <span class="nv">k_vac</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;vortex charge: &quot;</span> <span class="nv">m_charge</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;Jones vector components: (e_z=&quot;</span> <span class="nv">e_z</span> <span class="s">&quot;, e_y=&quot;</span> <span class="nv">e_y</span> <span class="s">&quot;)&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot; ---&gt; &quot;</span> <span class="p">(</span><span class="k">cond </span><span class="p">(</span><span class="nf">s-pol?</span> <span class="s">&quot;s-&quot;</span><span class="p">)</span> <span class="p">(</span><span class="nf">p-pol?</span> <span class="s">&quot;p-&quot;</span><span class="p">)</span> <span class="p">(</span><span class="nf">a-pol?</span> <span class="s">&quot;mixed-&quot;</span><span class="p">))</span> <span class="s">&quot;polarisation&quot;</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;degree of linear   polarisation at pi/4: &quot;</span> <span class="p">(</span><span class="nb">* </span><span class="mi">2</span> <span class="p">(</span><span class="nb">real-part </span><span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">conj</span> <span class="p">(</span><span class="nb">- </span><span class="mi">0</span> <span class="nv">e_z</span><span class="p">))</span> <span class="nv">e_y</span><span class="p">)))</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;degree of circular polarisation: &quot;</span>         <span class="p">(</span><span class="nb">* </span><span class="mi">2</span> <span class="p">(</span><span class="nb">imag-part </span><span class="p">(</span><span class="nb">* </span><span class="p">(</span><span class="nf">conj</span> <span class="p">(</span><span class="nb">- </span><span class="mi">0</span> <span class="nv">e_z</span><span class="p">))</span> <span class="nv">e_y</span><span class="p">)))</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; exploiting symmetries to reduce computational effort</span>
+<span class="c1">;; (only possible for beams without intrinsic orbital angular momentum, i.e. no vortex charge)</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+
+<span class="c1">;; The plane of incidence (x-y-plane) is a mirror plane which is characterised to be orthogonal to the z-axis</span>
+<span class="c1">;; (symmetry of the geometric structure). Symmetry of the sources must be ensured simultaneously, which is only</span>
+<span class="c1">;; possible for certain cases. If I am not mistaken this can only be achieved for vortex free beams with pure s- or</span>
+<span class="c1">;; p-polarisation, i.e. where either the Ez or Ey component is specified.</span>
+<span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">equal? </span><span class="nv">m_charge</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">cond </span><span class="p">(</span><span class="nf">s-pol?</span>                       <span class="c1">; s-polarisation</span>
+              <span class="p">(</span><span class="k">set! </span><span class="nv">symmetries</span> <span class="p">(</span><span class="nb">list </span><span class="p">(</span><span class="nf">make</span> <span class="nv">mirror-sym</span> <span class="p">(</span><span class="nf">direction</span> <span class="nv">Z</span><span class="p">)</span> <span class="p">(</span><span class="nf">phase</span> <span class="mi">-1</span><span class="p">)))))</span>
+              <span class="p">(</span><span class="nf">p-pol?</span>                       <span class="c1">; p-polarisation</span>
+              <span class="p">(</span><span class="k">set! </span><span class="nv">symmetries</span> <span class="p">(</span><span class="nb">list </span><span class="p">(</span><span class="nf">make</span> <span class="nv">mirror-sym</span> <span class="p">(</span><span class="nf">direction</span> <span class="nv">Z</span><span class="p">)</span>           <span class="p">))))</span>
+        <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="c1">;; specify current source, output functions and run simulation</span>
+<span class="c1">;;------------------------------------------------------------------------------------------------</span>
+<span class="p">(</span><span class="nf">use-output-directory</span><span class="p">)</span>                      <span class="c1">; put output files in a separate folder</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">force-complex-fields?</span> <span class="nv">true</span><span class="p">)</span>           <span class="c1">; default: true</span>
+<span class="p">(</span><span class="k">set! </span><span class="nv">eps-averaging?</span> <span class="nv">true</span><span class="p">)</span>                  <span class="c1">; default: true</span>
+
+<span class="p">(</span><span class="k">set! </span><span class="nv">sources</span> <span class="p">(</span><span class="nf">filter</span> <span class="p">(</span><span class="nf">compose</span> <span class="nv">not</span> <span class="nv">unspecified?</span><span class="p">)</span>
+              <span class="p">(</span><span class="nf">list</span>
+                  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">not </span><span class="p">(</span><span class="nb">equal? </span><span class="nv">e_z</span> <span class="mi">0</span><span class="p">))</span>
+                      <span class="p">(</span><span class="nf">make</span> <span class="nv">source</span>
+                          <span class="p">(</span><span class="nf">src</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">continuous-src</span> <span class="p">(</span><span class="nf">frequency</span> <span class="nv">freq</span><span class="p">)</span> <span class="p">(</span><span class="nf">width</span> <span class="mf">0.5</span><span class="p">)))</span>
+                          <span class="p">(</span><span class="nf">component</span> <span class="nv">Ez</span><span class="p">)</span>
+                          <span class="p">(</span><span class="nf">amplitude</span> <span class="nv">e_z</span><span class="p">)</span>
+                          <span class="p">(</span><span class="nf">size</span> <span class="mi">0</span> <span class="mi">3</span> <span class="mi">3</span><span class="p">)</span>
+                          <span class="p">(</span><span class="nf">center</span> <span class="nv">source_shift</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span>
+                          <span class="c1">;(amp-func (Gauss w_0))</span>
+                          <span class="c1">;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) shift))</span>
+                          <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">equal? </span><span class="nv">m_charge</span> <span class="mi">0</span><span class="p">)</span>
+                              <span class="c1">;; if vortex charge is zero use Gauss spectrum distribution (improves perfomance)</span>
+                              <span class="p">(</span><span class="nf">amp-func</span> <span class="p">(</span><span class="nf">psi_spherical</span> <span class="p">(</span><span class="nf">f_Gauss_spherical</span> <span class="nv">w_0</span><span class="p">)</span> <span class="nv">shift</span><span class="p">))</span>
+                              <span class="p">(</span><span class="nf">amp-func</span> <span class="p">(</span><span class="nf">psi_spherical</span> <span class="p">(</span><span class="nf">f_Laguerre_Gauss_spherical</span> <span class="nv">w_0</span> <span class="nv">m_charge</span><span class="p">)</span> <span class="nv">shift</span><span class="p">))</span>
+                          <span class="p">)</span>
+                       <span class="p">)</span>
+                  <span class="p">)</span>
+                  <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">not </span><span class="p">(</span><span class="nb">equal? </span><span class="nv">e_y</span> <span class="mi">0</span><span class="p">))</span>
+                      <span class="p">(</span><span class="nf">make</span> <span class="nv">source</span>
+                          <span class="p">(</span><span class="nf">src</span> <span class="p">(</span><span class="nf">make</span> <span class="nv">continuous-src</span> <span class="p">(</span><span class="nf">frequency</span> <span class="nv">freq</span><span class="p">)</span> <span class="p">(</span><span class="nf">width</span> <span class="mf">0.5</span><span class="p">)))</span>
+                          <span class="p">(</span><span class="nf">component</span> <span class="nv">Ey</span><span class="p">)</span>
+                          <span class="p">(</span><span class="nf">amplitude</span> <span class="nv">e_y</span><span class="p">)</span>
+                          <span class="p">(</span><span class="nf">size</span> <span class="mi">0</span> <span class="mi">3</span> <span class="mi">3</span><span class="p">)</span>
+                          <span class="p">(</span><span class="nf">center</span> <span class="nv">source_shift</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span>
+                          <span class="c1">;(amp-func (Gauss w_0))</span>
+                          <span class="c1">;(amp-func (psi_cartesian (f_Laguerre_Gauss_cartesian w_0 m_charge) shift))</span>
+                          <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">equal? </span><span class="nv">m_charge</span> <span class="mi">0</span><span class="p">)</span>
+                              <span class="c1">;; if vortex charge is zero use Gauss spectrum distribution (improves perfomance)</span>
+                              <span class="p">(</span><span class="nf">amp-func</span> <span class="p">(</span><span class="nf">psi_spherical</span> <span class="p">(</span><span class="nf">f_Gauss_spherical</span> <span class="nv">w_0</span><span class="p">)</span> <span class="nv">shift</span><span class="p">))</span>
+                              <span class="p">(</span><span class="nf">amp-func</span> <span class="p">(</span><span class="nf">psi_spherical</span> <span class="p">(</span><span class="nf">f_Laguerre_Gauss_spherical</span> <span class="nv">w_0</span> <span class="nv">m_charge</span><span class="p">)</span> <span class="nv">shift</span><span class="p">))</span>
+                          <span class="p">)</span>
+                      <span class="p">)</span>
+                  <span class="p">)</span>
+              <span class="p">))</span>
+<span class="p">)</span>
+
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">efield-real-squared</span> <span class="nv">r</span> <span class="nv">ex</span> <span class="nv">ey</span> <span class="nv">ez</span><span class="p">)</span>    <span class="c1">; calculates |Re E|^2</span>
+        <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">real-part </span><span class="nv">ex</span><span class="p">)</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">real-part </span><span class="nv">ey</span><span class="p">)</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">real-part </span><span class="nv">ez</span><span class="p">)</span> <span class="mi">2</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">efield-imag-squared</span> <span class="nv">r</span> <span class="nv">ex</span> <span class="nv">ey</span> <span class="nv">ez</span><span class="p">)</span>    <span class="c1">; calculates |Im E|^2</span>
+        <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">imag-part </span><span class="nv">ex</span><span class="p">)</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">imag-part </span><span class="nv">ey</span><span class="p">)</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nb">expt </span><span class="p">(</span><span class="nb">imag-part </span><span class="nv">ez</span><span class="p">)</span> <span class="mi">2</span><span class="p">)))</span>
+
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">output-efield-real-squared</span><span class="p">)</span> <span class="p">(</span><span class="nf">output-real-field-function</span> <span class="p">(</span><span class="k">cond </span><span class="p">(</span><span class="nf">s-pol?</span> <span class="s">&quot;e_real2_s&quot;</span><span class="p">)</span> <span class="p">(</span><span class="nf">p-pol?</span> <span class="s">&quot;e_real2_p&quot;</span><span class="p">)</span>
+                                                                       <span class="p">(</span><span class="nf">a-pol?</span> <span class="s">&quot;e_real2_mixed&quot;</span><span class="p">))</span>
+                                                                 <span class="p">(</span><span class="nb">list </span><span class="nv">Ex</span> <span class="nv">Ey</span> <span class="nv">Ez</span><span class="p">)</span> <span class="nv">efield-real-squared</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define </span><span class="p">(</span><span class="nf">output-efield-imag-squared</span><span class="p">)</span> <span class="p">(</span><span class="nf">output-real-field-function</span> <span class="p">(</span><span class="k">cond </span><span class="p">(</span><span class="nf">s-pol?</span> <span class="s">&quot;e_imag2_s&quot;</span><span class="p">)</span> <span class="p">(</span><span class="nf">p-pol?</span> <span class="s">&quot;e_imag2_p&quot;</span><span class="p">)</span>
+                                                                       <span class="p">(</span><span class="nf">a-pol?</span> <span class="s">&quot;e_imag2_mixed&quot;</span><span class="p">))</span>
+                                                                 <span class="p">(</span><span class="nb">list </span><span class="nv">Ex</span> <span class="nv">Ey</span> <span class="nv">Ez</span><span class="p">)</span> <span class="nv">efield-imag-squared</span><span class="p">))</span>
+
+
+<span class="p">(</span><span class="nf">run-until</span> <span class="nv">runtime</span>
+      <span class="p">(</span><span class="nf">at-beginning</span> <span class="p">(</span><span class="k">lambda </span><span class="p">()</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nCalculating inital field configuration. This will take some time...\n\n&quot;</span><span class="p">)))</span>
+<span class="c1">;     (at-beginning output-epsilon)          ; output of dielectric function</span>
+<span class="c1">;     (at-end output-efield-x)               ; output of E_x component</span>
+<span class="c1">;     (at-end output-efield-y)               ; output of E_y component</span>
+<span class="c1">;     (at-end output-efield-z)               ; output of E_z component</span>
+      <span class="p">(</span><span class="nf">at-end</span> <span class="nv">output-efield-real-squared</span><span class="p">)</span>    <span class="c1">; output of electric field intensity</span>
+      <span class="p">(</span><span class="nf">at-end</span> <span class="p">(</span><span class="nf">when-true</span> <span class="p">(</span><span class="k">lambda </span><span class="p">()</span> <span class="nv">force-complex-fields?</span><span class="p">)</span> <span class="nv">output-efield-imag-squared</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nf">print</span> <span class="s">&quot;\nend time: &quot;</span><span class="p">(</span><span class="nf">strftime</span> <span class="s">&quot;%c&quot;</span> <span class="p">(</span><span class="nf">localtime</span> <span class="p">(</span><span class="nf">current-time</span><span class="p">)))</span> <span class="s">&quot;\n&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="python.html" class="btn btn-neutral float-left" title="Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Daniel Kotik.
+      <span class="lastupdated">
+        Last updated on Aug 26, 2021.
+      </span>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

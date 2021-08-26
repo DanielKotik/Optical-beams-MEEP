@@ -1,0 +1,1164 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Python &mdash; Optical-beams-MEEP  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Scheme" href="scheme.html" />
+    <link rel="prev" title="Welcome to Optical-beams-MEEP’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Optical-beams-MEEP
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Scripts</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gauss-beam-in-2d">Gauss beam in 2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#airy-beam-in-2d">Airy beam in 2d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#laguerre-gauss-beam">Laguerre-Gauss beam</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheme.html">Scheme</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Optical-beams-MEEP</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Python</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            
+              <a href="https://github.com//DanielKotik/Optical-beams-MEEP/blob/develop/docs/source/scripts/python.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="python">
+<h1>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h1>
+<p>You can find these Python scripts <a class="reference external" href="https://github.com/DanielKotik/Optical-beams-MEEP/tree/develop/scripts">here</a>.</p>
+<div class="section" id="gauss-beam-in-2d">
+<h2>Gauss beam in 2d<a class="headerlink" href="#gauss-beam-in-2d" title="Permalink to this headline">¶</a></h2>
+<div class="literal-block-wrapper docutils container" id="gauss2d-py">
+<div class="code-block-caption"><span class="caption-text">Gauss2d.py</span><a class="headerlink" href="#gauss2d-py" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">file:    Gauss2d.py</span>
+<span class="sd">brief:   Python configuration input file for the FDTD solver Meep simulating the</span>
+<span class="sd">         scattering of a Gaussian beam at planar and curved dielectric interfaces</span>
+<span class="sd">author:  Daniel Kotik</span>
+<span class="sd">version: 1.5-beta</span>
+<span class="sd">release date: xx.xx.2020</span>
+<span class="sd">creation date: 17.12.2019</span>
+
+
+<span class="sd">invocation:</span>
+
+<span class="sd"> a) launch the serial version of meep with specified polarisation (p)</span>
+
+<span class="sd">        python3 Gauss2d.py -s_pol False</span>
+
+<span class="sd"> b) launch the parallel version of meep using 8 cores with  a specified</span>
+<span class="sd">    interface (concave)</span>
+
+<span class="sd">        mpirun -quiet -np 8 python3 Gauss2d.py -interface concave</span>
+
+<span class="sd"> coordinate system in meep (defines center of computational cell):</span>
+
+<span class="sd">                          --|-----&gt; x</span>
+<span class="sd">                            |</span>
+<span class="sd">                            |</span>
+<span class="sd">                            v y</span>
+
+
+<span class="sd">visualisation:</span>
+
+<span class="sd">Parenthesis show options for overlaying the dielectric function HDF5FILE_1.</span>
+
+<span class="sd">          h5topng -S2 -c  hot       (-a yarg -A [HDF5FILE_1]) HDF5FILE_2</span>
+<span class="sd">          h5topng -S2 -Zc dkbluered (-a gray -A [HDF5FILE_1]) HDF5FILE_2</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">meep</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">import</span> <span class="nn">optbeam</span> <span class="k">as</span> <span class="nn">op</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meep version:&quot;</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">interfaceType</span><span class="p">(</span><span class="n">string_val</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Provide interface argument type.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">string_val</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;planar&quot;</span><span class="p">,</span> <span class="s2">&quot;concave&quot;</span><span class="p">,</span> <span class="s2">&quot;convex&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentTypeError</span><span class="p">(</span><span class="s1">&#39;Value has to be either concave, &#39;</span>
+                                         <span class="s1">&#39;convex or planar (but </span><span class="si">%s</span><span class="s1"> is provided)&#39;</span>
+                                         <span class="o">%</span> <span class="n">string_val</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">string_val</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">start time:&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># physical parameters characterizing light source and interface characteris-</span>
+    <span class="c1"># tics (must be adjusted - eihter here or via command line interface (CLI))</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">interface</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">interface</span>
+    <span class="n">s_pol</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">s_pol</span>
+    <span class="n">ref_medium</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">ref_medium</span>
+
+    <span class="n">n1</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">n1</span>
+    <span class="n">n2</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">n2</span>
+
+    <span class="n">kw_0</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">kw_0</span>
+    <span class="n">kr_w</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">kr_w</span>
+    <span class="n">kr_c</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">kr_c</span>
+
+    <span class="c1"># angle of incidence</span>
+    <span class="n">chi_deg</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">chi_deg</span>
+    <span class="c1">#chi_deg = 1.0*op.critical(n1, n2)</span>
+    <span class="c1">#chi_deg = 0.95*op.brewster(n1, n2)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># specific Meep parameters (may need to be adjusted)</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">sx</span> <span class="o">=</span> <span class="mi">5</span>   <span class="c1"># size of cell including PML in x-direction</span>
+    <span class="n">sy</span> <span class="o">=</span> <span class="mi">5</span>   <span class="c1"># size of cell including PML in y-direction</span>
+    <span class="n">pml_thickness</span> <span class="o">=</span> <span class="mf">0.25</span>   <span class="c1"># thickness of PML layer</span>
+    <span class="n">freq</span> <span class="o">=</span> <span class="mi">12</span>      <span class="c1"># vacuum frequency of source (5 to 12 is good)</span>
+    <span class="n">runtime</span> <span class="o">=</span> <span class="mi">10</span>   <span class="c1"># runs simulation for 10 times freq periods</span>
+
+    <span class="c1"># number of pixels per wavelength in the denser medium (at least 10,</span>
+    <span class="c1"># 20 to 30 is a good choice)</span>
+    <span class="n">pixel</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="c1"># source position with respect to the center (point of impact) in Meep</span>
+    <span class="c1"># units (-2.15 good); if equal -r_w, then source position coincides with</span>
+    <span class="c1"># waist position</span>
+    <span class="n">source_shift</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.15</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># derived (Meep) parameters (do not change)</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">k_vac</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">freq</span>
+    <span class="n">k1</span> <span class="o">=</span> <span class="n">n1</span> <span class="o">*</span> <span class="n">k_vac</span>
+    <span class="n">n_ref</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span>  <span class="k">if</span> <span class="n">ref_medium</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span>
+             <span class="n">n1</span> <span class="k">if</span> <span class="n">ref_medium</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span>
+             <span class="n">n2</span> <span class="k">if</span> <span class="n">ref_medium</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">r_w</span> <span class="o">=</span> <span class="n">kr_w</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_ref</span> <span class="o">*</span> <span class="n">k_vac</span><span class="p">)</span>
+    <span class="n">w_0</span> <span class="o">=</span> <span class="n">kw_0</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_ref</span> <span class="o">*</span> <span class="n">k_vac</span><span class="p">)</span>
+    <span class="n">r_c</span> <span class="o">=</span> <span class="n">kr_c</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_ref</span> <span class="o">*</span> <span class="n">k_vac</span><span class="p">)</span>
+    <span class="n">shift</span> <span class="o">=</span> <span class="n">source_shift</span> <span class="o">+</span> <span class="n">r_w</span>
+    <span class="n">chi_rad</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">chi_deg</span><span class="p">)</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">W_y</span><span class="o">=</span><span class="n">w_0</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k1</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># placement of the dielectric interface within the computational cell</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># helper functions</span>
+    <span class="k">def</span> <span class="nf">alpha</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Angle of inclined plane with y-axis in radians.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">chi_rad</span>
+
+    <span class="k">def</span> <span class="nf">Delta_x</span><span class="p">(</span><span class="n">alpha</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Inclined plane offset to the center of the cell.&quot;&quot;&quot;</span>
+        <span class="n">sin_alpha</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">cos_alpha</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">sx</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(((</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">cos_alpha</span><span class="p">)</span> <span class="o">-</span> <span class="n">sin_alpha</span><span class="p">)</span> <span class="o">/</span> <span class="n">sin_alpha</span><span class="p">)</span>
+
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># geometry-lattice</span>
+
+    <span class="k">if</span> <span class="n">interface</span> <span class="o">==</span> <span class="s2">&quot;planar&quot;</span><span class="p">:</span>
+        <span class="n">default_material</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Medium</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">n1</span><span class="p">)</span>
+        <span class="c1"># located at lower right edge for 45 degree</span>
+        <span class="n">geometry</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">Block</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">sx</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">mp</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
+                             <span class="n">center</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="o">+</span><span class="n">sx</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Delta_x</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">)),</span>
+                                               <span class="o">-</span><span class="n">sy</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span>
+                             <span class="n">e1</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">)),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                             <span class="n">e2</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">)),</span> <span class="mi">0</span><span class="p">),</span>
+                             <span class="n">e3</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                             <span class="n">material</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Medium</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">n2</span><span class="p">))]</span>
+    <span class="k">elif</span> <span class="n">interface</span> <span class="o">==</span> <span class="s2">&quot;concave&quot;</span><span class="p">:</span>
+        <span class="n">default_material</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Medium</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">n2</span><span class="p">)</span>
+        <span class="c1"># move center to the right in order to ensure that the point of impact</span>
+        <span class="c1"># is always centrally placed</span>
+        <span class="n">geometry</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">Cylinder</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="o">-</span><span class="n">r_c</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">),</span>
+                                                  <span class="o">+</span><span class="n">r_c</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">)),</span>
+                                <span class="n">height</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+                                <span class="n">radius</span><span class="o">=</span><span class="n">r_c</span><span class="p">,</span>
+                                <span class="n">material</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Medium</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">n1</span><span class="p">))]</span>
+    <span class="k">elif</span> <span class="n">interface</span> <span class="o">==</span> <span class="s2">&quot;convex&quot;</span><span class="p">:</span>
+        <span class="n">default_material</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Medium</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">n1</span><span class="p">)</span>
+        <span class="c1"># move center to the right in order to ensure that the point of impact</span>
+        <span class="c1"># is always centrally placed</span>
+        <span class="n">geometry</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">Cylinder</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="o">+</span><span class="n">r_c</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">),</span>
+                                                  <span class="o">-</span><span class="n">r_c</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">)),</span>
+                                <span class="n">height</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+                                <span class="n">radius</span><span class="o">=</span><span class="n">r_c</span><span class="p">,</span>
+                                <span class="n">material</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Medium</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">n2</span><span class="p">))]</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># add absorbing boundary conditions and discretize structure</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">pml_layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">PML</span><span class="p">(</span><span class="n">pml_thickness</span><span class="p">)]</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="n">pixel</span> <span class="o">*</span> <span class="p">(</span><span class="n">n1</span> <span class="k">if</span> <span class="n">n1</span> <span class="o">&gt;</span> <span class="n">n2</span> <span class="k">else</span> <span class="n">n2</span><span class="p">)</span> <span class="o">*</span> <span class="n">freq</span>
+    <span class="c1"># set Courant factor (mandatory if either n1 or n2 is smaller than 1)</span>
+    <span class="n">Courant</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="k">if</span> <span class="n">n1</span> <span class="o">&lt;</span> <span class="n">n2</span> <span class="k">else</span> <span class="n">n2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># display values of physical variables</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Specified variables and derived values:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n1:&quot;</span><span class="p">,</span> <span class="n">n1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n2:&quot;</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;chi:  &quot;</span><span class="p">,</span> <span class="n">chi_deg</span><span class="p">,</span> <span class="s2">&quot; [degree]&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;incl.:&quot;</span><span class="p">,</span> <span class="mi">90</span> <span class="o">-</span> <span class="n">chi_deg</span><span class="p">,</span> <span class="s2">&quot; [degree]&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;kw_0: &quot;</span><span class="p">,</span> <span class="n">kw_0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">interface</span> <span class="o">!=</span> <span class="s2">&quot;planar&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;kr_c: &quot;</span><span class="p">,</span> <span class="n">kr_c</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;kr_w: &quot;</span><span class="p">,</span> <span class="n">kr_w</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;k_vac:&quot;</span><span class="p">,</span> <span class="n">k_vac</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;polarisation:&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="n">s_pol</span> <span class="k">else</span> <span class="s2">&quot;p&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;interface:&quot;</span><span class="p">,</span> <span class="n">interface</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># specify current source, output functions and run simulation</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">force_complex_fields</span> <span class="o">=</span> <span class="kc">False</span>          <span class="c1"># default: False</span>
+    <span class="n">eps_averaging</span> <span class="o">=</span> <span class="kc">True</span>                  <span class="c1"># default: True</span>
+    <span class="n">filename_prefix</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># specify optical beam</span>
+    <span class="n">beam</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">Gauss2d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">shift</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">sources</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">ContinuousSource</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">freq</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+                         <span class="n">component</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Ez</span> <span class="k">if</span> <span class="n">s_pol</span> <span class="k">else</span> <span class="n">mp</span><span class="o">.</span><span class="n">Ey</span><span class="p">,</span>
+                         <span class="n">size</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">center</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="n">source_shift</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">amp_func</span><span class="o">=</span><span class="n">beam</span><span class="o">.</span><span class="n">profile</span>
+                         <span class="p">)</span>
+               <span class="p">]</span>
+
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">cell_size</span><span class="o">=</span><span class="n">cell</span><span class="p">,</span>
+                        <span class="n">boundary_layers</span><span class="o">=</span><span class="n">pml_layers</span><span class="p">,</span>
+                        <span class="n">default_material</span><span class="o">=</span><span class="n">default_material</span><span class="p">,</span>
+                        <span class="n">Courant</span><span class="o">=</span><span class="n">Courant</span><span class="p">,</span>
+                        <span class="n">geometry</span><span class="o">=</span><span class="n">geometry</span><span class="p">,</span>
+                        <span class="n">sources</span><span class="o">=</span><span class="n">sources</span><span class="p">,</span>
+                        <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                        <span class="n">force_complex_fields</span><span class="o">=</span><span class="n">force_complex_fields</span><span class="p">,</span>
+                        <span class="n">eps_averaging</span><span class="o">=</span><span class="n">eps_averaging</span><span class="p">,</span>
+                        <span class="n">filename_prefix</span><span class="o">=</span><span class="n">filename_prefix</span>
+                        <span class="p">)</span>
+
+    <span class="n">sim</span><span class="o">.</span><span class="n">use_output_directory</span><span class="p">(</span><span class="n">interface</span><span class="p">)</span>  <span class="c1"># put output files in a separate folder</span>
+
+    <span class="k">def</span> <span class="nf">eSquared</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">ex</span><span class="p">,</span> <span class="n">ey</span><span class="p">,</span> <span class="n">ez</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate |E|^2.</span>
+
+<span class="sd">        With |.| denoting the complex modulus if &#39;force_complex_fields?&#39;</span>
+<span class="sd">        is set to true, otherwise |.| gives the Euclidean norm.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">ey</span><span class="p">,</span> <span class="n">ez</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="k">def</span> <span class="nf">output_efield2</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Output E-field intensity.&quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;e2_s&quot;</span> <span class="k">if</span> <span class="n">s_pol</span> <span class="k">else</span> <span class="s2">&quot;e2_p&quot;</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">eSquared</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">Ex</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">Ey</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">Ez</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">sim</span><span class="o">.</span><span class="n">output_field_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cs</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">real_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">at_beginning</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">output_epsilon</span><span class="p">),</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">at_end</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">output_efield_z</span> <span class="k">if</span> <span class="n">s_pol</span> <span class="k">else</span> <span class="n">mp</span><span class="o">.</span><span class="n">output_efield_y</span><span class="p">),</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">at_end</span><span class="p">(</span><span class="n">output_efield2</span><span class="p">),</span>
+            <span class="n">until</span><span class="o">=</span><span class="n">runtime</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">end time:&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-interface&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">interfaceType</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;planar&#39;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;specify type of interface (concave, convex, &#39;</span>
+                              <span class="s1">&#39;planar) (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-n1&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mf">1.54</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;index of refraction of the incident medium &#39;</span>
+                              <span class="s1">&#39;(default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-n2&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;index of refraction of the refracted medium &#39;</span>
+                              <span class="s1">&#39;(default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s_pol&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;True for s-spol, False for p-pol &#39;</span>
+                              <span class="s1">&#39;(default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ref_medium&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;reference medium: 0 - free space, &#39;</span>
+                              <span class="s1">&#39;1 - incident medium, &#39;</span>
+                              <span class="s1">&#39;2 - refracted medium (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-kw_0&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;beam width (&gt;5 is good) (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-kr_w&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;beam waist distance to interface (30 to 50 is &#39;</span>
+                              <span class="s1">&#39;good if source position coincides with beam &#39;</span>
+                              <span class="s1">&#39;waist) (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-kr_c&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;radius of curvature (if interface is either &#39;</span>
+                              <span class="s1">&#39;concave of convex) (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-chi_deg&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;incidence angle in degrees (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="airy-beam-in-2d">
+<h2>Airy beam in 2d<a class="headerlink" href="#airy-beam-in-2d" title="Permalink to this headline">¶</a></h2>
+<div class="literal-block-wrapper docutils container" id="airy2d-py">
+<div class="code-block-caption"><span class="caption-text">Airy2d.py</span><a class="headerlink" href="#airy2d-py" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">file:    Airy2d.py</span>
+<span class="sd">brief:   Python configuration input file for the FDTD solver Meep simulating the</span>
+<span class="sd">         scattering of an incomplete Airy beam at a planar dielectric interface</span>
+<span class="sd">author:  Daniel Kotik</span>
+<span class="sd">version: 1.5-beta</span>
+<span class="sd">release date: xx.xx.2020</span>
+<span class="sd">creation date: 30.11.2019</span>
+
+
+<span class="sd">invocation:</span>
+
+<span class="sd"> a) launch the serial version of meep with specified polarisation (p)</span>
+
+<span class="sd">        python3 Airy2d.py -s_pol False</span>
+
+<span class="sd"> b) launch the parallel version of meep using 8 cores</span>
+
+<span class="sd">        mpirun -quiet -np 8 python3 Airy2d.py</span>
+
+<span class="sd">coordinate system in meep (defines center of computational cell):</span>
+
+<span class="sd">                        --|-----&gt; x</span>
+<span class="sd">                          |</span>
+<span class="sd">                          |</span>
+<span class="sd">                          v y</span>
+
+
+<span class="sd">visualisation:</span>
+
+<span class="sd">Parenthesis show options for overlaying the dielectric function HDF5FILE_1.</span>
+
+<span class="sd">      h5topng -S2 -X [SCALEX] -c hot (-a yarg -A [HDF5FILE_1]) [HDF5FILE_2]</span>
+
+<span class="sd">If necessary, scale the x dimension of the image by SCALEX.</span>
+
+<span class="sd">exmple use:</span>
+<span class="sd">      h5topng -X 1.2 -Zc dkbluered -a yarg -A Airy2d-eps-___.h5 Airy2d-ez-___.h5</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">meep</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">import</span> <span class="nn">optbeam</span> <span class="k">as</span> <span class="nn">op</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meep version:&quot;</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">start time:&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># physical parameters characterizing light source and interface characteris-</span>
+    <span class="c1"># tics (must be adjusted - eihter here or via command line interface (CLI))</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">s_pol</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">s_pol</span>
+    <span class="n">ref_medium</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">ref_medium</span>
+
+    <span class="n">n1</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">n1</span>
+    <span class="n">n2</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">n2</span>
+
+    <span class="n">kw_0</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">kw_0</span>
+    <span class="n">kr_w</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">kr_w</span>
+
+    <span class="c1"># Airy beam parameters</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">M</span>
+    <span class="n">W</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">W</span>
+
+    <span class="c1"># angle of incidence</span>
+    <span class="n">chi_deg</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">chi_deg</span>
+    <span class="c1">#chi_deg = 1.0*op.critical(n1, n2)</span>
+    <span class="c1">#chi_deg = 0.95*op.brewster(n1, n2)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># specific Meep parameters (may need to be adjusted)</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">sx</span> <span class="o">=</span> <span class="mi">10</span>   <span class="c1"># size of cell including PML in x-direction</span>
+    <span class="n">sy</span> <span class="o">=</span> <span class="mi">10</span>   <span class="c1"># size of cell including PML in y-direction</span>
+    <span class="n">pml_thickness</span> <span class="o">=</span> <span class="mf">0.25</span>   <span class="c1"># thickness of PML layer</span>
+    <span class="n">freq</span> <span class="o">=</span> <span class="mi">12</span>      <span class="c1"># vacuum frequency of source (4 to 12 is good)</span>
+    <span class="n">runtime</span> <span class="o">=</span> <span class="mi">90</span>   <span class="c1"># runs simulation for X times freq periods</span>
+
+    <span class="c1"># number of pixels per wavelength in the denser medium (at least 10,</span>
+    <span class="c1"># 20 to 30 is a good choice)</span>
+    <span class="n">pixel</span> <span class="o">=</span> <span class="mi">15</span>
+
+    <span class="c1"># source position with respect to the center (point of impact) in Meep</span>
+    <span class="c1"># units (-2.15 good); if equal -r_w, then source position coincides with</span>
+    <span class="c1"># waist position</span>
+    <span class="c1">#source_shift = 0</span>
+    <span class="n">source_shift</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="p">(</span><span class="n">sx</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">pml_thickness</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># derived (Meep) parameters (do not change)</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">k_vac</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">freq</span>
+    <span class="n">k1</span> <span class="o">=</span> <span class="n">n1</span> <span class="o">*</span> <span class="n">k_vac</span>
+    <span class="n">n_ref</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span>  <span class="k">if</span> <span class="n">ref_medium</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span>
+             <span class="n">n1</span> <span class="k">if</span> <span class="n">ref_medium</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span>
+             <span class="n">n2</span> <span class="k">if</span> <span class="n">ref_medium</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">r_w</span> <span class="o">=</span> <span class="n">kr_w</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_ref</span> <span class="o">*</span> <span class="n">k_vac</span><span class="p">)</span>
+    <span class="n">w_0</span> <span class="o">=</span> <span class="n">kw_0</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_ref</span> <span class="o">*</span> <span class="n">k_vac</span><span class="p">)</span>
+    <span class="n">shift</span> <span class="o">=</span> <span class="n">source_shift</span> <span class="o">+</span> <span class="n">r_w</span>
+    <span class="n">chi_rad</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">chi_deg</span><span class="p">)</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">W_y</span><span class="o">=</span><span class="n">w_0</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k1</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">M</span><span class="p">,</span> <span class="n">W</span><span class="o">=</span><span class="n">W</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># placement of the dielectric interface within the computational cell</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># helper functions</span>
+    <span class="k">def</span> <span class="nf">alpha</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Angle of inclined plane with y-axis in radians.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">chi_rad</span>
+
+    <span class="k">def</span> <span class="nf">Delta_x</span><span class="p">(</span><span class="n">alpha</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Inclined plane offset to the center of the cell.&quot;&quot;&quot;</span>
+        <span class="n">sin_alpha</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">cos_alpha</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">sx</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(((</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">cos_alpha</span><span class="p">)</span> <span class="o">-</span> <span class="n">sin_alpha</span><span class="p">)</span> <span class="o">/</span> <span class="n">sin_alpha</span><span class="p">)</span>
+
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># geometry-lattice</span>
+    <span class="n">default_material</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Medium</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">n1</span><span class="p">)</span>
+    <span class="n">geometry</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">Block</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">sx</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">mp</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
+                         <span class="n">center</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="o">+</span><span class="n">sx</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Delta_x</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">)),</span>
+                                           <span class="o">-</span><span class="n">sy</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span>
+                         <span class="n">e1</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">)),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">e2</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">)),</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">e3</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                         <span class="n">material</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Medium</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">n2</span><span class="p">))]</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># add absorbing boundary conditions and discretize structure</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">pml_layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">PML</span><span class="p">(</span><span class="n">pml_thickness</span><span class="p">)]</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="n">pixel</span> <span class="o">*</span> <span class="p">(</span><span class="n">n1</span> <span class="k">if</span> <span class="n">n1</span> <span class="o">&gt;</span> <span class="n">n2</span> <span class="k">else</span> <span class="n">n2</span><span class="p">)</span> <span class="o">*</span> <span class="n">freq</span>
+    <span class="c1"># set Courant factor (mandatory if either n1 or n2 is smaller than 1)</span>
+    <span class="n">Courant</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="k">if</span> <span class="n">n1</span> <span class="o">&lt;</span> <span class="n">n2</span> <span class="k">else</span> <span class="n">n2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># display values of physical variables</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Specified variables and derived values:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n1:&quot;</span><span class="p">,</span> <span class="n">n1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n2:&quot;</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;chi:  &quot;</span><span class="p">,</span> <span class="n">chi_deg</span><span class="p">,</span> <span class="s2">&quot; [degree]&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;incl.:&quot;</span><span class="p">,</span> <span class="mi">90</span> <span class="o">-</span> <span class="n">chi_deg</span><span class="p">,</span> <span class="s2">&quot; [degree]&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;kw_0: &quot;</span><span class="p">,</span> <span class="n">kw_0</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;kr_w: &quot;</span><span class="p">,</span> <span class="n">kr_w</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;k_vac:&quot;</span><span class="p">,</span> <span class="n">k_vac</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;polarisation:&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="n">s_pol</span> <span class="k">else</span> <span class="s2">&quot;p&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># specify current source, output functions and run simulation</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">force_complex_fields</span> <span class="o">=</span> <span class="kc">False</span>          <span class="c1"># default: False</span>
+    <span class="n">eps_averaging</span> <span class="o">=</span> <span class="kc">True</span>                  <span class="c1"># default: True</span>
+    <span class="n">filename_prefix</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># specify optical beam</span>
+    <span class="n">beam</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">IncAiry2d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">shift</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">sources</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">ContinuousSource</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">freq</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+                         <span class="n">component</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Ez</span> <span class="k">if</span> <span class="n">s_pol</span> <span class="k">else</span> <span class="n">mp</span><span class="o">.</span><span class="n">Ey</span><span class="p">,</span>
+                         <span class="n">size</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">center</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="n">source_shift</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">amp_func</span><span class="o">=</span><span class="n">beam</span><span class="o">.</span><span class="n">profile</span>
+                         <span class="p">)</span>
+               <span class="p">]</span>
+
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">cell_size</span><span class="o">=</span><span class="n">cell</span><span class="p">,</span>
+                        <span class="n">boundary_layers</span><span class="o">=</span><span class="n">pml_layers</span><span class="p">,</span>
+                        <span class="n">default_material</span><span class="o">=</span><span class="n">default_material</span><span class="p">,</span>
+                        <span class="n">Courant</span><span class="o">=</span><span class="n">Courant</span><span class="p">,</span>
+                        <span class="n">geometry</span><span class="o">=</span><span class="n">geometry</span><span class="p">,</span>
+                        <span class="n">sources</span><span class="o">=</span><span class="n">sources</span><span class="p">,</span>
+                        <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                        <span class="n">force_complex_fields</span><span class="o">=</span><span class="n">force_complex_fields</span><span class="p">,</span>
+                        <span class="n">eps_averaging</span><span class="o">=</span><span class="n">eps_averaging</span><span class="p">,</span>
+                        <span class="n">filename_prefix</span><span class="o">=</span><span class="n">filename_prefix</span>
+                        <span class="p">)</span>
+
+    <span class="n">sim</span><span class="o">.</span><span class="n">use_output_directory</span><span class="p">()</span>   <span class="c1"># put output files in a separate folder</span>
+
+    <span class="k">def</span> <span class="nf">eSquared</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">ex</span><span class="p">,</span> <span class="n">ey</span><span class="p">,</span> <span class="n">ez</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate |E|^2.</span>
+
+<span class="sd">        With |.| denoting the complex modulus if &#39;force_complex_fields?&#39;</span>
+<span class="sd">        is set to true, otherwise |.| gives the Euclidean norm.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">ey</span><span class="p">,</span> <span class="n">ez</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="k">def</span> <span class="nf">output_efield2</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Output E-field intensity.&quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;e2_s&quot;</span> <span class="k">if</span> <span class="n">s_pol</span> <span class="k">else</span> <span class="s2">&quot;e2_p&quot;</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">eSquared</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">Ex</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">Ey</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">Ez</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">sim</span><span class="o">.</span><span class="n">output_field_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cs</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">real_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">at_beginning</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">output_epsilon</span><span class="p">),</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">at_end</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">output_efield_z</span> <span class="k">if</span> <span class="n">s_pol</span> <span class="k">else</span> <span class="n">mp</span><span class="o">.</span><span class="n">output_efield_y</span><span class="p">),</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">at_end</span><span class="p">(</span><span class="n">output_efield2</span><span class="p">),</span>
+            <span class="n">until</span><span class="o">=</span><span class="n">runtime</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">end time:&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-n1&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;index of refraction of the incident medium &#39;</span>
+                              <span class="s1">&#39;(default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-n2&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mf">0.65</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;index of refraction of the refracted medium &#39;</span>
+                              <span class="s1">&#39;(default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s_pol&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;True for s-spol, False for p-pol &#39;</span>
+                              <span class="s1">&#39;(default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ref_medium&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;reference medium: 0 - free space, &#39;</span>
+                              <span class="s1">&#39;1 - incident medium, &#39;</span>
+                              <span class="s1">&#39;2 - refracted medium (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-kw_0&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;beam width (&gt;5 is good) (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-kr_w&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;beam waist distance to interface &#39;</span>
+                              <span class="s1">&#39;(30 to 50 is good if source &#39;</span>
+                              <span class="s1">&#39;position coincides with beam waist) &#39;</span>
+                              <span class="s1">&#39;(default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-M&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Airy beam parameter (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-W&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Airy beam parameter (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-chi_deg&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;incidence angle in degrees (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="laguerre-gauss-beam">
+<h2>Laguerre-Gauss beam<a class="headerlink" href="#laguerre-gauss-beam" title="Permalink to this headline">¶</a></h2>
+<div class="literal-block-wrapper docutils container" id="laguerregauss3d-py">
+<div class="code-block-caption"><span class="caption-text">LaguerreGauss3d.py</span><a class="headerlink" href="#laguerregauss3d-py" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">file:    LaguerreGauss3d.py</span>
+<span class="sd">brief:   Python configuration input file for the FDTD solver Meep simulating the</span>
+<span class="sd">         scattering of a polarised Laguerre-Gaussian beam at a planar dielectric</span>
+<span class="sd">         interface (3d)</span>
+<span class="sd">author:  Daniel Kotik</span>
+<span class="sd">version: 1.5-beta</span>
+<span class="sd">release date: xx.xx.2020</span>
+<span class="sd">creation date: 10.01.2020</span>
+
+
+<span class="sd">invocation:</span>
+
+<span class="sd"> a) launch the serial version of meep with specified polarisation (p)</span>
+
+<span class="sd">        python3 LaguerreGauss3d.py -e_z 0 -e_y 1</span>
+
+<span class="sd"> b) launch the parallel version of meep using 8 cores</span>
+
+<span class="sd">        mpirun -quiet -np 8 python3 LaguerreGauss3d.py</span>
+
+
+<span class="sd">coordinate system in meep (defines center of computational cell):</span>
+
+<span class="sd">                        --|-----&gt; x</span>
+<span class="sd">                          |</span>
+<span class="sd">                          |</span>
+<span class="sd">                          v y</span>
+
+
+<span class="sd">visualisation:</span>
+
+<span class="sd"> - slice within the plane of incidence (x-y plane)</span>
+<span class="sd">          h5topng -S2 -0 -z 0 -c hot [HDF5FILE]</span>
+
+<span class="sd"> - slice transversal to the incident propagation axis (INDEX specifies slice index)</span>
+<span class="sd">          h5topng -S2 -x [INDEX] -c hot [HDF5FILE]</span>
+
+<span class="sd"> - full 3D simulation (creating a VTK file to be opened e.g., with MayaVi or ParaView)</span>
+<span class="sd">          h5tovtk [HDF5FILE]</span>
+
+<span class="sd">As input HDF5FILE choose between, for example, &#39;e_real2_p-___.h5&#39; and</span>
+<span class="sd">&#39;e_imag2_p-___.h5&#39; (these are proportional to the electric field energy</span>
+<span class="sd">density) or the sum of both &#39;e2.h5&#39; (which is proportional to the complex modulus</span>
+<span class="sd">of the complex electric field) obtained by</span>
+<span class="sd">          h5math -e &quot;d1 + d2&quot; e2.h5 e_real2_p-___.h5 e_imag2_p-___.h5</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">meep</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">import</span> <span class="nn">optbeam</span> <span class="k">as</span> <span class="nn">op</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meep version:&quot;</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">start time:&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># physical parameters characterizing light source and interface characteris-</span>
+    <span class="c1"># tics (must be adjusted - eihter here or via command line interface (CLI))</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">e_z</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">e_z</span>
+    <span class="n">e_y</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">e_y</span>
+
+    <span class="n">m_charge</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">m_charge</span>
+    <span class="n">ref_medium</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">ref_medium</span>
+
+    <span class="n">n1</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">n1</span>
+    <span class="n">n2</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">n2</span>
+
+    <span class="n">kw_0</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">kw_0</span>
+    <span class="n">kr_w</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">kr_w</span>
+
+    <span class="c1"># angle of incidence</span>
+    <span class="n">chi_deg</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">chi_deg</span>
+    <span class="c1">#chi_deg = 1.0*op.critical(n1, n2)</span>
+    <span class="c1">#chi_deg = 0.95*op.brewster(n1, n2)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># specific Meep parameters (may need to be adjusted)</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">sx</span> <span class="o">=</span> <span class="mi">5</span>   <span class="c1"># size of cell including PML in x-direction</span>
+    <span class="n">sy</span> <span class="o">=</span> <span class="mi">5</span>   <span class="c1"># size of cell including PML in y-direction</span>
+    <span class="n">sz</span> <span class="o">=</span> <span class="mi">4</span>   <span class="c1"># size of cell including PML in z-direction</span>
+    <span class="n">pml_thickness</span> <span class="o">=</span> <span class="mf">0.25</span>   <span class="c1"># thickness of PML layer</span>
+    <span class="n">freq</span> <span class="o">=</span> <span class="mi">5</span>       <span class="c1"># vacuum frequency of source (default 5)</span>
+    <span class="n">runtime</span> <span class="o">=</span> <span class="mi">10</span>   <span class="c1"># runs simulation for 10 times freq periods</span>
+
+    <span class="c1"># number of pixels per wavelength in the denser medium (at least 10,</span>
+    <span class="c1"># 20 to 30 is a good choice)</span>
+    <span class="n">pixel</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="c1"># source position with respect to the center (point of impact) in Meep</span>
+    <span class="c1"># units (-2.15 good); if equal -r_w, then source position coincides with</span>
+    <span class="c1"># waist position</span>
+    <span class="n">source_shift</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.15</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># derived (Meep) parameters (do not change)</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">k_vac</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">freq</span>
+    <span class="n">k1</span> <span class="o">=</span> <span class="n">n1</span> <span class="o">*</span> <span class="n">k_vac</span>
+    <span class="n">n_ref</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span>  <span class="k">if</span> <span class="n">ref_medium</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span>
+             <span class="n">n1</span> <span class="k">if</span> <span class="n">ref_medium</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span>
+             <span class="n">n2</span> <span class="k">if</span> <span class="n">ref_medium</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">r_w</span> <span class="o">=</span> <span class="n">kr_w</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_ref</span> <span class="o">*</span> <span class="n">k_vac</span><span class="p">)</span>
+    <span class="n">w_0</span> <span class="o">=</span> <span class="n">kw_0</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_ref</span> <span class="o">*</span> <span class="n">k_vac</span><span class="p">)</span>
+    <span class="n">shift</span> <span class="o">=</span> <span class="n">source_shift</span> <span class="o">+</span> <span class="n">r_w</span>
+    <span class="n">chi_rad</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">chi_deg</span><span class="p">)</span>
+    <span class="n">s_pol</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="p">(</span><span class="n">e_z</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">e_y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span>
+    <span class="n">p_pol</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="p">(</span><span class="n">e_z</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">e_y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">W_y</span><span class="o">=</span><span class="n">w_0</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">m_charge</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k1</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># placement of the dielectric interface within the computational cell</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># helper functions</span>
+    <span class="k">def</span> <span class="nf">alpha</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Angle of inclined plane with y-axis in radians.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">chi_rad</span>
+
+    <span class="k">def</span> <span class="nf">Delta_x</span><span class="p">(</span><span class="n">alpha</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Inclined plane offset to the center of the cell.&quot;&quot;&quot;</span>
+        <span class="n">sin_alpha</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">cos_alpha</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">sx</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(((</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">cos_alpha</span><span class="p">)</span> <span class="o">-</span> <span class="n">sin_alpha</span><span class="p">)</span> <span class="o">/</span> <span class="n">sin_alpha</span><span class="p">)</span>
+
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="n">sz</span><span class="p">)</span>  <span class="c1"># geometry-lattice</span>
+
+    <span class="n">default_material</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Medium</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">n1</span><span class="p">)</span>
+    <span class="c1"># located at lower right edge for 45 degree tilt</span>
+    <span class="n">geometry</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">Block</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">sx</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">mp</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
+                         <span class="n">center</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="o">+</span><span class="n">sx</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Delta_x</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">)),</span>
+                                           <span class="o">-</span><span class="n">sy</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span>
+                         <span class="n">e1</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">)),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">e2</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">alpha</span><span class="p">(</span><span class="n">chi_rad</span><span class="p">)),</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">e3</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                         <span class="n">material</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Medium</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">n2</span><span class="p">))]</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># add absorbing boundary conditions and discretize structure</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">pml_layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">PML</span><span class="p">(</span><span class="n">pml_thickness</span><span class="p">)]</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="n">pixel</span> <span class="o">*</span> <span class="p">(</span><span class="n">n1</span> <span class="k">if</span> <span class="n">n1</span> <span class="o">&gt;</span> <span class="n">n2</span> <span class="k">else</span> <span class="n">n2</span><span class="p">)</span> <span class="o">*</span> <span class="n">freq</span>
+    <span class="c1"># set Courant factor (mandatory if either n1 or n2 is smaller than 1)</span>
+    <span class="n">Courant</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="k">if</span> <span class="n">n1</span> <span class="o">&lt;</span> <span class="n">n2</span> <span class="k">else</span> <span class="n">n2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># display values of physical variables</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected output file size:&quot;</span><span class="p">,</span>
+          <span class="nb">round</span><span class="p">(</span><span class="mi">8</span><span class="o">*</span><span class="p">(</span><span class="n">sx</span><span class="o">*</span><span class="n">sy</span><span class="o">*</span><span class="n">sz</span><span class="o">*</span><span class="n">resolution</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="p">)),</span> <span class="s2">&quot;MiB&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Specified variables and derived values:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n1:&quot;</span><span class="p">,</span> <span class="n">n1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n2:&quot;</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;chi:  &quot;</span><span class="p">,</span> <span class="n">chi_deg</span><span class="p">,</span> <span class="s2">&quot; [degree]&quot;</span><span class="p">)</span>
+    <span class="c1"># interface inclination with respect to the x-axis</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;incl.:&quot;</span><span class="p">,</span> <span class="mi">90</span> <span class="o">-</span> <span class="n">chi_deg</span><span class="p">,</span> <span class="s2">&quot; [degree]&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;kw_0: &quot;</span><span class="p">,</span> <span class="n">kw_0</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;kr_w: &quot;</span><span class="p">,</span> <span class="n">kr_w</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;k_vac:&quot;</span><span class="p">,</span> <span class="n">k_vac</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;vortex charge:&quot;</span><span class="p">,</span> <span class="n">m_charge</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jones vector components: &quot;</span>
+          <span class="s2">&quot;(e_z=&quot;</span><span class="p">,</span> <span class="n">e_z</span><span class="p">,</span> <span class="s2">&quot;, e_y=&quot;</span><span class="p">,</span> <span class="n">e_y</span><span class="p">,</span> <span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; ---&gt;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;s-&quot;</span> <span class="k">if</span> <span class="n">s_pol</span> <span class="k">else</span>
+                    <span class="s2">&quot;p-&quot;</span> <span class="k">if</span> <span class="n">p_pol</span> <span class="k">else</span>
+                    <span class="s2">&quot;mixed-&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;polarisation&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;degree of linear   polarisation at pi/4:&quot;</span><span class="p">,</span>
+          <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">e_z</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span><span class="o">*</span><span class="n">e_y</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;degree of circular polarisation:&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">e_z</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span><span class="o">*</span><span class="n">e_y</span><span class="p">)</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># exploiting symmetries to reduce computational effort</span>
+    <span class="c1"># (only possible for beams without intrinsic orbital angular momentum, i.e.</span>
+    <span class="c1">#  no vortex charge)</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="c1"># The plane of incidence (x-y-plane) is a mirror plane which is characterised</span>
+    <span class="c1"># to be orthogonal to the z-axis (symmetry of the geometric structure).</span>
+    <span class="c1"># Symmetry of the sources must be ensured simultaneously, which is only</span>
+    <span class="c1"># possible for certain cases. If I am not mistaken this can only be achieved</span>
+    <span class="c1"># for vortex free beams with pure s- or p-polarisation, i.e. where either</span>
+    <span class="c1"># the Ez or Ey component is specified.</span>
+    <span class="n">symmetries</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">m_charge</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">s_pol</span><span class="p">:</span>
+            <span class="n">symmetries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">Mirror</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span> <span class="n">phase</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">p_pol</span><span class="p">:</span>
+            <span class="n">symmetries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">Mirror</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">phase</span><span class="o">=+</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># specify current source, output functions and run simulation</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">force_complex_fields</span> <span class="o">=</span> <span class="kc">True</span>           <span class="c1"># default: True</span>
+    <span class="n">eps_averaging</span> <span class="o">=</span> <span class="kc">True</span>                  <span class="c1"># default: True</span>
+
+    <span class="n">sources</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># specify optical beam</span>
+    <span class="n">LGbeam</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">LaguerreGauss3d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">shift</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">e_z</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">source_Ez</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">ContinuousSource</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">freq</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+                              <span class="n">component</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Ez</span><span class="p">,</span>
+                              <span class="n">amplitude</span><span class="o">=</span><span class="n">e_z</span><span class="p">,</span>
+                              <span class="n">size</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                              <span class="n">center</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="n">source_shift</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                              <span class="n">amp_func</span><span class="o">=</span><span class="n">LGbeam</span><span class="o">.</span><span class="n">profile</span>
+                              <span class="p">)</span>
+        <span class="n">sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source_Ez</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">e_y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">source_Ey</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">ContinuousSource</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">freq</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+                              <span class="n">component</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Ey</span><span class="p">,</span>
+                              <span class="n">amplitude</span><span class="o">=</span><span class="n">e_y</span><span class="p">,</span>
+                              <span class="n">size</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                              <span class="n">center</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="n">source_shift</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                              <span class="n">amp_func</span><span class="o">=</span><span class="n">LGbeam</span><span class="o">.</span><span class="n">profile</span>
+                              <span class="p">)</span>
+        <span class="n">sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source_Ey</span><span class="p">)</span>
+
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">cell_size</span><span class="o">=</span><span class="n">cell</span><span class="p">,</span>
+                        <span class="n">boundary_layers</span><span class="o">=</span><span class="n">pml_layers</span><span class="p">,</span>
+                        <span class="n">symmetries</span><span class="o">=</span><span class="n">symmetries</span><span class="p">,</span>
+                        <span class="n">default_material</span><span class="o">=</span><span class="n">default_material</span><span class="p">,</span>
+                        <span class="n">Courant</span><span class="o">=</span><span class="n">Courant</span><span class="p">,</span>
+                        <span class="n">geometry</span><span class="o">=</span><span class="n">geometry</span><span class="p">,</span>
+                        <span class="n">sources</span><span class="o">=</span><span class="n">sources</span><span class="p">,</span>
+                        <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                        <span class="n">force_complex_fields</span><span class="o">=</span><span class="n">force_complex_fields</span><span class="p">,</span>
+                        <span class="n">eps_averaging</span><span class="o">=</span><span class="n">eps_averaging</span>
+                        <span class="p">)</span>
+
+    <span class="n">sim</span><span class="o">.</span><span class="n">use_output_directory</span><span class="p">()</span>   <span class="c1"># put output files in a separate folder</span>
+
+    <span class="k">def</span> <span class="nf">efield_real_squared</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">ex</span><span class="p">,</span> <span class="n">ey</span><span class="p">,</span> <span class="n">ez</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate |Re E|^2.</span>
+
+<span class="sd">        With |.| denoting the complex modulus if &#39;force_complex_fields?&#39;</span>
+<span class="sd">        is set to true, otherwise |.| gives the Euclidean norm.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ex</span><span class="o">.</span><span class="n">real</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ey</span><span class="o">.</span><span class="n">real</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ez</span><span class="o">.</span><span class="n">real</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="k">def</span> <span class="nf">efield_imag_squared</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">ex</span><span class="p">,</span> <span class="n">ey</span><span class="p">,</span> <span class="n">ez</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate |Im E|^2.</span>
+
+<span class="sd">        With |.| denoting the complex modulus if &#39;force_complex_fields?&#39;</span>
+<span class="sd">        is set to true, otherwise |.| gives the Euclidean norm.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ex</span><span class="o">.</span><span class="n">imag</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ey</span><span class="o">.</span><span class="n">imag</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ez</span><span class="o">.</span><span class="n">imag</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="k">def</span> <span class="nf">output_efield_real_squared</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Output E-field (real part) intensity.&quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;e_real2_s&quot;</span> <span class="k">if</span> <span class="n">s_pol</span> <span class="k">else</span> <span class="s2">&quot;e_real2_p&quot;</span> <span class="k">if</span> <span class="n">p_pol</span> <span class="k">else</span> <span class="s2">&quot;e_real2_mixed&quot;</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">efield_real_squared</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">Ex</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">Ey</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">Ez</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">sim</span><span class="o">.</span><span class="n">output_field_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cs</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">real_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">output_efield_imag_squared</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Output E-field (imag part) intensity.&quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;e_imag2_s&quot;</span> <span class="k">if</span> <span class="n">s_pol</span> <span class="k">else</span> <span class="s2">&quot;e_imag2_p&quot;</span> <span class="k">if</span> <span class="n">p_pol</span> <span class="k">else</span> <span class="s2">&quot;e_imag2_mixed&quot;</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">efield_imag_squared</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="p">[</span><span class="n">mp</span><span class="o">.</span><span class="n">Ex</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">Ey</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">Ez</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">sim</span><span class="o">.</span><span class="n">output_field_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cs</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">real_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">run_args</span> <span class="o">=</span> <span class="p">[</span><span class="c1">#mp.at_beginning(mp.output_epsilon),    # output of dielectric function</span>
+                <span class="c1">#mp.at_end(mp.output_efield_x),         # output of E_x component</span>
+                <span class="c1">#mp.at_end(mp.output_efield_z),         # output of E_y component</span>
+                <span class="c1">#mp.at_end(mp.output_efield_y),         # output of E_z component</span>
+                <span class="n">mp</span><span class="o">.</span><span class="n">at_end</span><span class="p">(</span><span class="n">output_efield_real_squared</span><span class="p">)</span>  <span class="c1"># output of electric field intensity</span>
+                <span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">force_complex_fields</span><span class="p">:</span>
+        <span class="n">run_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">at_end</span><span class="p">(</span><span class="n">output_efield_imag_squared</span><span class="p">))</span>
+
+    <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">*</span><span class="n">run_args</span><span class="p">,</span> <span class="n">until</span><span class="o">=</span><span class="n">runtime</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">end time:&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e_z&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">eval</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;z-component of Jones vector (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e_y&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">eval</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;y-component of Jones vector (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m_charge&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;vortex charge (azimuthal quantum number)&#39;</span>
+                              <span class="s1">&#39; (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-n1&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;index of refraction of the incident medium &#39;</span>
+                              <span class="s1">&#39;(default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-n2&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mf">1.54</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;index of refraction of the refracted medium &#39;</span>
+                              <span class="s1">&#39;(default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ref_medium&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;reference medium: 0 - free space, &#39;</span>
+                              <span class="s1">&#39;1 - incident medium, &#39;</span>
+                              <span class="s1">&#39;2 - refracted medium (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-kw_0&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;beam width (&gt;5 is good) (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-kr_w&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;beam waist distance to interface (30 to 50 is &#39;</span>
+                              <span class="s1">&#39;good if source position coincides with beam &#39;</span>
+                              <span class="s1">&#39;waist) (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">))</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-chi_deg&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;incidence angle in degrees (default: </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="scheme.html" class="btn btn-neutral float-right" title="Scheme" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to Optical-beams-MEEP’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Daniel Kotik.
+      <span class="lastupdated">
+        Last updated on Aug 26, 2021.
+      </span>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
