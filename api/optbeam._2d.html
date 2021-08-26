@@ -218,7 +218,24 @@ position if not coinciding with beam waist.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="optbeam._2d.beams.Gauss2d.profile">
 <span class="sig-name descname"><span class="pre">profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/optbeam/_2d/beams.html#Gauss2d.profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optbeam._2d.beams.Gauss2d.profile" title="Permalink to this definition">¶</a></dt>
-<dd><p>…</p>
+<dd><p>Field amplitude function.</p>
+<p>Plane wave decomposition: calculate field amplitude at light source
+position if not coinciding with beam waist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>r</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><em>type</em></a>) – Description of parameter <cite>r</cite>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Description of returned object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)">type</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The beam profile at waist is given by</p>
+<div class="math notranslate nohighlight">
+\[\psi_\text{G} (x, z=0) = \exp\biggl[-\Bigl(\frac{x}{w_0} \Bigr)^2\biggr]\]</div>
 </dd></dl>
 
 <dl class="py method">

@@ -238,7 +238,30 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">called</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Gauss2d.profile"><a class="viewcode-back" href="../../../api/optbeam._2d.html#optbeam._2d.beams.Gauss2d.profile">[docs]</a>    <span class="k">def</span> <span class="nf">profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;...&quot;&quot;&quot;</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Field amplitude function.</span>
+
+<span class="sd">        Plane wave decomposition: calculate field amplitude at light source</span>
+<span class="sd">        position if not coinciding with beam waist.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        r : type</span>
+<span class="sd">            Description of parameter `r`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        type</span>
+<span class="sd">            Description of returned object.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The beam profile at waist is given by</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">           \psi_\text{G} (x, z=0) = \exp\biggl[-\Bigl(\frac{x}{w_0} \Bigr)^2\biggr]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># beam profile distribution (field amplitude) at the waist of the beam</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm</span> <span class="o">*</span> <span class="n">_exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">y</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_W_y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
