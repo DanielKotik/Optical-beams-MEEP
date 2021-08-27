@@ -7,6 +7,7 @@ doi: 10.5281/zenodo.2631828 # This DOI represents all versions, and will always 
 authors:
 - given-names: Daniel
   family-names: Kotik
+  orcid: https://orcid.org/0000-0001-8735-3199
 - given-names: Jörg
   family-names: Götte
 version: 2.1.2
