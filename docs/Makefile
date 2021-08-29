@@ -20,5 +20,5 @@ help:
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 
-apidocs:
-	sphinx-apidoc -fP -o source/api ../optbeam
+# apidocs:
+	# sphinx-apidoc -fPM -o source/api ../optbeam

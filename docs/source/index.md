@@ -11,7 +11,7 @@ caption: API Reference
 maxdepth: 1
 ---
 
-api/modules
+api/optbeam
 ```
 
 ```{toctree}

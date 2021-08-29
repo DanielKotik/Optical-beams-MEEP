@@ -52,7 +52,7 @@ jobs:
 
       - name: Build API and docs
         run: |
-          sphinx-apidoc -fP -o docs/source/api optbeam
+          # sphinx-apidoc -fPM -o docs/source/api optbeam
           sphinx-build -W --keep-going -b html -d docs/_build/doctrees docs/source docs/_build/html
           mv -v docs/_build/html public
 
