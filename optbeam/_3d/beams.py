@@ -1,4 +1,4 @@
-
+"""Contains classes for beams in 3d."""
 import math
 import sys
 
@@ -116,11 +116,7 @@ class Beam3dCartesian(Beam3d):
 # base classes depending on the choice of a suitable coordinate system
 # -----------------------------------------------------------------------------
 class LaguerreGauss3dCartesian(Beam3dCartesian):
-    """Cartesian implementaion of a 3d Laguerre-Gauss beam.
-
-    This class serves only as an example for a will be removed in future
-    versions.
-    """
+    """Cartesian implementaion of a 3d Laguerre-Gauss beam."""
 
     def __init__(self, x, params, called=False):
         """Laguerre-Gauss beam specifc parameters."""
@@ -175,12 +171,31 @@ class LaguerreGauss3dCartesian(Beam3dCartesian):
 
 
 class LaguerreGauss3d(Beam3dSpherical):
-    """3d Laguerre-Gauss beam.
+    r"""3d Laguerre-Gauss beam.
 
-    Usage:
-     LGbeam = LaguerreGauss3d(x=x, params=params)
-     LGbeam.profile(r)
-     LGbeam.spectrum(sin_theta, theta, phi)
+    The implementation is based on [1]_.
+
+    Parameters
+    ----------
+    x : type
+        Description of parameter `x`.
+    params : dict
+        Description of parameter `params`.
+    called : bool
+        Description of parameter `called` (the default is False).
+
+
+    References
+    ----------
+    .. [1] Bliokh, K Y, Aiello, A: Goos-Hänchen and Imbert-Fedorov beam shifts:
+           an overview, Journal of Optics 15(1), 014001, 2013.
+
+    Examples
+    --------
+    >>> LGbeam = LaguerreGauss3d(x=x, params=params)
+    >>> LGbeam.profile(r)
+    >>> LGbeam.spectrum(sin_theta, theta, phi)
+
     """
 
     def __init__(self, x, params, called=False):
@@ -191,14 +206,61 @@ class LaguerreGauss3d(Beam3dSpherical):
         self._norm = 4 * math.pi / (self._W_y**2)
 
     def profile(self, r):
-        """..."""
+        r"""Beam profile, psi.
+
+        Parameters
+        ----------
+        r : type
+            Description of parameter `r`.
+
+        Returns
+        -------
+        complex
+            Description of returned object.
+
+        Notes
+        -----
+        .. math::
+
+           \psi_\text{LG}(x,y,z) = k^2 \int_0^{\pi/2}\mathrm{d}\theta\int_0^{2\pi}\mathrm{d}\phi\, \sin{\theta}\cos{\theta}\,f_\text{LG}(\theta, \phi) \exp\bigl[\mathrm{i}k \bigl(x \cos{\theta} + y\sin{\theta}\sin{\phi} - z \sin{\theta}\cos{\phi}\bigr)\bigr]
+
+        """
         if self.x == 0 and self._m == 0:
             return self._norm * _exp(-((r.y**2 + r.z**2) / self._W_y**2))
         else:
             return super().profile(r)
 
     def spectrum(self, sin_theta, theta, phi):
-        """Spectrum amplitude function, f."""
+        r"""Spectrum amplitude function, f.
+
+        Parameters
+        ----------
+        sin_theta : type
+            Description of parameter `sin_theta`.
+        theta : type
+            Description of parameter `theta`.
+        phi : type
+            Description of parameter `phi`.
+
+        Returns
+        -------
+        complex
+            Description of returned object.
+
+        Notes
+        -----
+        The implementation is based on [1]_.
+
+        The spectrum amplitude is of the form
+
+        .. math::
+
+           f_\text{LG}(\theta,\phi) = \theta^{|m|} \
+                                      \exp\biggl[-\Bigl(\frac{kw_0}{2} \
+                                                        \sin\theta\Bigr)^2 \
+                                          \biggr] \exp(\mathrm{i} m \phi)
+
+        """
         if self._m == 0:
             return self._f_Gauss_spherical(sin_theta, self._W_y, self._k)
         else:

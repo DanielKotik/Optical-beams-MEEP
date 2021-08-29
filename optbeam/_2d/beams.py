@@ -1,3 +1,4 @@
+"""Contains classes for beams in 2d."""
 
 import math
 import sys
@@ -74,7 +75,30 @@ class Gauss2d(Beam2dCartesian):
         super().__init__(x, params, called)
 
     def profile(self, r):
-        """..."""
+        r"""Field amplitude function.
+
+        Plane wave decomposition: calculate field amplitude at light source
+        position if not coinciding with beam waist.
+
+        Parameters
+        ----------
+        r : type
+            Description of parameter `r`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        Notes
+        -----
+        The beam profile at waist is given by
+
+        .. math::
+
+           \psi_\text{G} (x, z=0) = \exp\biggl[-\Bigl(\frac{x}{w_0} \Bigr)^2\biggr]
+
+        """
         # beam profile distribution (field amplitude) at the waist of the beam
         if self.x == 0:
             return self._norm * _exp(-(r.y / self._W_y)**2)
@@ -82,7 +106,25 @@ class Gauss2d(Beam2dCartesian):
             return super().profile(r)
 
     def spectrum(self, k_y):
-        """Spectrum amplitude function, f."""
+        r"""Gauss spectrum amplitude function, f.
+
+        Parameters
+        ----------
+        k_y : type
+            Description of parameter `k_y`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        Notes
+        -----
+        .. math::
+           f_\text{G} (k_x) = \frac{w_0}{2 \sqrt{\pi}} \
+                              \exp\biggl[-\Bigl(\frac{k_x w_0}{2} \Bigr)^2 \biggr]
+
+        """
         return self._f_Gauss(k_y, self._W_y)
 
     def _f_Gauss(self, k_y, W_y):
@@ -91,7 +133,26 @@ class Gauss2d(Beam2dCartesian):
 
 
 class IncAiry2d(Beam2dCartesian):
-    """2d incomplete Airy beam."""
+    """2d incomplete Airy beam.
+
+    The implementation is based on [2]_.
+
+    Parameters
+    ----------
+    x : type
+        Description of parameter `x`.
+    params : type
+        Description of parameter `params`.
+    called : type
+        Description of parameter `called` (the default is False).
+
+    References
+    ----------
+    .. [2] Ring, J D, Howls, C J, Dennis, M R: Incomplete Airy beams:
+           finite energy from a sharp spectral cutoff , Optics Letters 38(10),
+           OSA, 1639–1641, May 2013.
+
+    """
 
     def __init__(self, x, params, called=False):
         """..."""
@@ -101,7 +162,30 @@ class IncAiry2d(Beam2dCartesian):
         super().__init__(x, params, called)
 
     def profile(self, r):
-        """..."""
+        r"""Beam profile, psi.
+
+        Parameters
+        ----------
+        r : type
+            Description of parameter `r`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        Notes
+        -----
+        The beam profile at waist is defined by the incomplete Airy function,
+        see [2]_
+
+        .. math::
+
+           \psi^\text{Airy}_{M,W}(x, z=0) = \int_{M-W}^{M+W}\mathrm{d}\xi\, \
+           \mathrm{exp}\left[\mathrm{i}\left(\frac{1}{3} \xi^3 + \
+           \xi \frac{x}{w_0}\right)\right]
+
+        """
         if self.x == 0:
             # adjust integration boundaries
             self._a = self._M-self._W
@@ -110,7 +194,32 @@ class IncAiry2d(Beam2dCartesian):
         return super().profile(r)
 
     def spectrum(self, k_y):
-        """..."""
+        r"""Spectrum amplitude function, f.
+
+        Parameters
+        ----------
+        k_y : type
+            Description of parameter `k_y`.
+
+        Returns
+        -------
+        f_Airy: complex
+            Spectrum amplitude function
+
+        Notes
+        -----
+        .. math::
+
+           \begin{align*}
+           f^\text{Airy}_{M,W}(k_x) &= \frac{1}{2 \pi} \int_{-\infty}^\infty\mathrm{d}x\, \psi^\text{Airy}_{M,W}(x, z=0) \exp(-\mathrm{i}k_x x)\\
+                                    &= \int_{M-W}^{M+W}\mathrm{d}\xi\, \exp\Bigl(\mathrm{i}\frac{1}{3}\xi^3 \Bigr) \delta\Bigl(\frac{\xi}{w_0} -k_x\Bigr)\\
+                                    &=\begin{cases}
+                                       w_0 \exp\Bigl[\mathrm{i} \frac{1}{3} \bigl(w_0k_x \bigr)^3\Bigr] & M-W < w_0k_x <M+W \\
+                                       0                                                                  & \text{otherwise}
+                                      \end{cases}
+           \end{align*}
+
+        """
         return self._f_Airy(k_y, self._W_y, self._M, self._W)
 
     def _f_Airy(self, k_y, W_y, M, W):
